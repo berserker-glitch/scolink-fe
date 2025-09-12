@@ -1,0 +1,179 @@
+import React, { useState, useEffect } from 'react';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Menu, LogOut, Settings, Users, Building2, Home, Database } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useAuth } from '@/contexts/AuthContext';
+
+export const SuperAdminLayout: React.FC = () => {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isDark, setIsDark] = useState(false);
+  const { user, logout } = useAuth();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // Initialize theme from localStorage or system preference
+  useEffect(() => {
+    const saved = localStorage.getItem('theme');
+    if (saved) {
+      setIsDark(saved === 'dark');
+    } else {
+      setIsDark(window.matchMedia('(prefers-color-scheme: dark)').matches);
+    }
+  }, []);
+
+  // Apply theme to document
+  useEffect(() => {
+    if (isDark) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+  }, [isDark]);
+
+  const toggleTheme = () => {
+    setIsDark(!isDark);
+  };
+
+  const closeSidebar = () => {
+    setSidebarOpen(false);
+  };
+
+  const handleLogout = async () => {
+    await logout();
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <div className="flex h-screen">
+        {/* Sidebar */}
+        <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 transform ${
+          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        } transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0`}>
+        <div className="flex flex-col h-full">
+          {/* Header */}
+          <div className="flex items-center justify-between h-16 px-6 border-b border-gray-200">
+            <div className="flex items-center space-x-2">
+              <Building2 className="w-8 h-8 text-blue-600" />
+              <h1 className="text-xl font-bold text-gray-900">Scolink Admin</h1>
+            </div>
+            <button
+              onClick={closeSidebar}
+              className="lg:hidden p-2 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <Menu className="w-5 h-5" />
+            </button>
+          </div>
+
+          {/* Navigation */}
+          <nav className="flex-1 px-4 py-6 space-y-2">
+            <div className="space-y-1">
+              <div className="px-3 py-2 text-sm font-medium text-gray-500 uppercase tracking-wider">
+                Navigation
+              </div>
+              
+              <Button
+                variant={location.pathname === '/super-admin' || location.pathname === '/' ? "default" : "ghost"}
+                className="w-full justify-start text-left"
+                onClick={() => {
+                  navigate('/super-admin');
+                  closeSidebar();
+                }}
+              >
+                <Home className="w-5 h-5 mr-3" />
+                Dashboard
+              </Button>
+              
+              <Button
+                variant={location.pathname === '/super-admin/management' ? "default" : "ghost"}
+                className="w-full justify-start text-left"
+                onClick={() => {
+                  navigate('/super-admin/management');
+                  closeSidebar();
+                }}
+              >
+                <Database className="w-5 h-5 mr-3" />
+                Management
+              </Button>
+            </div>
+          </nav>
+
+          {/* User Info & Actions */}
+          <div className="p-4 border-t border-gray-200">
+            <div className="flex items-center space-x-3 mb-4">
+              <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                <span className="text-sm font-medium text-white">
+                  {user?.fullName?.charAt(0) || 'A'}
+                </span>
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-gray-900 truncate">
+                  {user?.fullName || 'Super Admin'}
+                </p>
+                <p className="text-xs text-gray-500 truncate">
+                  {user?.email || 'admin@admin.com'}
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="w-full justify-start"
+                onClick={toggleTheme}
+              >
+                <Settings className="w-4 h-4 mr-2" />
+                {isDark ? 'Light Mode' : 'Dark Mode'}
+              </Button>
+              
+              <Button
+                variant="ghost"
+                size="sm"
+                className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50"
+                onClick={handleLogout}
+              >
+                <LogOut className="w-4 h-4 mr-2" />
+                Logout
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Overlay for mobile */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black bg-opacity-50 lg:hidden"
+          onClick={closeSidebar}
+        />
+      )}
+
+        {/* Main Content */}
+        <div className="flex-1 flex flex-col min-h-screen lg:ml-0">
+        {/* Window Controls - Only show on desktop */}
+        <div className="hidden lg:flex fixed top-0 right-0 z-50 bg-white border-b border-l border-gray-200">
+        </div>
+        
+        {/* Mobile Header */}
+        <header className="lg:hidden h-16 bg-white border-b border-gray-200 flex items-center justify-between px-4">
+          <button
+            onClick={() => setSidebarOpen(true)}
+            className="p-2 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <Menu className="w-6 h-6" />
+          </button>
+          <h1 className="text-xl font-bold text-gray-900">Scolink Admin</h1>
+          <div className="w-10" /> {/* Spacer for balance */}
+        </header>
+        
+        {/* Page Content */}
+        <main className="flex-1 overflow-auto bg-gray-50">
+          <Outlet />
+        </main>
+        </div>
+      </div>
+    </div>
+  );
+};

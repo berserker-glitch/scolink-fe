@@ -1,0 +1,150 @@
+
+
+Teachers (new page)
+
+Teacher list: name, email, phone, subjects taught, assigned groups count
+
+Add/Edit Teacher modal: name, contact, subjects (multi-select), bio, avatar upload (placeholder)
+
+Clicking a teacher opens profile drawer with:
+
+Teacher info, assigned groups list (clickable to group)
+
+Option to link/unlink students
+
+Export teacher schedule
+
+Teacher dropdown must be available in Student add/edit wizard and Group add/edit forms (optional linking).
+
+Subjects & Groups
+
+Subject list with search & filter
+
+Add Subject modal: name + monthly fee
+
+
+
+Schedule & Attendance
+
+Weekly schedule grid (7 columns for days, time slots vertically) — show group cards in their slots.
+
+Default to current day on open; clickable group cards open group details & attendance modal.
+
+Generate Attendance List: modal shows group students with toggles for Present / Absent / Late. Additional columns: note, reason.
+
+Save action: persist (to mock API) and update each student’s attendance history.
+
+Export attendance list as PDF (front-end generated) with: group info, teacher, date, student list with checkboxes and notes area.
+
+Attendance history page per group (filter by date range)
+
+Payments
+
+Analytics cards: number paid vs unpaid, monthly revenue summary (placeholder)
+
+Payments list (virtualized): student name, month, subjects, amount, status
+
+Make Payment modal reused from Student Drawer
+
+Filters by status, month, subject; search by student
+
+Events
+
+Events list with search
+
+Add Event modal: name, type (Normal | Temp Additional Course Day), fee (if Normal), group selection (if Temp Additional), start/end date & time
+
+Event details drawer: show students — manual add for Normal, read-only auto-add for Temp Additional
+
+Auto-expire events after end datetime (mocked behavior)
+
+Settings
+
+Cards for:
+
+Change employee code (simple modal)
+
+Backup settings: auto backup every X days (setting), manual SQLite backup (simulated), CSV export (simulate download)
+
+App preferences: default language, default timezone (localize), attendance default status
+
+Data models (for seeding & shape)
+
+Provide seed data file with ~200 students, 10 teachers, 12 subjects, 25 groups, sample payments, and events. Example shapes:
+
+Student {
+id, firstName, lastName, sex, year, field, phone, parentPhone, parentType,
+tag, CNI, teacherId?, subjects: [{subjectId, groupId}], attendanceRecords: [{date, groupId, status, note}], payments: [...]
+}
+
+Teacher {
+id, name, email, phone, subjects: [subjectId], avatarUrl?, bio
+}
+
+Subject { id, name, monthlyFee }
+Group { id, subjectId, name, capacity, classNumber, schedule: {day, start, end}, teacherId?, students: [studentId] }
+
+Payment { id, studentId, month, subjects: [subjectId], amount, date, status }
+
+Event { id, name, type, fee?, groupId?, start, end, students: [studentId] }
+
+Interactions & edge cases
+
+Handle ss tag flow for students (custom payment plan).
+
+When generating attendance PDF, include teacher info if available.
+
+When deleting students: show soft-delete confirmation; allow filter to view deleted.
+
+When linking teacher to student/group, update UI everywhere (badge in lists).
+
+Schedule conflicts: visually flag groups that overlap for same teacher (UI-only warning).
+
+Large dataset performance: demonstrate virtualization or pagination patterns.
+
+Error states: empty lists, no subjects selected, payment validation.
+
+Deliverables & acceptance criteria
+
+Complete React + TypeScript frontend that runs with npm run dev (or similar). No backend required; include mocked API and seed data.
+
+All pages implemented: Dashboard, Students, Teachers, Subjects & Groups, Schedule & Attendance, Payments, Events, Settings.
+
+Multi-step Add Student wizard and Student Drawer with all tabs working against mock data.
+
+Attendance flows that persist to mock state and generate downloadable PDFs.
+
+Teacher Management implemented (list, add/edit, profile drawer) and teacher dropdowns available in student/group forms.
+
+Style guide & README with how to run and where to change seed data.
+
+Clean, minimal code structure and comments for handoff.
+
+A short demo video gif (optional) showing main flows (add student → attendance → export PDF) is a plus.
+
+Small bonuses (optional)
+
+Lightweight charts for attendance trends (sparklines or small bar charts).
+
+CSV export for payments and attendance.
+
+Tiny animations using CSS transitions only.
+
+
+rules :
+
+leave no page unimplemented add all the the pages you were tasked to add 
+add all the forms for all the actions 
+add all the dialog for all the buttons 
+prefer the use of components to always keep consistency in the ui 
+dont remove just add 
+
+
+rules :
+dont remove just add and edit 
+
+only do frontend stuf neglect all the backend features for now 
+
+
+
+ 

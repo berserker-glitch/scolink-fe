@@ -1,0 +1,167 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 
+Brutalist Educational Center Design System
+Inspired by Notion's clean minimalism
+*/
+
+@layer base {
+  :root {
+    /* Core brutalist color palette - monochrome greys */
+    --background: 0 0% 100%;
+    --foreground: 0 0% 5%;
+    
+    /* Surface colors for cards and containers */
+    --surface: 0 0% 99%;
+    --surface-secondary: 0 0% 97%;
+    --surface-hover: 0 0% 95%;
+    
+    /* Brutalist borders and accents */
+    --border: 0 0% 90%;
+    --border-strong: 0 0% 80%;
+    
+    /* Text hierarchy */
+    --text-primary: 0 0% 5%;
+    --text-secondary: 0 0% 40%;
+    --text-muted: 0 0% 60%;
+    
+    /* Interactive elements */
+    --interactive: 0 0% 20%;
+    --interactive-hover: 0 0% 10%;
+    
+    /* Status colors (minimal) */
+    --success: 120 40% 30%;
+    --warning: 45 80% 50%;
+    --error: 0 60% 50%;
+    
+    /* Spacing baseline */
+    --space-unit: 8px;
+    --radius-sharp: 4px;
+    --radius-soft: 8px;
+    
+    /* Legacy shadcn compatibility */
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 5%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 5%;
+    --primary: 0 0% 5%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 10%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%;
+    --accent: 0 0% 96%;
+    --accent-foreground: 0 0% 10%;
+    --destructive: 0 60% 50%;
+    --destructive-foreground: 0 0% 98%;
+    --input: 0 0% 90%;
+    --ring: 0 0% 20%;
+    --radius: 8px;
+  }
+
+  .dark {
+    /* Dark mode - inverted brutalist palette */
+    --background: 0 0% 8%;
+    --foreground: 0 0% 95%;
+    --surface: 0 0% 10%;
+    --surface-secondary: 0 0% 12%;
+    --surface-hover: 0 0% 15%;
+    --border: 0 0% 20%;
+    --border-strong: 0 0% 30%;
+    --text-primary: 0 0% 95%;
+    --text-secondary: 0 0% 70%;
+    --text-muted: 0 0% 50%;
+    --interactive: 0 0% 80%;
+    --interactive-hover: 0 0% 90%;
+    
+    /* Legacy shadcn compatibility for dark mode */
+    --card: 0 0% 10%;
+    --card-foreground: 0 0% 95%;
+    --popover: 0 0% 10%;
+    --popover-foreground: 0 0% 95%;
+    --primary: 0 0% 95%;
+    --primary-foreground: 0 0% 10%;
+    --secondary: 0 0% 15%;
+    --secondary-foreground: 0 0% 90%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 65%;
+    --accent: 0 0% 15%;
+    --accent-foreground: 0 0% 90%;
+    --input: 0 0% 20%;
+    --ring: 0 0% 80%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-inter antialiased;
+  }
+
+  /* Brutalist typography scale */
+  .text-hero {
+    @apply text-4xl font-bold tracking-tight leading-tight;
+  }
+  
+  .text-heading {
+    @apply text-2xl font-semibold tracking-tight;
+  }
+  
+  .text-subheading {
+    @apply text-lg font-medium;
+  }
+  
+  .text-body {
+    @apply text-base font-normal;
+  }
+  
+  .text-caption {
+    @apply text-sm font-medium;
+  }
+  
+  .text-micro {
+    @apply text-xs font-medium uppercase tracking-wide;
+  }
+}
+
+@layer components {
+  /* Brutalist button variants */
+  .btn-brutalist {
+    @apply px-6 py-3 font-semibold uppercase tracking-wide border-2 border-text-primary bg-transparent text-text-primary transition-all duration-150 hover:bg-text-primary hover:text-background;
+  }
+  
+  .btn-brutalist-fill {
+    @apply px-6 py-3 font-semibold uppercase tracking-wide border-2 border-text-primary bg-text-primary text-background transition-all duration-150 hover:bg-transparent hover:text-text-primary;
+  }
+  
+  /* Surface containers */
+  .surface {
+    @apply bg-surface border border-border;
+  }
+  
+  .surface-secondary {
+    @apply bg-surface-secondary border border-border;
+  }
+  
+  /* Interactive states */
+  .surface-hover {
+    @apply hover:bg-surface-hover transition-colors duration-150;
+  }
+  
+  /* Grid system */
+  .grid-brutalist {
+    @apply grid gap-6;
+  }
+  
+  /* Focus states */
+  .focus-brutalist {
+    @apply focus:outline-none focus:ring-2 focus:ring-interactive focus:ring-offset-2 focus:ring-offset-background;
+  }
+}
