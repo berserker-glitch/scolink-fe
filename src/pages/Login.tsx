@@ -75,13 +75,6 @@ const Login: React.FC = () => {
                   </Alert>
                 )}
 
-                {/* Test Credentials Info */}
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-                  <p className="text-sm font-medium text-blue-800 mb-1">Test Credentials:</p>
-                  <p className="text-xs text-blue-600">Super Admin: admin@admin.com / D8fd5D5694</p>
-                  <p className="text-xs text-blue-600">Center Admin: admin@samplecenter.edu / Admin123!</p>
-                </div>
-                
                 <div className="space-y-2">
                   <label htmlFor="email" className="text-caption text-text-primary font-medium">
                     Email
@@ -137,11 +130,6 @@ const Login: React.FC = () => {
                 </BrutalistButton>
               </form>
 
-              <div className="mt-6 text-center">
-                <p className="text-caption text-text-muted">
-                  Demo credentials: Use any email and password
-                </p>
-              </div>
             </CardContent>
           </Card>
 
