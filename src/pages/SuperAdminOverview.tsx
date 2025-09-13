@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { Button } from '@/components/ui/button';
+import { ModernButton } from '@/components/ui';
 import { Badge } from '@/components/ui/badge';
 import { Building2, Users, Settings, TrendingUp, Activity, Calendar, Plus } from 'lucide-react';
 import { apiService, Center, User } from '@/services/api';
@@ -99,18 +99,6 @@ export const SuperAdminOverview: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Debug Info */}
-      {process.env.NODE_ENV === 'development' && (
-        <div className="bg-yellow-50 border-b border-yellow-200 p-4">
-          <div className="max-w-7xl mx-auto">
-            <h3 className="text-sm font-medium text-yellow-800">Debug Info:</h3>
-            <p className="text-xs text-yellow-700">
-              Loading: {loading.toString()} | Centers: {recentCenters.length} | Users: {stats.totalUsers}
-            </p>
-          </div>
-        </div>
-      )}
-
       {/* Hero Section */}
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -122,21 +110,24 @@ export const SuperAdminOverview: React.FC = () => {
               Manage and oversee all centers, users, and system operations from this central hub.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
-              <Button 
+              <ModernButton 
                 onClick={() => navigate('/super-admin/management')}
-                className="bg-blue-600 hover:bg-blue-700 px-6 py-3 text-lg"
-              >
-                <Plus className="w-5 h-5 mr-2" />
-                Create New Center
-              </Button>
-              <Button 
-                variant="outline" 
-                onClick={() => navigate('/super-admin/management')}
+                variant="solid"
+                size="lg"
+                icon={Plus}
                 className="px-6 py-3 text-lg"
               >
-                <Settings className="w-5 h-5 mr-2" />
+                Create New Center
+              </ModernButton>
+              <ModernButton 
+                variant="outline" 
+                onClick={() => navigate('/super-admin/management')}
+                icon={Settings}
+                size="lg"
+                className="px-6 py-3 text-lg"
+              >
                 Manage System
-              </Button>
+              </ModernButton>
             </div>
           </div>
         </div>
@@ -185,13 +176,13 @@ export const SuperAdminOverview: React.FC = () => {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-xl font-semibold">Recent Centers</CardTitle>
-              <Button 
+              <ModernButton 
                 variant="ghost" 
                 size="sm"
                 onClick={() => navigate('/super-admin/management')}
               >
                 View All
-              </Button>
+              </ModernButton>
             </CardHeader>
             <CardContent>
               {loading ? (
@@ -227,13 +218,13 @@ export const SuperAdminOverview: React.FC = () => {
                   <Building2 className="w-12 h-12 text-gray-300 mx-auto mb-4" />
                   <h3 className="text-lg font-medium text-gray-900 mb-2">No Centers Yet</h3>
                   <p className="text-gray-500 mb-4">Create your first center to get started</p>
-                  <Button 
+                  <ModernButton 
                     onClick={() => navigate('/super-admin/management')}
-                    className="bg-blue-600 hover:bg-blue-700"
+                    variant="solid"
+                    icon={Plus}
                   >
-                    <Plus className="w-4 h-4 mr-2" />
                     Create Center
-                  </Button>
+                  </ModernButton>
                 </div>
               )}
             </CardContent>
@@ -246,7 +237,7 @@ export const SuperAdminOverview: React.FC = () => {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 gap-4">
-                <Button 
+                <ModernButton 
                   variant="outline" 
                   className="h-16 justify-start text-left p-4"
                   onClick={() => navigate('/super-admin/management')}
@@ -260,9 +251,9 @@ export const SuperAdminOverview: React.FC = () => {
                       <div className="text-sm text-gray-500">View and edit all centers</div>
                     </div>
                   </div>
-                </Button>
+                </ModernButton>
 
-                <Button 
+                <ModernButton 
                   variant="outline" 
                   className="h-16 justify-start text-left p-4"
                   onClick={() => navigate('/super-admin/management')}
@@ -276,9 +267,9 @@ export const SuperAdminOverview: React.FC = () => {
                       <div className="text-sm text-gray-500">View and manage all users</div>
                     </div>
                   </div>
-                </Button>
+                </ModernButton>
 
-                <Button 
+                <ModernButton 
                   variant="outline" 
                   className="h-16 justify-start text-left p-4"
                   onClick={() => navigate('/super-admin/management')}
@@ -292,9 +283,9 @@ export const SuperAdminOverview: React.FC = () => {
                       <div className="text-sm text-gray-500">Set up new center with admin</div>
                     </div>
                   </div>
-                </Button>
+                </ModernButton>
 
-                <Button 
+                <ModernButton 
                   variant="outline" 
                   className="h-16 justify-start text-left p-4"
                 >
@@ -307,7 +298,7 @@ export const SuperAdminOverview: React.FC = () => {
                       <div className="text-sm text-gray-500">View activity and analytics</div>
                     </div>
                   </div>
-                </Button>
+                </ModernButton>
               </div>
             </CardContent>
           </Card>

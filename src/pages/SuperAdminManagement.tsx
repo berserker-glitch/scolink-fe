@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { Button } from '@/components/ui/button';
+import { ModernButton } from '@/components/ui';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Plus, Search, Building2, Users, Settings, Filter, MoreHorizontal, Eye, Edit, Trash2, Shield, ShieldOff } from 'lucide-react';
@@ -157,13 +157,13 @@ export const SuperAdminManagement: React.FC = () => {
   );
 
   const TabButton = ({ tab, label, count }: { tab: 'centers' | 'users'; label: string; count: number }) => (
-    <Button
-      variant={activeTab === tab ? "default" : "outline"}
+    <ModernButton
+      variant={activeTab === tab ? "solid" : "outline"}
       onClick={() => setActiveTab(tab)}
       className="flex-1"
     >
       {label} ({count})
-    </Button>
+    </ModernButton>
   );
 
   return (
@@ -176,13 +176,15 @@ export const SuperAdminManagement: React.FC = () => {
               <h1 className="text-3xl font-bold text-gray-900">System Management</h1>
               <p className="text-gray-600 mt-2">Manage centers, users, and system administration</p>
             </div>
-            <Button
+            <ModernButton
               onClick={() => setShowCreateForm(true)}
-              className="bg-blue-600 hover:bg-blue-700 px-6 py-3 text-lg mx-auto lg:mx-0"
+              variant="solid"
+              size="lg"
+              icon={Plus}
+              className="px-6 py-3 text-lg mx-auto lg:mx-0"
             >
-              <Plus className="w-5 h-5 mr-2" />
               Create Center & Admin
-            </Button>
+            </ModernButton>
           </div>
         </div>
       </div>
@@ -243,9 +245,9 @@ export const SuperAdminManagement: React.FC = () => {
                         
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity">
+                            <ModernButton variant="ghost" size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity">
                               <MoreHorizontal className="w-4 h-4" />
-                            </Button>
+                            </ModernButton>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent>
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
@@ -316,13 +318,13 @@ export const SuperAdminManagement: React.FC = () => {
                 <p className="text-gray-500 mb-6">
                   {searchTerm ? 'No centers match your search criteria' : 'Create your first center to get started'}
                 </p>
-                <Button 
+                <ModernButton 
                   onClick={() => setShowCreateForm(true)}
-                  className="bg-blue-600 hover:bg-blue-700"
+                  variant="solid"
+                  icon={Plus}
                 >
-                  <Plus className="w-4 h-4 mr-2" />
                   Create Center & Admin
-                </Button>
+                </ModernButton>
               </div>
             )}
           </div>
@@ -408,9 +410,9 @@ export const SuperAdminManagement: React.FC = () => {
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             <DropdownMenu>
                               <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="sm">
+                                <ModernButton variant="ghost" size="sm">
                                   <MoreHorizontal className="w-4 h-4" />
-                                </Button>
+                                </ModernButton>
                               </DropdownMenuTrigger>
                               <DropdownMenuContent>
                                 <DropdownMenuLabel>Actions</DropdownMenuLabel>

@@ -1,7 +1,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { BrutalistButton } from '@/components/ui/BrutalistButton';
+import { ModernButton } from '@/components/ui';
 import { Badge } from '@/components/ui/badge';
 import { useQuery } from '@tanstack/react-query';
 import { apiService, type PaymentFilters } from '@/services/api';
@@ -323,10 +323,9 @@ export const PaymentReports: React.FC<PaymentReportsProps> = ({
         </div>
         
         <div className="flex items-center gap-4 mt-4 lg:mt-0">
-          <BrutalistButton variant="outline" onClick={printReport}>
-            <Printer className="w-4 h-4 mr-2" />
+          <ModernButton variant="outline" icon={Printer} iconPosition="left" onClick={printReport}>
             Print
-          </BrutalistButton>
+          </ModernButton>
         </div>
       </div>
 
@@ -532,32 +531,35 @@ export const PaymentReports: React.FC<PaymentReportsProps> = ({
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <BrutalistButton
+            <ModernButton
               variant="outline"
               onClick={() => exportToCSV('summary')}
               className="flex items-center justify-center"
+              icon={Download}
+              iconPosition="left"
             >
-              <Download className="w-4 h-4 mr-2" />
               Export Summary CSV
-            </BrutalistButton>
+            </ModernButton>
 
-            <BrutalistButton
+            <ModernButton
               variant="outline"
               onClick={() => exportToCSV('payments')}
               className="flex items-center justify-center"
+              icon={Download}
+              iconPosition="left"
             >
-              <Download className="w-4 h-4 mr-2" />
               Export Payments CSV
-            </BrutalistButton>
+            </ModernButton>
 
-            <BrutalistButton
+            <ModernButton
               variant="outline"
               onClick={() => exportToCSV('monthly')}
               className="flex items-center justify-center"
+              icon={Download}
+              iconPosition="left"
             >
-              <Download className="w-4 h-4 mr-2" />
               Export Monthly CSV
-            </BrutalistButton>
+            </ModernButton>
           </div>
         </CardContent>
       </Card>

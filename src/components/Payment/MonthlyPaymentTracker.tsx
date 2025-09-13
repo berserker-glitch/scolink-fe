@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { BrutalistButton } from '@/components/ui/BrutalistButton';
+import { ModernButton } from '@/components/ui';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -238,10 +238,9 @@ export const MonthlyPaymentTracker: React.FC<MonthlyPaymentTrackerProps> = ({
             ))}
           </select>
           
-          <BrutalistButton variant="outline" onClick={handleRefresh}>
-            <RefreshCw className="w-4 h-4 mr-2" />
+          <ModernButton variant="outline" icon={RefreshCw} iconPosition="left" onClick={handleRefresh}>
             Refresh
-          </BrutalistButton>
+          </ModernButton>
         </div>
       </div>
 
@@ -398,21 +397,21 @@ export const MonthlyPaymentTracker: React.FC<MonthlyPaymentTrackerProps> = ({
                       </td>
                       <td className="p-4">
                         <div className="flex items-center gap-2">
-                          <BrutalistButton
+                          <ModernButton
                             variant="outline"
                             size="sm"
                             onClick={() => handleViewDetails({ student, status })}
                           >
                             View
-                          </BrutalistButton>
+                          </ModernButton>
                           {status.status !== 'paid' && (
-                            <BrutalistButton
-                              variant="primary"
+                            <ModernButton
+                              variant="solid"
                               size="sm"
                               onClick={() => handleRecordPayment(student)}
                             >
                               Pay
-                            </BrutalistButton>
+                            </ModernButton>
                           )}
                         </div>
                       </td>

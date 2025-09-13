@@ -7,7 +7,7 @@ import {
   SheetFooter
 } from '@/components/ui/sheet';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { BrutalistButton } from '@/components/ui/BrutalistButton';
+import { ModernButton } from '@/components/ui';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/badge';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -97,7 +97,7 @@ export const TeacherDetailDrawer: React.FC<TeacherDetailDrawerProps> = ({
                 </p>
               </div>
               <div className="flex items-center gap-2">
-                <BrutalistButton
+                <ModernButton
                   variant="danger"
                   size="sm"
                   onClick={handleDeleteTeacher}
@@ -105,7 +105,7 @@ export const TeacherDetailDrawer: React.FC<TeacherDetailDrawerProps> = ({
                 >
                   <Trash2 className="w-4 h-4 mr-1" />
                   Delete
-                </BrutalistButton>
+                </ModernButton>
               </div>
             </div>
           </SheetHeader>

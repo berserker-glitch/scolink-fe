@@ -1,7 +1,5 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { BrutalistButton } from '@/components/ui/BrutalistButton';
 import { getAnalytics } from '@/data/mockData';
 import { 
   Users, 
@@ -13,8 +11,18 @@ import {
   Plus,
   FileText,
   CalendarDays,
-  CheckCircle2
+  CheckCircle2,
+  UserCheck
 } from 'lucide-react';
+import {
+  StatCard,
+  PerformanceChart,
+  KnowledgeCard,
+  EventCalendar,
+  FinanceCard,
+  UpcomingEvents,
+  ModernButton
+} from '@/components/ui';
 
 export const Dashboard: React.FC = () => {
   const navigate = useNavigate();
@@ -103,144 +111,107 @@ export const Dashboard: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background p-6 lg:p-8">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50/30 p-6 lg:p-8">
       {/* Header */}
       <div className="mb-8">
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6">
+        <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-8">
           <div>
-            <h1 className="text-hero text-text-primary mb-2">Dashboard</h1>
-            <p className="text-body text-text-secondary">
-              Welcome back! Here's what's happening at your educational center today.
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Dashboard</h1>
+            <p className="text-gray-600 text-lg">
+              Hi, Habib! Welcome to Edu-Center Dashboard
             </p>
           </div>
           
-          {/* Live Clock */}
-          <div className="mt-4 lg:mt-0 text-right">
-            <div className="text-2xl font-bold text-text-primary font-mono">{timeString}</div>
-            <div className="text-caption text-text-secondary">{dateString}</div>
+          {/* Action Buttons */}
+          <div className="flex items-center space-x-3 mt-4 lg:mt-0">
+            <select className="px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500">
+              <option>Change Periode</option>
+              <option>This Week</option>
+              <option>This Month</option>
+              <option>This Year</option>
+            </select>
+            <ModernButton 
+              variant="solid" 
+              icon={Plus}
+              iconPosition="left"
+              onClick={() => navigate('/students')}
+            >
+              New Admission
+            </ModernButton>
           </div>
         </div>
       </div>
 
       {/* Analytics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 mb-8">
-        {analyticsCards.map((card, index) => (
-          <Card key={index} className="surface">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-micro text-text-muted mb-2">{card.title}</p>
-                  <p className="text-2xl font-bold text-text-primary">{card.value}</p>
-                  <p className="text-caption text-text-secondary mt-1">{card.description}</p>
-                </div>
-                <div className="p-3 bg-surface-secondary rounded-lg">
-                  <card.icon className="w-6 h-6 text-interactive" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <StatCard
+          title="Total Students"
+          value={analytics.totalStudents}
+          change="+8% than last month"
+          changeType="positive"
+          icon={Users}
+          iconBgColor="bg-blue-100"
+          iconColor="text-blue-600"
+        />
+
+        <StatCard
+          title="Total Teachers"
+          value={Math.floor(analytics.totalStudents / 12)}
+          change="+3% than last month"
+          changeType="positive"
+          icon={UserCheck}
+          iconBgColor="bg-green-100"
+          iconColor="text-green-600"
+        />
+
+        <StatCard
+          title="Events"
+          value={Math.floor(analytics.groupsToday * 49)}
+          change="+5% than last month"
+          changeType="positive"
+          icon={CalendarDays}
+          iconBgColor="bg-purple-100"
+          iconColor="text-purple-600"
+        />
+
+        <StatCard
+          title="Invoice Status"
+          value={Math.floor(analytics.totalStudents * 1.8)}
+          change="+12% than last month"
+          changeType="positive"
+          icon={FileText}
+          iconBgColor="bg-orange-100"
+          iconColor="text-orange-600"
+        />
       </div>
 
-      {/* Quick Actions */}
-      <Card className="surface mb-8">
-        <CardHeader>
-          <CardTitle>Quick Actions</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-wrap gap-4 justify-center">
-            {quickActions.map((action, index) => (
-              <BrutalistButton
-                key={index}
-                variant={action.variant}
-                className="flex items-center space-x-2"
-                onClick={action.onClick}
-              >
-                <action.icon className="w-4 h-4" />
-                <span>{action.label}</span>
-              </BrutalistButton>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+      {/* Main Content Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+        <PerformanceChart
+          studentsValue={analytics.attendanceRate}
+          teachersValue={2}
+          currentPeriod="January 2024"
+        />
 
-      {/* Recent Activity */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2">
-          <Card className="surface h-full">
-            <CardHeader>
-              <CardTitle>Recent Activity</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {recentActivities.map((activity, index) => (
-                  <div 
-                    key={index}
-                    className="flex items-start space-x-3 p-3 rounded-lg hover:bg-surface-hover transition-colors"
-                  >
-                    <div className="w-2 h-2 bg-interactive rounded-full mt-2 flex-shrink-0"></div>
-                    <p className="text-body text-text-secondary">{activity}</p>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+        <KnowledgeCard 
+          onButtonClick={() => navigate('/events')}
+        />
+      </div>
 
-        {/* Today's Summary */}
-        <div className="space-y-6">
-          <Card className="surface">
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Clock className="w-5 h-5" />
-                <span>Today's Summary</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex justify-between items-center">
-                <span className="text-body text-text-secondary">Groups Scheduled</span>
-                <span className="text-subheading font-semibold text-text-primary">
-                  {analytics.groupsToday}
-                </span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-body text-text-secondary">Students Present</span>
-                <span className="text-subheading font-semibold text-text-primary">
-                  {analytics.attendanceRate}%
-                </span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-body text-text-secondary">Payments Today</span>
-                <span className="text-subheading font-semibold text-text-primary">
-                  {analytics.newPaymentsThisMonth}
-                </span>
-              </div>
-            </CardContent>
-          </Card>
+      {/* Bottom Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
+        <EventCalendar />
 
-          <Card className="surface">
-            <CardHeader>
-              <CardTitle>System Status</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-body text-text-secondary">Database</span>
-                <div className="flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-status-success rounded-full"></div>
-                  <span className="text-caption text-status-success font-medium">Online</span>
-                </div>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-body text-text-secondary">Last Backup</span>
-                <span className="text-caption text-text-secondary">2 hours ago</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-body text-text-secondary">Active Users</span>
-                <span className="text-caption text-text-primary font-medium">3</span>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+        <FinanceCard 
+          data={{
+            income: analytics.monthlyRevenue,
+            expense: Math.floor(analytics.monthlyRevenue * 0.6)
+          }}
+        />
+
+        <UpcomingEvents 
+          onNewEvent={() => navigate('/events')}
+        />
       </div>
     </div>
   );

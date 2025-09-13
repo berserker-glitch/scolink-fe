@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { BrutalistButton } from '@/components/ui/BrutalistButton';
+import { ModernButton } from '@/components/ui';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -180,7 +180,7 @@ export const PaymentEditModal: React.FC<PaymentEditModalProps> = ({
           <div className="p-4 bg-surface rounded-lg">
             <h4 className="font-medium text-text-primary mb-2">Student</h4>
             <p className="text-text-secondary">
-              {payment.student?.firstName} {payment.student?.lastName}
+              {(payment as any).student?.firstName} {(payment as any).student?.lastName}
             </p>
           </div>
 
@@ -283,14 +283,14 @@ export const PaymentEditModal: React.FC<PaymentEditModalProps> = ({
             </label>
             <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
               <PopoverTrigger asChild>
-                <BrutalistButton
+                <ModernButton
                   variant="outline"
                   className="w-full justify-start text-left font-normal"
                   type="button"
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
                   {paymentDate ? format(paymentDate, 'PPP') : 'Select date'}
-                </BrutalistButton>
+                </ModernButton>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align="start">
                 <Calendar
@@ -320,24 +320,24 @@ export const PaymentEditModal: React.FC<PaymentEditModalProps> = ({
 
           {/* Actions */}
           <div className="flex items-center justify-end gap-4 pt-4 border-t border-border">
-            <BrutalistButton
+            <ModernButton
               type="button"
               variant="outline"
               onClick={onClose}
               disabled={updatePaymentMutation.isPending}
             >
               Cancel
-            </BrutalistButton>
-            <BrutalistButton
+            </ModernButton>
+            <ModernButton
               type="submit"
-              variant="primary"
+              variant="solid"
               disabled={updatePaymentMutation.isPending}
             >
               {updatePaymentMutation.isPending && (
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
               )}
               Update Payment
-            </BrutalistButton>
+            </ModernButton>
           </div>
         </form>
       </DialogContent>

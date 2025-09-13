@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { BrutalistButton } from '@/components/ui/BrutalistButton';
+import { ModernButton } from '@/components/ui';
 import { Modal } from '@/components/ui/Modal';
 import { FormField, Input, Select } from '@/components/ui/FormField';
 import { SubjectDetailDrawer } from '@/components/Subject/SubjectDetailDrawer';
@@ -252,6 +252,7 @@ export const SubjectsGroups: React.FC = () => {
 
     const subjectData = {
       name: subjectForm.name,
+      code: subjectForm.name.substring(0, 3).toUpperCase() + Math.random().toString(36).substr(2, 3).toUpperCase(),
       monthlyFee: parseFloat(subjectForm.monthlyFee),
       yearId: subjectForm.yearId,
       fieldId: subjectForm.fieldId,
@@ -316,20 +317,22 @@ export const SubjectsGroups: React.FC = () => {
         </div>
         
         <div className="flex items-center space-x-4 mt-4 lg:mt-0">
-          <BrutalistButton 
+          <ModernButton 
             variant="outline" 
+            icon={Plus}
+            iconPosition="left"
             onClick={() => setIsAddGroupOpen(true)}
           >
-            <Plus className="w-4 h-4 mr-2" />
             Add Group
-          </BrutalistButton>
-          <BrutalistButton 
-            variant="primary" 
+          </ModernButton>
+          <ModernButton 
+            variant="solid" 
+            icon={Plus}
+            iconPosition="left"
             onClick={() => setIsAddSubjectOpen(true)}
           >
-            <Plus className="w-4 h-4 mr-2" />
             Add Subject
-          </BrutalistButton>
+          </ModernButton>
         </div>
       </div>
 
@@ -393,16 +396,16 @@ export const SubjectsGroups: React.FC = () => {
                       </div>
                     </div>
                   <div className="flex items-center space-x-2">
-                    <BrutalistButton 
+                    <ModernButton 
                       variant="outline" 
                       size="sm"
+                      icon={Eye}
                       onClick={() => openSubjectDrawer(subject)}
-                    >
-                      <Eye className="w-4 h-4" />
-                    </BrutalistButton>
-                    <BrutalistButton 
+                    />
+                    <ModernButton 
                       variant="outline" 
                       size="sm"
+                      icon={Edit}
                       onClick={() => {
       setSubjectForm({
         name: subject.name,
@@ -414,23 +417,22 @@ export const SubjectsGroups: React.FC = () => {
                         setEditingSubjectId(subject.id);
                         setIsAddSubjectOpen(true);
                       }}
-                    >
-                      <Edit className="w-4 h-4" />
-                    </BrutalistButton>
-                    <BrutalistButton 
+                    />
+                    <ModernButton 
                       variant="outline" 
                       size="sm"
+                      icon={Trash2}
                       onClick={() => {
                         if (confirm('Are you sure you want to delete this subject? This will also delete all associated groups.')) {
                           deleteSubjectMutation.mutate({ id: subject.id, cascade: true });
                         }
                       }}
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </BrutalistButton>
-                    <BrutalistButton 
+                    />
+                    <ModernButton 
                       variant="outline" 
                       size="sm"
+                      icon={Plus}
+                      iconPosition="left"
                       onClick={() => {
                         setGroupForm(prev => ({ ...prev, subjectId: subject.id }));
                         setIsEditMode(false);
@@ -438,9 +440,8 @@ export const SubjectsGroups: React.FC = () => {
                         setIsAddGroupOpen(true);
                       }}
                     >
-                      <Plus className="w-4 h-4 mr-1" />
                       Add Group
-                    </BrutalistButton>
+                    </ModernButton>
                   </div>
                 </div>
               </CardHeader>
@@ -461,12 +462,12 @@ export const SubjectsGroups: React.FC = () => {
                           <CardContent className="p-4">
                             <div className="flex items-start justify-between mb-3">
                               <h4 className="font-medium text-text-primary">{group.name}</h4>
-                              <button 
-                                className="p-1 rounded hover:bg-surface-hover"
+                              <ModernButton
+                                variant="ghost"
+                                size="sm"
+                                icon={Eye}
                                 onClick={() => openGroupDrawer(group)}
-                              >
-                                <Eye className="w-4 h-4 text-text-muted" />
-                              </button>
+                              />
                             </div>
                             
                             <div className="space-y-2 text-caption text-text-secondary">
@@ -500,10 +501,12 @@ export const SubjectsGroups: React.FC = () => {
                             </div>
                             
                             <div className="flex items-center space-x-2 mt-4">
-                              <BrutalistButton 
+                              <ModernButton 
                                 variant="outline" 
                                 size="sm" 
                                 className="flex-1"
+                                icon={Edit}
+                                iconPosition="left"
                                 onClick={() => {
                                   setGroupForm({
                                     subjectId: group.subjectId,
@@ -518,20 +521,18 @@ export const SubjectsGroups: React.FC = () => {
                                   setIsAddGroupOpen(true);
                                 }}
                               >
-                                <Edit className="w-3 h-3 mr-1" />
                                 Edit
-                              </BrutalistButton>
-                              <BrutalistButton 
+                              </ModernButton>
+                              <ModernButton 
                                 variant="outline" 
                                 size="sm"
+                                icon={Trash2}
                                 onClick={() => {
                                   if (confirm('Are you sure you want to delete this group?')) {
                                     deleteGroupMutation.mutate(group.id);
                                   }
                                 }}
-                              >
-                                <Trash2 className="w-3 h-3" />
-                              </BrutalistButton>
+                              />
                             </div>
                           </CardContent>
                         </Card>
@@ -608,15 +609,15 @@ export const SubjectsGroups: React.FC = () => {
           </div>
           
           <div className="flex items-center space-x-4 pt-4">
-            <BrutalistButton 
+            <ModernButton 
               variant="outline" 
               className="flex-1"
               onClick={() => setIsAddSubjectOpen(false)}
             >
               Cancel
-            </BrutalistButton>
-            <BrutalistButton 
-              variant="primary" 
+            </ModernButton>
+            <ModernButton 
+              variant="solid" 
               className="flex-1"
               onClick={handleSaveSubject}
               disabled={createSubjectMutation.isPending || updateSubjectMutation.isPending}
@@ -625,7 +626,7 @@ export const SubjectsGroups: React.FC = () => {
                 ? (isEditSubjectMode ? 'Updating...' : 'Saving...') 
                 : (isEditSubjectMode ? 'Update Subject' : 'Save Subject')
               }
-            </BrutalistButton>
+            </ModernButton>
           </div>
         </div>
       </Modal>
@@ -721,17 +722,18 @@ export const SubjectsGroups: React.FC = () => {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <label className="text-sm font-medium text-text-secondary">Schedule</label>
-              <BrutalistButton
+              <ModernButton
                 variant="outline"
                 size="sm"
+                icon={Plus}
+                iconPosition="left"
                 onClick={() => setGroupForm(prev => ({
                   ...prev,
                   schedules: [...prev.schedules, { day: 'Monday', startTime: '08:00', endTime: '10:00' }]
                 }))}
               >
-                <Plus className="w-4 h-4 mr-2" />
                 Add Day
-              </BrutalistButton>
+              </ModernButton>
             </div>
             
             {groupForm.schedules.map((schedule, index) => (
@@ -777,17 +779,16 @@ export const SubjectsGroups: React.FC = () => {
             
             <div className="flex items-end">
               {groupForm.schedules.length > 1 && (
-                <BrutalistButton
+                <ModernButton
                   variant="outline"
                   size="sm"
+                  icon={Trash2}
                   onClick={() => setGroupForm(prev => ({
                     ...prev,
                     schedules: prev.schedules.filter((_, i) => i !== index)
                   }))}
                   className="w-full"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </BrutalistButton>
+                />
               )}
             </div>
             </div>
@@ -911,26 +912,26 @@ export const SubjectsGroups: React.FC = () => {
 
           {/* Navigation Buttons */}
           <div className="flex items-center space-x-4 pt-4 border-t border-border">
-            <BrutalistButton 
+            <ModernButton 
               variant="outline" 
               className="flex-1"
               onClick={() => setIsAddGroupOpen(false)}
             >
               Cancel
-            </BrutalistButton>
+            </ModernButton>
             
             {groupFormStep === 2 && (
-              <BrutalistButton
+              <ModernButton
                 variant="outline"
                 className="flex-1"
                 onClick={handlePreviousStep}
               >
                 Previous
-              </BrutalistButton>
+              </ModernButton>
             )}
             
-            <BrutalistButton 
-              variant="primary" 
+            <ModernButton 
+              variant="solid" 
               className="flex-1"
               onClick={groupFormStep === 1 ? handleNextStep : handleSaveGroup}
               disabled={
@@ -944,7 +945,7 @@ export const SubjectsGroups: React.FC = () => {
                   ? (isEditMode ? 'Updating...' : 'Creating...')
                   : (isEditMode ? 'Update Group' : 'Create Group')
               }
-            </BrutalistButton>
+            </ModernButton>
           </div>
         </div>
       </Modal>

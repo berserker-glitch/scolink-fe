@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { BrutalistButton } from '@/components/ui/BrutalistButton';
+import { ModernButton } from '@/components/ui';
 import { Modal } from '@/components/ui/Modal';
 import { GroupDetailDrawer } from '@/components/Subject/GroupDetailDrawer';
 import { useQuery } from '@tanstack/react-query';
@@ -225,10 +225,9 @@ export const Schedule: React.FC = () => {
         </div>
         
         <div className="flex items-center space-x-4 mt-4 lg:mt-0">
-          <BrutalistButton variant="primary">
-            <Download className="w-4 h-4 mr-2" />
+          <ModernButton variant="solid" icon={Download} iconPosition="left">
             Export Schedule
-          </BrutalistButton>
+          </ModernButton>
         </div>
       </div>
 
@@ -248,9 +247,9 @@ export const Schedule: React.FC = () => {
                 const isToday = new Date().toLocaleDateString('en-US', { weekday: 'long' }) === day;
                 
                 return (
-                  <BrutalistButton
+                  <ModernButton
                     key={day}
-                    variant={selectedDay === day ? 'primary' : 'outline'}
+                    variant={selectedDay === day ? 'solid' : 'outline'}
                     size="lg"
                     onClick={() => setSelectedDay(day)}
                     className="w-full justify-start text-left py-4"
@@ -261,7 +260,7 @@ export const Schedule: React.FC = () => {
                         <div className="w-2.5 h-2.5 bg-status-success rounded-full" />
                       )}
                     </div>
-                  </BrutalistButton>
+                  </ModernButton>
                 );
               })}
             </div>
@@ -391,23 +390,23 @@ export const Schedule: React.FC = () => {
                                 </div>
                                 
                                 <div className="flex items-center space-x-2">
-                                  <BrutalistButton 
-                                    variant="primary" 
+                                  <ModernButton 
+                                    variant="solid" 
                                     size="sm"
+                                    icon={CheckCircle2}
+                                    iconPosition="left"
                                     onClick={() => handleOpenGroupDrawer(group)}
                                     className="flex-1"
                                   >
-                                    <CheckCircle2 className="w-4 h-4 mr-2" />
                                     Take Attendance
-                                  </BrutalistButton>
-                                  <BrutalistButton 
+                                  </ModernButton>
+                                  <ModernButton 
                                     variant="outline" 
                                     size="sm"
+                                    icon={Download}
                                     onClick={() => generateAttendancePDF(group)}
                                     title="Download attendance sheet"
-                                  >
-                                    <Download className="w-4 h-4" />
-                                  </BrutalistButton>
+                                  />
                                 </div>
                               </CardContent>
                             </Card>
@@ -550,20 +549,20 @@ export const Schedule: React.FC = () => {
 
             {/* Actions */}
             <div className="flex items-center space-x-4">
-              <BrutalistButton
+              <ModernButton
                 variant="outline"
                 className="flex-1"
                 onClick={() => setIsAttendanceOpen(false)}
               >
                 Cancel
-              </BrutalistButton>
-              <BrutalistButton
-                variant="primary"
+              </ModernButton>
+              <ModernButton
+                variant="solid"
                 className="flex-1"
                 onClick={handleSaveAttendance}
               >
                 Save Attendance
-              </BrutalistButton>
+              </ModernButton>
             </div>
           </div>
         )}

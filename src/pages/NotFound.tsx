@@ -1,6 +1,6 @@
 import { useLocation, Link } from "react-router-dom";
 import { useEffect } from "react";
-import { BrutalistButton } from "@/components/ui/BrutalistButton";
+import { ModernButton } from "@/components/ui";
 import { Home, AlertCircle } from "lucide-react";
 
 const NotFound = () => {
@@ -26,10 +26,9 @@ const NotFound = () => {
         </div>
         
         <Link to="/">
-          <BrutalistButton variant="primary" size="lg">
-            <Home className="w-4 h-4 mr-2" />
+          <ModernButton variant="solid" size="lg" icon={Home} iconPosition="left">
             Return to Dashboard
-          </BrutalistButton>
+          </ModernButton>
         </Link>
       </div>
     </div>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { BrutalistButton } from '@/components/ui/BrutalistButton';
+import { ModernButton } from '@/components/ui';
 import { Modal } from '@/components/ui/Modal';
 import { FormField, Input, Select, Textarea } from '@/components/ui/FormField';
 import { EventDetailDrawer } from '@/components/Event/EventDetailDrawer';
@@ -421,13 +421,14 @@ export const Events: React.FC = () => {
           </p>
         </div>
         
-        <BrutalistButton 
-          variant="primary"
+        <ModernButton 
+          variant="solid"
+          icon={Plus}
+          iconPosition="left"
           onClick={() => setIsAddEventOpen(true)}
         >
-          <Plus className="w-4 h-4 mr-2" />
           Create Event
-        </BrutalistButton>
+        </ModernButton>
       </div>
 
       {/* Filters */}
@@ -518,15 +519,15 @@ export const Events: React.FC = () => {
                       )}
                     </div>
                   </div>
-                  <button 
-                    className="p-2 rounded-md hover:bg-surface-secondary text-text-secondary hover:text-text-primary"
+                  <ModernButton
+                    variant="ghost"
+                    size="sm"
+                    icon={Eye}
                     onClick={(e) => {
                       e.stopPropagation();
                       handleViewEvent(event);
                     }}
-                  >
-                    <Eye className="w-4 h-4" />
-                  </button>
+                  />
                 </div>
 
                 {/* Event Details */}
@@ -563,40 +564,39 @@ export const Events: React.FC = () => {
 
                 {/* Actions */}
                 <div className="flex items-center space-x-2">
-                  <BrutalistButton 
+                  <ModernButton 
                     variant="outline" 
                     size="sm" 
                     className="flex-1"
+                    icon={Printer}
+                    iconPosition="left"
                     onClick={(e) => {
                       e.stopPropagation();
                       handlePrintStudentList(event);
                     }}
                   >
-                    <Printer className="w-3 h-3 mr-1" />
                     Print Student List
-                  </BrutalistButton>
-                  <BrutalistButton 
+                  </ModernButton>
+                  <ModernButton 
                     variant="outline" 
                     size="sm"
+                    icon={Edit}
                     onClick={(e) => {
                       e.stopPropagation();
                       handleEditEvent(event);
                     }}
-                  >
-                    <Edit className="w-3 h-3" />
-                  </BrutalistButton>
-                  <BrutalistButton 
+                  />
+                  <ModernButton 
                     variant="outline" 
                     size="sm"
+                    icon={Trash2}
                     onClick={(e) => {
                       e.stopPropagation();
                       if (confirm('Are you sure you want to delete this event? This action cannot be undone.')) {
                         deleteEventMutation.mutate(event.id);
                       }
                     }}
-                  >
-                    <Trash2 className="w-3 h-3" />
-                  </BrutalistButton>
+                  />
                 </div>
               </CardContent>
             </Card>
@@ -678,14 +678,15 @@ export const Events: React.FC = () => {
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <label className="text-sm font-medium text-text-secondary">Event Schedule</label>
-                  <BrutalistButton
+                  <ModernButton
                     variant="outline"
                     size="sm"
+                    icon={Plus}
+                    iconPosition="left"
                     onClick={() => setIsDatePickerOpen(true)}
                   >
-                    <Plus className="w-4 h-4 mr-2" />
                     Add Day
-                  </BrutalistButton>
+                  </ModernButton>
                 </div>
                 
                 {eventForm.selectedDays.length === 0 ? (
@@ -724,13 +725,12 @@ export const Events: React.FC = () => {
                           />
                         </div>
                         
-                        <BrutalistButton
+                        <ModernButton
                           variant="outline"
                           size="sm"
+                          icon={Trash2}
                           onClick={() => handleRemoveDay(index)}
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </BrutalistButton>
+                        />
                       </div>
                     ))}
                   </div>
@@ -837,26 +837,26 @@ export const Events: React.FC = () => {
 
           {/* Navigation Buttons */}
           <div className="flex items-center space-x-4 pt-4 border-t border-border">
-            <BrutalistButton
+            <ModernButton
               variant="outline"
               className="flex-1"
               onClick={() => setIsAddEventOpen(false)}
             >
               Cancel
-            </BrutalistButton>
+            </ModernButton>
             
             {currentStep === 2 && (
-              <BrutalistButton
+              <ModernButton
                 variant="outline"
                 className="flex-1"
                 onClick={handlePreviousStep}
               >
                 Previous
-              </BrutalistButton>
+              </ModernButton>
             )}
             
-            <BrutalistButton
-              variant="primary"
+            <ModernButton
+              variant="solid"
               className="flex-1"
               onClick={handleNextStep}
               disabled={!canProceedToNextStep()}
@@ -865,7 +865,7 @@ export const Events: React.FC = () => {
                 ? 'Next' 
                 : 'Create Event'
               }
-            </BrutalistButton>
+            </ModernButton>
           </div>
         </div>
       </Modal>
@@ -938,12 +938,12 @@ export const Events: React.FC = () => {
           </div>
           
           <div className="flex items-center justify-end gap-2 pt-4 border-t border-border">
-            <BrutalistButton
+            <ModernButton
               variant="outline"
               onClick={() => setIsDatePickerOpen(false)}
             >
               Cancel
-            </BrutalistButton>
+            </ModernButton>
           </div>
         </div>
       </Modal>
@@ -1019,14 +1019,15 @@ export const Events: React.FC = () => {
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <label className="text-sm font-medium text-text-secondary">Event Schedule</label>
-                  <BrutalistButton
+                  <ModernButton
                     variant="outline"
                     size="sm"
+                    icon={Plus}
+                    iconPosition="left"
                     onClick={() => setIsDatePickerOpen(true)}
                   >
-                    <Plus className="w-4 h-4 mr-2" />
                     Add Day
-                  </BrutalistButton>
+                  </ModernButton>
                 </div>
                 
                 {eventForm.selectedDays.length === 0 ? (
@@ -1065,13 +1066,12 @@ export const Events: React.FC = () => {
                           />
                         </div>
                         
-                        <BrutalistButton
+                        <ModernButton
                           variant="outline"
                           size="sm"
+                          icon={Trash2}
                           onClick={() => handleRemoveDay(index)}
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </BrutalistButton>
+                        />
                       </div>
                     ))}
                   </div>
@@ -1178,7 +1178,7 @@ export const Events: React.FC = () => {
 
           {/* Navigation Buttons */}
           <div className="flex items-center space-x-4 pt-4 border-t border-border">
-            <BrutalistButton
+            <ModernButton
               variant="outline"
               className="flex-1"
               onClick={() => {
@@ -1187,20 +1187,20 @@ export const Events: React.FC = () => {
               }}
             >
               Cancel
-            </BrutalistButton>
+            </ModernButton>
             
             {currentStep === 2 && (
-              <BrutalistButton
+              <ModernButton
                 variant="outline"
                 className="flex-1"
                 onClick={handlePreviousStep}
               >
                 Previous
-              </BrutalistButton>
+              </ModernButton>
             )}
             
-            <BrutalistButton
-              variant="primary"
+            <ModernButton
+              variant="solid"
               className="flex-1"
               onClick={currentStep === 1 && editingEvent?.type === 'TempAdditionalCourseDay' 
                 ? () => setCurrentStep(2)
@@ -1212,7 +1212,7 @@ export const Events: React.FC = () => {
                 ? 'Manage Groups' 
                 : 'Update Event'
               }
-            </BrutalistButton>
+            </ModernButton>
           </div>
         </div>
       </Modal>

@@ -50,22 +50,28 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, isDark, onThe
       
       {/* Sidebar */}
       <div className={`
-        fixed left-0 top-0 h-screen w-64 bg-surface border-r border-border transform transition-transform duration-300 ease-in-out z-50 flex flex-col
+        fixed left-0 top-0 h-screen w-64 sidebar-bg border-r border-purple-400/20 transform transition-transform duration-300 ease-in-out z-50 flex flex-col shadow-xl
         ${isOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0
       `}>
         {/* Header */}
-        <div className="flex items-center justify-between h-16 px-6 border-b border-border">
-          <h1 className="text-heading font-bold text-text-primary">EduCenter</h1>
+        <div className="flex items-center justify-between h-20 px-6 border-b border-white/10">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+              <BookOpen className="w-6 h-6 sidebar-text" />
+            </div>
+            <h1 className="text-xl font-bold sidebar-text">Edu-Center</h1>
+          </div>
           <button
             onClick={onClose}
-            className="lg:hidden p-2 rounded-md hover:bg-surface-hover focus-brutalist"
+            className="lg:hidden p-2 rounded-md hover:bg-white/10 focus-brutalist"
           >
-            <X className="w-5 h-5" />
+            <X className="w-5 h-5 sidebar-text" />
           </button>
         </div>
         
         {/* Navigation */}
-        <nav className="flex-1 px-4 py-6">
+        <nav className="flex-1 px-6 py-8">
+          <p className="text-xs font-semibold sidebar-text-secondary uppercase tracking-wider mb-6">Main Menu</p>
           <div className="space-y-2">
             {navigation.map((item) => (
               <NavLink
@@ -73,15 +79,15 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, isDark, onThe
                 to={item.href}
                 end={item.href === '/'}
                 className={({ isActive }) =>
-                  `flex items-center px-4 py-3 rounded-lg transition-colors duration-150 ${
+                  `flex items-center px-4 py-3 rounded-xl transition-all duration-200 group ${
                     isActive
-                      ? 'bg-interactive text-background font-medium'
-                      : 'text-text-secondary hover:bg-surface-hover hover:text-text-primary'
+                      ? 'bg-white/20 sidebar-text font-semibold backdrop-blur-sm'
+                      : 'sidebar-text-secondary hover:bg-white/10 hover:sidebar-text'
                   }`
                 }
                 onClick={() => window.innerWidth < 1024 && onClose()}
               >
-                <item.icon className="w-5 h-5 mr-3" />
+                <item.icon className="w-5 h-5 mr-4" />
                 <span className="font-medium">{item.name}</span>
               </NavLink>
             ))}
@@ -89,38 +95,35 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, isDark, onThe
         </nav>
         
         {/* Footer */}
-        <div className="p-4 border-t border-border space-y-2">
+        <div className="p-6 border-t border-white/10 space-y-4">
+          {/* User Info */}
+          {user && (
+            <div className="flex items-center space-x-3 p-3 bg-white/10 rounded-xl">
+              <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                <span className="text-sm font-semibold sidebar-text">
+                  {user.fullName?.split(' ').map(n => n[0]).join('').toUpperCase() || 'U'}
+                </span>
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium sidebar-text truncate">{user.fullName}</p>
+                <p className="text-xs sidebar-text-secondary truncate">{user.email}</p>
+              </div>
+            </div>
+          )}
+          
           {/* Theme Toggle */}
           <button
             onClick={onThemeToggle}
-            className="flex items-center w-full px-4 py-3 text-text-secondary hover:bg-surface-hover hover:text-text-primary rounded-lg transition-colors duration-150"
+            className="flex items-center w-full px-4 py-3 sidebar-text-secondary hover:bg-white/10 hover:sidebar-text rounded-xl transition-all duration-200"
           >
             {isDark ? <Sun className="w-5 h-5 mr-3" /> : <Moon className="w-5 h-5 mr-3" />}
             <span className="font-medium">{isDark ? 'Light Mode' : 'Dark Mode'}</span>
           </button>
           
-          {/* Language Selector */}
-          <div className="flex items-center px-4 py-3 text-text-secondary">
-            <Globe className="w-5 h-5 mr-3" />
-            <select className="bg-transparent border-none outline-none font-medium focus-brutalist">
-              <option value="en">English</option>
-              <option value="ar">العربية</option>
-              <option value="fr">Français</option>
-            </select>
-          </div>
-          
-          {/* User Info */}
-          {user && (
-            <div className="px-4 py-2 text-sm text-text-secondary border-b border-border mb-2">
-              <p className="font-medium text-text-primary">{user.name}</p>
-              <p className="text-xs">{user.email}</p>
-            </div>
-          )}
-          
           {/* Logout */}
           <button 
             onClick={logout}
-            className="flex items-center w-full px-4 py-3 text-text-secondary hover:bg-surface-hover hover:text-text-primary rounded-lg transition-colors duration-150"
+            className="flex items-center w-full px-4 py-3 sidebar-text-secondary hover:bg-white/10 hover:sidebar-text rounded-xl transition-all duration-200"
           >
             <LogOut className="w-5 h-5 mr-3" />
             <span className="font-medium">Logout</span>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { BrutalistButton } from '@/components/ui/BrutalistButton';
+import { ModernButton } from '@/components/ui';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -362,13 +362,12 @@ export const PaymentRecordModal: React.FC<PaymentRecordModalProps> = ({
                       max={totalAmount}
                     />
                     <span className="text-sm text-text-secondary">DH</span>
-                    <BrutalistButton
+                    <ModernButton
                       variant="outline"
                       size="sm"
+                      icon={Calculator}
                       onClick={() => setPaidAmount(totalAmount)}
-                    >
-                      <Calculator className="w-4 h-4" />
-                    </BrutalistButton>
+                    />
                   </div>
                 </FormField>
               </div>
@@ -442,25 +441,25 @@ export const PaymentRecordModal: React.FC<PaymentRecordModalProps> = ({
 
         {/* Footer Actions */}
         <div className="flex items-center justify-between gap-3 pt-6 border-t border-border">
-          <BrutalistButton 
+          <ModernButton 
             variant="outline"
             onClick={handleReset}
             disabled={isProcessing}
           >
             Reset
-          </BrutalistButton>
+          </ModernButton>
           
           <div className="flex gap-3">
-            <BrutalistButton 
+            <ModernButton 
               variant="outline" 
               onClick={onClose}
               disabled={isProcessing}
             >
               Cancel
-            </BrutalistButton>
+            </ModernButton>
             
-            <BrutalistButton 
-              variant="primary" 
+            <ModernButton 
+              variant="solid" 
               onClick={handleRecordPayment}
               disabled={!isPaymentValid || isProcessing}
               className="min-w-[120px]"
@@ -476,7 +475,7 @@ export const PaymentRecordModal: React.FC<PaymentRecordModalProps> = ({
                   Record Payment
                 </>
               )}
-            </BrutalistButton>
+            </ModernButton>
           </div>
         </div>
       </DialogContent>

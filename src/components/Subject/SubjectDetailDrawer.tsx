@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetFooter } from '@/components/ui/sheet';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { BrutalistButton } from '@/components/ui/BrutalistButton';
+import { ModernButton } from '@/components/ui';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { FormField, Input, Select } from '@/components/ui/FormField';
@@ -274,7 +274,7 @@ export const SubjectDetailDrawer: React.FC<SubjectDetailDrawerProps> = ({
               </p>
             </div>
             <div className="flex items-center gap-2">
-              <BrutalistButton
+              <ModernButton
                 variant="danger"
                 size="sm"
                 onClick={() => {
@@ -286,7 +286,7 @@ export const SubjectDetailDrawer: React.FC<SubjectDetailDrawerProps> = ({
               >
                 <Trash2 className="w-4 h-4 mr-1" />
                 {deleteSubjectMutation.isPending ? 'Deleting...' : 'Delete'}
-              </BrutalistButton>
+              </ModernButton>
             </div>
           </div>
         </SheetHeader>
@@ -333,15 +333,15 @@ export const SubjectDetailDrawer: React.FC<SubjectDetailDrawerProps> = ({
           {/* Groups Section */}
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-text-primary">Groups ({groupsLoading ? '...' : subjectGroups.length})</h3>
-            <BrutalistButton 
-              variant="primary" 
+            <ModernButton 
+              variant="solid" 
               size="sm"
               onClick={() => setIsAddGroupOpen(true)}
               disabled={groupsLoading}
             >
               <Plus className="w-4 h-4 mr-2" />
               Add Group
-            </BrutalistButton>
+            </ModernButton>
           </div>
 
           {groupsLoading ? (
@@ -370,21 +370,21 @@ export const SubjectDetailDrawer: React.FC<SubjectDetailDrawerProps> = ({
                       <div className="flex items-start justify-between mb-3">
                         <h4 className="font-medium text-text-primary">{group.name}</h4>
                         <div className="flex items-center gap-2">
-                          <BrutalistButton 
+                          <ModernButton 
                             variant="outline" 
                             size="sm"
                             onClick={() => openEditGroup(group)}
                           >
                             <Edit className="w-3 h-3 mr-1" />
                             Edit
-                          </BrutalistButton>
-                          <BrutalistButton 
+                          </ModernButton>
+                          <ModernButton 
                             variant="outline" 
                             size="sm"
                             onClick={() => handleDeleteGroup(group.id)}
                           >
                             <Trash2 className="w-3 h-3" />
-                          </BrutalistButton>
+                          </ModernButton>
                         </div>
                       </div>
                       
@@ -493,7 +493,7 @@ export const SubjectDetailDrawer: React.FC<SubjectDetailDrawerProps> = ({
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
                       <label className="text-sm font-medium text-text-secondary">Schedules</label>
-                      <BrutalistButton
+                      <ModernButton
                         variant="outline"
                         size="sm"
                         onClick={() => setGroupForm(prev => ({
@@ -503,7 +503,7 @@ export const SubjectDetailDrawer: React.FC<SubjectDetailDrawerProps> = ({
                       >
                         <Plus className="w-4 h-4 mr-1" />
                         Add Day
-                      </BrutalistButton>
+                      </ModernButton>
                     </div>
                     
                     {groupForm.schedules.map((schedule, index) => (
@@ -548,7 +548,7 @@ export const SubjectDetailDrawer: React.FC<SubjectDetailDrawerProps> = ({
                         </FormField>
                         
                         {groupForm.schedules.length > 1 && (
-                          <BrutalistButton
+                          <ModernButton
                             variant="outline"
                             size="sm"
                             onClick={() => setGroupForm(prev => ({
@@ -557,7 +557,7 @@ export const SubjectDetailDrawer: React.FC<SubjectDetailDrawerProps> = ({
                             }))}
                           >
                             <X className="w-4 h-4" />
-                          </BrutalistButton>
+                          </ModernButton>
                         )}
                       </div>
                     ))}
@@ -680,32 +680,32 @@ export const SubjectDetailDrawer: React.FC<SubjectDetailDrawerProps> = ({
 
               {/* Navigation Buttons */}
               <div className="flex items-center space-x-4 pt-4 border-t border-border">
-                <BrutalistButton
+                <ModernButton
                   variant="outline"
                   className="flex-1"
                   onClick={() => setIsAddGroupOpen(false)}
                 >
                   Cancel
-                </BrutalistButton>
+                </ModernButton>
                 
                 {groupFormStep === 2 && (
-                  <BrutalistButton
+                  <ModernButton
                     variant="outline"
                     className="flex-1"
                     onClick={handlePreviousStep}
                   >
                     Previous
-                  </BrutalistButton>
+                  </ModernButton>
                 )}
                 
-                <BrutalistButton
-                  variant="primary"
+                <ModernButton
+                  variant="solid"
                   className="flex-1"
                   onClick={groupFormStep === 1 ? handleNextStep : handleSaveGroup}
                   disabled={groupFormStep === 1 && !canProceedToNextStep()}
                 >
                   {groupFormStep === 1 ? 'Next' : 'Create Group'}
-                </BrutalistButton>
+                </ModernButton>
               </div>
             </div>
           </DialogContent>
@@ -751,7 +751,7 @@ export const SubjectDetailDrawer: React.FC<SubjectDetailDrawerProps> = ({
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <label className="text-sm font-medium text-text-secondary">Schedules</label>
-                  <BrutalistButton
+                  <ModernButton
                     variant="outline"
                     size="sm"
                     onClick={() => setGroupForm(prev => ({
@@ -761,7 +761,7 @@ export const SubjectDetailDrawer: React.FC<SubjectDetailDrawerProps> = ({
                   >
                     <Plus className="w-4 h-4 mr-1" />
                     Add Day
-                  </BrutalistButton>
+                  </ModernButton>
                 </div>
                 
                 {groupForm.schedules.map((schedule, index) => (
@@ -806,7 +806,7 @@ export const SubjectDetailDrawer: React.FC<SubjectDetailDrawerProps> = ({
                     </FormField>
                     
                     {groupForm.schedules.length > 1 && (
-                      <BrutalistButton
+                      <ModernButton
                         variant="outline"
                         size="sm"
                         onClick={() => setGroupForm(prev => ({
@@ -815,7 +815,7 @@ export const SubjectDetailDrawer: React.FC<SubjectDetailDrawerProps> = ({
                         }))}
                       >
                         <X className="w-4 h-4" />
-                      </BrutalistButton>
+                      </ModernButton>
                     )}
                   </div>
                 ))}
@@ -833,18 +833,18 @@ export const SubjectDetailDrawer: React.FC<SubjectDetailDrawerProps> = ({
               </FormField>
               
               <div className="flex items-center justify-end gap-2 pt-4 border-t border-border">
-                <BrutalistButton 
+                <ModernButton 
                   variant="outline" 
                   onClick={() => setIsEditGroupOpen(false)}
                 >
                   Cancel
-                </BrutalistButton>
-                <BrutalistButton 
-                  variant="primary" 
+                </ModernButton>
+                <ModernButton 
+                  variant="solid" 
                   onClick={handleEditGroup}
                 >
                   Update Group
-                </BrutalistButton>
+                </ModernButton>
               </div>
             </div>
           </DialogContent>

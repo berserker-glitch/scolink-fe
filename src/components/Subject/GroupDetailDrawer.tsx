@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { BrutalistButton } from '@/components/ui/BrutalistButton';
+import { ModernButton } from '@/components/ui';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useToast } from '@/hooks/use-toast';
 import { apiService, Group, Subject, Teacher } from '@/services/api';
@@ -178,14 +178,14 @@ export const GroupDetailDrawer: React.FC<GroupDetailDrawerProps> = ({
               </p>
             </div>
             <div className="flex items-center gap-2">
-              <BrutalistButton
+              <ModernButton
                 variant="danger"
                 size="sm"
                 onClick={handleDeleteGroup}
               >
                 <Trash2 className="w-4 h-4 mr-1" />
                 Delete
-              </BrutalistButton>
+              </ModernButton>
             </div>
           </div>
         </SheetHeader>
@@ -371,7 +371,7 @@ export const GroupDetailDrawer: React.FC<GroupDetailDrawerProps> = ({
               {/* Attendance Actions - Only show in takeAttendance mode */}
               {effectiveMode === 'takeAttendance' && students.length > 0 && (
                 <div className="flex items-center space-x-4 flex-shrink-0">
-                  <BrutalistButton
+                  <ModernButton
                     variant="outline"
                     className="flex-1"
                     onClick={() => {
@@ -384,9 +384,9 @@ export const GroupDetailDrawer: React.FC<GroupDetailDrawerProps> = ({
                     }}
                   >
                     Mark All Present
-                  </BrutalistButton>
-                  <BrutalistButton
-                    variant="primary"
+                  </ModernButton>
+                  <ModernButton
+                    variant="solid"
                     className="flex-1"
                     onClick={async () => {
                       try {
@@ -411,7 +411,7 @@ export const GroupDetailDrawer: React.FC<GroupDetailDrawerProps> = ({
                     }}
                   >
                     Save Attendance
-                  </BrutalistButton>
+                  </ModernButton>
                 </div>
               )}
             </div>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, LogOut, Settings, Users, Building2, Home, Database } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { ModernButton } from '@/components/ui';
 import { useAuth } from '@/contexts/AuthContext';
 
 export const SuperAdminLayout: React.FC = () => {
@@ -73,29 +73,29 @@ export const SuperAdminLayout: React.FC = () => {
                 Navigation
               </div>
               
-              <Button
-                variant={location.pathname === '/super-admin' || location.pathname === '/' ? "default" : "ghost"}
+              <ModernButton
+                variant={location.pathname === '/super-admin' || location.pathname === '/' ? "solid" : "ghost"}
                 className="w-full justify-start text-left"
                 onClick={() => {
                   navigate('/super-admin');
                   closeSidebar();
                 }}
+                icon={Home}
               >
-                <Home className="w-5 h-5 mr-3" />
                 Dashboard
-              </Button>
+              </ModernButton>
               
-              <Button
-                variant={location.pathname === '/super-admin/management' ? "default" : "ghost"}
+              <ModernButton
+                variant={location.pathname === '/super-admin/management' ? "solid" : "ghost"}
                 className="w-full justify-start text-left"
                 onClick={() => {
                   navigate('/super-admin/management');
                   closeSidebar();
                 }}
+                icon={Database}
               >
-                <Database className="w-5 h-5 mr-3" />
                 Management
-              </Button>
+              </ModernButton>
             </div>
           </nav>
 
@@ -118,25 +118,25 @@ export const SuperAdminLayout: React.FC = () => {
             </div>
 
             <div className="space-y-2">
-              <Button
+              <ModernButton
                 variant="ghost"
                 size="sm"
                 className="w-full justify-start"
                 onClick={toggleTheme}
+                icon={Settings}
               >
-                <Settings className="w-4 h-4 mr-2" />
                 {isDark ? 'Light Mode' : 'Dark Mode'}
-              </Button>
+              </ModernButton>
               
-              <Button
+              <ModernButton
                 variant="ghost"
                 size="sm"
                 className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50"
                 onClick={handleLogout}
+                icon={LogOut}
               >
-                <LogOut className="w-4 h-4 mr-2" />
                 Logout
-              </Button>
+              </ModernButton>
             </div>
           </div>
         </div>

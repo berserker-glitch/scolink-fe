@@ -1,14 +1,6 @@
 import React, { useState } from 'react';
-import { 
-  Sheet, 
-  SheetContent, 
-  SheetHeader, 
-  SheetTitle, 
-  SheetFooter,
-  SheetClose 
-} from '@/components/ui/sheet';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { BrutalistButton } from '@/components/ui/BrutalistButton';
+import { ModernButton } from '@/components/ui';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
@@ -31,6 +23,7 @@ import {
   X,
   Clock as ClockIcon,
   ChevronLeft,
+  GraduationCap,
   ChevronRight,
   Users,
   AlertCircle
@@ -346,103 +339,137 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
     }
   };
 
+  if (!isOpen) return null;
+  
   return (
-    <Sheet open={isOpen} onOpenChange={onClose}>
-      <SheetContent side="right" className="!w-[50%] !max-w-[50vw] h-full overflow-hidden" style={{ width: '50%', maxWidth: '50vw' }}>
-        <SheetHeader className="border-b border-border">
+    <div className="w-full bg-white border-l border-gray-200 h-full overflow-hidden flex flex-col shadow-lg">
+        <div className="border-b border-gray-200 p-4 shrink-0">
           <div className="flex items-center justify-between">
             <div>
-              <SheetTitle className="text-xl font-bold">
+              <h2 className="text-xl font-bold text-gray-900">
                 {student.firstName} {student.lastName}
-              </SheetTitle>
-              <p className="text-sm text-text-secondary mt-1">
+              </h2>
+              <p className="text-sm text-gray-600 mt-1">
                 {student.yearName || 'Unknown Year'} • {student.fieldName || 'Unknown Field'}
               </p>
             </div>
+            <div className="flex items-center gap-2">
+              <Badge variant="outline" className="text-xs">
+                Student ID: {student.id?.slice(-6)?.toUpperCase()}
+              </Badge>
+              <ModernButton
+                variant="ghost"
+                size="sm"
+                onClick={onClose}
+              >
+                <X className="w-4 h-4" />
+              </ModernButton>
+            </div>
           </div>
-        </SheetHeader>
+        </div>
 
         <div className="flex-1 overflow-hidden">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
             <div className="px-6 pt-4 border-b border-border">
-              <TabsList className="grid w-full grid-cols-4">
-                <TabsTrigger value="info" className="flex items-center gap-2">
-                  <User className="w-4 h-4" />
-                  Info
+              <TabsList className="grid w-full grid-cols-4 bg-surface-secondary p-1 rounded-lg h-12">
+                <TabsTrigger 
+                  value="info" 
+                  className="flex items-center justify-center rounded-sm data-[state=active]:bg-interactive data-[state=active]:text-white data-[state=inactive]:text-text-muted hover:text-text-primary transition-all duration-200"
+                >
+                  <User className="w-5 h-5" />
                 </TabsTrigger>
-                <TabsTrigger value="subjects" className="flex items-center gap-2">
-                  <BookOpen className="w-4 h-4" />
-                  Subjects & Groups
+                <TabsTrigger 
+                  value="subjects" 
+                  className="flex items-center justify-center rounded-sm data-[state=active]:bg-interactive data-[state=active]:text-white data-[state=inactive]:text-text-muted hover:text-text-primary transition-all duration-200"
+                >
+                  <BookOpen className="w-5 h-5" />
                 </TabsTrigger>
-                <TabsTrigger value="payments" className="flex items-center gap-2">
-                  <CreditCard className="w-4 h-4" />
-                  Payments
+                <TabsTrigger 
+                  value="payments" 
+                  className="flex items-center justify-center rounded-sm data-[state=active]:bg-interactive data-[state=active]:text-white data-[state=inactive]:text-text-muted hover:text-text-primary transition-all duration-200"
+                >
+                  <CreditCard className="w-5 h-5" />
                 </TabsTrigger>
-                <TabsTrigger value="reports" className="flex items-center gap-2">
-                  <BarChart3 className="w-4 h-4" />
-                  Reports & Attendance
+                <TabsTrigger 
+                  value="reports" 
+                  className="flex items-center justify-center rounded-sm data-[state=active]:bg-interactive data-[state=active]:text-white data-[state=inactive]:text-text-muted hover:text-text-primary transition-all duration-200"
+                >
+                  <BarChart3 className="w-5 h-5" />
                 </TabsTrigger>
               </TabsList>
             </div>
 
             <div className="flex-1 overflow-y-auto p-6">
               {/* Info Tab */}
-              <TabsContent value="info" className="space-y-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <User className="w-5 h-5" />
-                      Personal Information
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="text-sm font-medium text-text-secondary">Full Name</label>
-                        <p className="text-text-primary">{student.firstName} {student.lastName}</p>
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium text-text-secondary">Gender</label>
-                        <p className="text-text-primary">{student.sex === 'M' ? 'Male' : 'Female'}</p>
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium text-text-secondary">Academic Year</label>
-                        <p className="text-text-primary">{student.yearName || 'Unknown Year'}</p>
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium text-text-secondary">Field of Study</label>
-                        <p className="text-text-primary">{student.fieldName || 'Unknown Field'}</p>
-                      </div>
-                    </div>
-                    
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="text-sm font-medium text-text-secondary">Phone</label>
-                        <p className="text-text-primary flex items-center gap-2">
-                          <Phone className="w-4 h-4" />
-                          {student.phone}
-                        </p>
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium text-text-secondary">Parent Phone</label>
-                        <p className="text-text-primary flex items-center gap-2">
-                          <Phone className="w-4 h-4" />
-                          {student.parentPhone}
-                        </p>
-                      </div>
-                    </div>
+              <TabsContent value="info" className="space-y-4">
+                {/* Profile Header - Minimal */}
+                <div className="text-center py-6 bg-surface rounded-lg shadow-sm">
+                  <div className="w-16 h-16 mx-auto mb-3 bg-interactive rounded-full flex items-center justify-center shadow-md">
+                    <User className="w-8 h-8 text-white" />
+                  </div>
+                  <h2 className="text-xl font-bold text-text-primary mb-1">
+                    {student.firstName} {student.lastName}
+                  </h2>
+                  <p className="text-sm text-text-secondary">
+                    {student.yearName || 'Unknown Year'} • {student.fieldName || 'Unknown Field'}
+                  </p>
+                </div>
 
-                    <div>
-                      <label className="text-sm font-medium text-text-secondary">Notes</label>
-                      <textarea
-                        className="w-full mt-2 p-3 border border-border rounded-lg bg-background text-text-primary focus-brutalist"
-                        rows={3}
-                        placeholder="Add notes about the student..."
-                        defaultValue={(student as MockStudent)?.notes || ''}
-                      />
+                {/* Information Grid - Minimal */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="p-4 bg-surface rounded-lg shadow-sm">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Phone className="w-4 h-4 text-interactive" />
+                      <span className="text-sm font-medium text-text-secondary">Student Phone</span>
                     </div>
-                  </CardContent>
-                </Card>
+                    <p className="text-text-primary font-medium">{student.phone}</p>
+                  </div>
+                  
+                  <div className="p-4 bg-surface rounded-lg shadow-sm">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Phone className="w-4 h-4 text-interactive" />
+                      <span className="text-sm font-medium text-text-secondary">Parent Phone</span>
+                    </div>
+                    <p className="text-text-primary font-medium">{student.parentPhone}</p>
+                  </div>
+                  
+                  <div className="p-4 bg-surface rounded-lg shadow-sm">
+                    <div className="flex items-center gap-2 mb-2">
+                      <BookOpen className="w-4 h-4 text-interactive" />
+                      <span className="text-sm font-medium text-text-secondary">Academic Year</span>
+                    </div>
+                    <p className="text-text-primary font-medium">{student.yearName || 'Unknown Year'}</p>
+                  </div>
+                  
+                  <div className="p-4 bg-surface rounded-lg shadow-sm">
+                    <div className="flex items-center gap-2 mb-2">
+                      <GraduationCap className="w-4 h-4 text-interactive" />
+                      <span className="text-sm font-medium text-text-secondary">Field of Study</span>
+                    </div>
+                    <p className="text-text-primary font-medium">{student.fieldName || 'Unknown Field'}</p>
+                  </div>
+                </div>
+
+                {/* Gender Badge - Minimal */}
+                <div className="flex justify-center">
+                  <div className="inline-flex items-center px-3 py-1 bg-surface rounded-full shadow-sm">
+                    <div className={`w-2 h-2 rounded-full mr-2 ${student.sex === 'M' ? 'bg-blue-500' : 'bg-pink-500'}`}></div>
+                    <span className="text-sm font-medium text-text-primary">
+                      {student.sex === 'M' ? 'Male' : 'Female'}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Notes - Only if exists */}
+                {(student as MockStudent)?.notes && (
+                  <div className="p-4 bg-surface rounded-lg shadow-sm">
+                    <div className="flex items-center gap-2 mb-2">
+                      <FileText className="w-4 h-4 text-text-muted" />
+                      <span className="text-sm font-medium text-text-secondary">Notes</span>
+                    </div>
+                    <p className="text-text-primary text-sm">{(student as MockStudent)?.notes}</p>
+                  </div>
+                )}
               </TabsContent>
 
               {/* Subjects & Groups Tab */}
@@ -454,15 +481,15 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
                         <BookOpen className="w-5 h-5" />
                         Current Subjects & Groups
                       </CardTitle>
-                      <BrutalistButton 
-                        variant="primary" 
+                      <ModernButton 
+                        variant="solid" 
                         size="sm"
                         onClick={() => setIsAddSubjectModalOpen(true)}
                         disabled={getAvailableSubjects().length === 0}
                       >
                         <Plus className="w-4 h-4 mr-2" />
                         Add Subject
-                      </BrutalistButton>
+                      </ModernButton>
                     </div>
                   </CardHeader>
                   <CardContent>
@@ -488,7 +515,7 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
                                   <Badge variant="outline">
                                     {subjectData?.monthlyFee} DH/month
                                   </Badge>
-                                  <BrutalistButton 
+                                  <ModernButton 
                                     variant="outline" 
                                     size="sm"
                                     onClick={() => {
@@ -498,15 +525,16 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
                                   >
                                     <Edit className="w-4 h-4 mr-2" />
                                     Change Group
-                                  </BrutalistButton>
-                                  <BrutalistButton 
-                                    variant="danger" 
+                                  </ModernButton>
+                                  <ModernButton 
+                                    variant="ghost" 
                                     size="sm"
+                                    className="text-red-600 hover:text-red-700 hover:bg-red-50"
                                     onClick={() => handleRemoveSubject(enrollment.id)}
                                   >
                                     <Trash2 className="w-4 h-4 mr-2" />
                                     Remove
-                                  </BrutalistButton>
+                                  </ModernButton>
                                 </div>
                               </div>
                               
@@ -566,8 +594,8 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
                         <CreditCard className="w-5 h-5" />
                         Payment History
                       </CardTitle>
-                      <BrutalistButton 
-                        variant="primary" 
+                      <ModernButton 
+                        variant="solid" 
                         size="sm"
                         onClick={() => {
                           setSelectedPaymentMonth('');
@@ -576,7 +604,7 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
                       >
                         <Plus className="w-4 h-4 mr-2" />
                         Record Payment
-                      </BrutalistButton>
+                      </ModernButton>
                     </div>
                   </CardHeader>
                   <CardContent>
@@ -611,7 +639,7 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
                                 </Badge>
                                 
                                 {status !== 'paid' && (
-                                  <BrutalistButton
+                                  <ModernButton
                                     variant="outline"
                                     size="sm"
                                     onClick={() => {
@@ -621,7 +649,7 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
                                   >
                                     <CreditCard className="w-3 h-3 mr-1" />
                                     Pay
-                                  </BrutalistButton>
+                                  </ModernButton>
                                 )}
                               </div>
                             </div>
@@ -866,8 +894,8 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
 
                       {/* Generate Report Button */}
                       <div className="pt-4 border-t border-border">
-                        <BrutalistButton 
-                          variant="primary" 
+                        <ModernButton 
+                          variant="solid" 
                           className="w-full"
                           onClick={() => {
                             // TODO: Implement PDF generation
@@ -876,7 +904,7 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
                         >
                           <Download className="w-4 h-4 mr-2" />
                           Generate Student Report
-                        </BrutalistButton>
+                        </ModernButton>
                       </div>
                         </>
                       )}
@@ -960,7 +988,7 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
                 )}
                 
                 <div className="flex items-center justify-end gap-2 pt-4 border-t border-border">
-                  <BrutalistButton 
+                  <ModernButton 
                     variant="outline" 
                     size="sm"
                     onClick={() => {
@@ -971,15 +999,15 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
                     }}
                   >
                     Cancel
-                  </BrutalistButton>
-                  <BrutalistButton 
-                    variant="primary" 
+                  </ModernButton>
+                  <ModernButton 
+                    variant="solid" 
                     size="sm"
                     onClick={() => setAddSubjectStep('groups')}
                     disabled={selectedSubjectsForAddition.length === 0}
                   >
                     Next: Select Groups
-                  </BrutalistButton>
+                  </ModernButton>
                 </div>
               </div>
             ) : (
@@ -1053,23 +1081,23 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
                 </div>
                 
                 <div className="flex items-center justify-end gap-2 pt-4 border-t border-border">
-                  <BrutalistButton 
+                  <ModernButton 
                     variant="outline" 
                     size="sm"
                     onClick={() => setAddSubjectStep('subjects')}
                   >
                     <ChevronLeft className="w-4 h-4 mr-2" />
                     Back
-                  </BrutalistButton>
-                  <BrutalistButton 
-                    variant="primary" 
+                  </ModernButton>
+                  <ModernButton 
+                    variant="solid" 
                     size="sm"
                     onClick={handleAddSubjectsToStudent}
                     disabled={Object.keys(selectedGroupsForAddition).length !== selectedSubjectsForAddition.length}
                   >
                     <Plus className="w-4 h-4 mr-2" />
                     Add to Student
-                  </BrutalistButton>
+                  </ModernButton>
                 </div>
               </div>
             )}
@@ -1102,7 +1130,7 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
                     )}
                     
                     <div className="flex items-center justify-end gap-2 pt-4 border-t border-border">
-                      <BrutalistButton 
+                      <ModernButton 
                         variant="outline" 
                         size="sm"
                         onClick={() => {
@@ -1111,8 +1139,8 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
                         }}
                       >
                         Cancel
-                      </BrutalistButton>
-                      <BrutalistButton 
+                      </ModernButton>
+                      <ModernButton 
                         size="sm"
                         onClick={() => {
                           setIsChangeGroupModalOpen(false);
@@ -1120,37 +1148,38 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
                         }}
                       >
                         Confirm
-                      </BrutalistButton>
+                      </ModernButton>
                     </div>
                   </DialogContent>
                 </Dialog>
 
-        <SheetFooter className="border-t border-border">
+        <div className="border-t border-gray-200 p-4 shrink-0">
           <div className="flex items-center justify-between w-full">
             <div className="flex items-center gap-2">
-              <BrutalistButton 
+              <ModernButton 
                 variant="outline" 
                 size="sm"
                 onClick={() => onEdit(student)}
               >
                 <Edit className="w-4 h-4 mr-2" />
                 Edit Student
-              </BrutalistButton>
-              <BrutalistButton 
-                variant="danger" 
+              </ModernButton>
+              <ModernButton 
+                variant="ghost" 
                 size="sm"
                 onClick={() => onDelete(student.id)}
+                className="text-red-600 hover:text-red-700 hover:bg-red-50"
               >
                 <Trash2 className="w-4 h-4 mr-2" />
                 Delete Student
-              </BrutalistButton>
+              </ModernButton>
             </div>
             
-            <div className="text-sm text-text-secondary">
-              Monthly Fee: <span className="font-medium text-text-primary">{getMonthlyFee()} DH</span>
+            <div className="text-sm text-gray-600">
+              Monthly Fee: <span className="font-medium text-gray-900">{getMonthlyFee()} DH</span>
             </div>
           </div>
-        </SheetFooter>
+        </div>
 
         {/* Payment Record Modal */}
         <PaymentRecordModal
@@ -1167,7 +1196,6 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
             queryClient.invalidateQueries({ queryKey: ['students', student.id] });
           }}
         />
-      </SheetContent>
-    </Sheet>
+    </div>
   );
 };

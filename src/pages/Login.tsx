@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { BrutalistButton } from '@/components/ui/BrutalistButton';
+import { ModernButton } from '@/components/ui';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2, Lock, Mail, School } from 'lucide-react';
@@ -113,9 +113,9 @@ const Login: React.FC = () => {
                   </div>
                 </div>
 
-                <BrutalistButton
+                <ModernButton
                   type="submit"
-                  variant="primary"
+                  variant="solid"
                   className="w-full"
                   disabled={isLoading}
                 >
@@ -127,7 +127,7 @@ const Login: React.FC = () => {
                   ) : (
                     'Sign in'
                   )}
-                </BrutalistButton>
+                </ModernButton>
               </form>
 
             </CardContent>

@@ -1,4 +1,5 @@
-const API_BASE_URL = 'https://api.scolink.ink/api/v1';
+//const API_BASE_URL = 'https://api.scolink.ink/api/v1';
+const API_BASE_URL = 'http://localhost:3001/api/v1';
 
 interface ApiResponse<T = any> {
   success: boolean;

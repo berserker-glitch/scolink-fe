@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { BrutalistButton } from '@/components/ui/BrutalistButton';
+import { ModernButton } from '@/components/ui';
 import { AddStudentWizard } from '@/components/Student/AddStudentWizard';
 import { StudentDrawer } from '@/components/Student/StudentDrawer';
 import { PaymentModal } from '@/components/Student/PaymentModal';
@@ -12,13 +12,12 @@ import { useToast } from '@/hooks/use-toast';
 import { 
   Search, 
   Plus, 
-  Eye,
-  Download
+  Phone
 } from 'lucide-react';
 
 // Wrapper component to fetch student by ID for the drawer
 const StudentDrawerWithQuery: React.FC<{
-  studentId: string;
+  studentId: string | null;
   isOpen: boolean;
   onClose: () => void;
   onEdit: (student: Student) => void;
@@ -27,12 +26,33 @@ const StudentDrawerWithQuery: React.FC<{
 }> = ({ studentId, isOpen, onClose, onEdit, onDelete, onPayment }) => {
   const { data: student, isLoading } = useQuery({
     queryKey: ['students', studentId],
-    queryFn: () => apiService.getStudentById(studentId),
+    queryFn: () => apiService.getStudentById(studentId!),
     enabled: isOpen && !!studentId,
   });
 
-  if (isLoading || !student) {
+  if (!isOpen) {
     return null;
+  }
+
+  if (isLoading) {
+    return (
+      <div className="w-full h-full bg-white border-l border-gray-200 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading student...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!student) {
+    return (
+      <div className="w-full h-full bg-white border-l border-gray-200 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-gray-600">No student selected</p>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -73,6 +93,7 @@ const PaymentModalWithQuery: React.FC<{
     />
   );
 };
+
 
 export const Students: React.FC = () => {
   const queryClient = useQueryClient();
@@ -129,13 +150,14 @@ export const Students: React.FC = () => {
     mutationFn: (studentId: string) => apiService.deleteStudent(studentId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['students'] });
+      setIsDrawerOpen(false);
+      setSelectedStudentId(null);
     },
   });
 
   // Create student mutation
   const createStudentMutation = useMutation({
     mutationFn: (studentData: any) => {
-      // Map the form data to the API expected format
       const apiData = {
         firstName: studentData.firstName,
         lastName: studentData.lastName,
@@ -146,7 +168,7 @@ export const Students: React.FC = () => {
         parentPhone: studentData.parentPhone,
         parentType: studentData.parentType,
         tag: studentData.tag,
-        cni: studentData.CNI, // Note: API uses 'cni' (lowercase), form uses 'CNI'
+        cni: studentData.CNI,
         isActive: true
       };
       return apiService.createStudent(apiData);
@@ -168,7 +190,6 @@ export const Students: React.FC = () => {
   // Update student mutation
   const updateStudentMutation = useMutation({
     mutationFn: (studentData: any) => {
-      // Map the form data to the API expected format
       const apiData = {
         firstName: studentData.firstName,
         lastName: studentData.lastName,
@@ -179,7 +200,7 @@ export const Students: React.FC = () => {
         parentPhone: studentData.parentPhone,
         parentType: studentData.parentType,
         tag: studentData.tag,
-        cni: studentData.CNI, // Note: API uses 'cni' (lowercase), form uses 'CNI'
+        cni: studentData.CNI,
         isActive: true
       };
       return apiService.updateStudent(studentData.id, apiData);
@@ -200,34 +221,12 @@ export const Students: React.FC = () => {
     },
   });
 
-  const getStudentSubjects = (enrollments?: Array<{groupName?: string; subjectName?: string}>) => {
-    if (!enrollments || enrollments.length === 0) {
-      return <span className="text-text-secondary italic">No subjects enrolled</span>;
-    }
-    
-    return (
-      <div className="space-y-1">
-        {enrollments.map((enrollment, index) => (
-          <div key={index} className="text-sm">
-            <span className="font-medium">{enrollment.subjectName}</span>
-            {enrollment.groupName && (
-              <span className="text-text-secondary ml-1">({enrollment.groupName})</span>
-            )}
-          </div>
-        ))}
-      </div>
-    );
-  };
-
-
-
-  const handleViewStudent = (student: Student) => {
+  const handleStudentClick = (student: Student) => {
     setSelectedStudentId(student.id);
     setIsDrawerOpen(true);
   };
 
   const handleEditStudent = (student: Student) => {
-    console.log('Edit student:', student);
     setEditingStudent(student);
     setIsEditing(true);
     setIsAddStudentOpen(true);
@@ -238,227 +237,233 @@ export const Students: React.FC = () => {
     const student = students.find(s => s.id === studentId);
     if (student && confirm(`Are you sure you want to delete ${student.firstName} ${student.lastName}?`)) {
       deleteStudentMutation.mutate(studentId);
-      setIsDrawerOpen(false);
     }
   };
 
-  const handlePaymentComplete = (payment: any) => {
-    // TODO: Update student payment records
-    console.log('Payment completed:', payment);
-    setIsPaymentModalOpen(false);
-  };
 
   return (
-    <div className="min-h-screen bg-background p-6 lg:p-8">
-      {/* Header */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8">
-        <div>
-          <h1 className="text-hero text-text-primary mb-2">Students</h1>
-          <p className="text-body text-text-secondary">
-            Manage and monitor all student information, subjects, and payments.
-          </p>
-        </div>
-        
-        <div className="flex items-center space-x-4 mt-4 lg:mt-0">
-          <BrutalistButton variant="outline" size="md">
-            <Download className="w-4 h-4 mr-2" />
-            Export
-          </BrutalistButton>
-          <BrutalistButton 
-            variant="primary" 
-            size="md"
-            onClick={() => {
-              setIsEditing(false);
-              setEditingStudent(null);
-              setIsAddStudentOpen(true);
-            }}
-          >
-            <Plus className="w-4 h-4 mr-2" />
-            Add Student
-          </BrutalistButton>
-        </div>
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50">
+        <div className="flex h-screen">
+          {/* Main Content */}
+          <div className={`transition-all duration-300 overflow-hidden ${isDrawerOpen ? 'w-[60%]' : 'w-full'}`}>
+            <div className="p-6 h-full overflow-y-auto">
+              {/* Header */}
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h1 className="text-2xl font-bold text-gray-900 mb-1">Students Database</h1>
+                  <p className="text-sm text-gray-600">
+                    {pagination?.total || 0} results • Welcome to Edu-Center Dashboard
+                  </p>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <ModernButton variant="outline" size="sm">
+                    Filter
+                  </ModernButton>
+                  <ModernButton 
+                    variant="solid" 
+                    size="sm"
+                    icon={Plus}
+                    onClick={() => {
+                      setIsEditing(false);
+                      setEditingStudent(null);
+                      setIsAddStudentOpen(true);
+                    }}
+                  >
+                    Add
+                  </ModernButton>
+                </div>
+              </div>
+
+              {/* Search and Filters */}
+              <div className="mb-6">
+                <div className="bg-white rounded-lg border border-gray-200 p-4">
+                  <div className="flex items-center space-x-4">
+                    {/* Search */}
+                    <div className="flex-1 relative">
+                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                      <input
+                        type="text"
+                        placeholder="Search here..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      />
+                    </div>
+
+                    {/* Filters */}
+                    <select
+                      value={selectedYear}
+                      onChange={(e) => setSelectedYear(e.target.value)}
+                      className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    >
+                      <option value="">All Years</option>
+                      {years.map(year => (
+                        <option key={year.id} value={year.id}>{year.name}</option>
+                      ))}
+                    </select>
+
+                    <select
+                      value={selectedField}
+                      onChange={(e) => setSelectedField(e.target.value)}
+                      className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    >
+                      <option value="">All Fields</option>
+                      {fields.map(field => (
+                        <option key={field.id} value={field.id}>{field.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              {/* Students Table */}
+              <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Full Name</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Year</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Field</th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {studentsLoading ? (
+                        <tr>
+                          <td colSpan={4} className="px-4 py-8 text-center text-gray-500">
+                            Loading students...
+                          </td>
+                        </tr>
+                      ) : studentsError ? (
+                        <tr>
+                          <td colSpan={4} className="px-4 py-8 text-center text-red-500">
+                            Error loading students. Please try again.
+                          </td>
+                        </tr>
+                      ) : students.length === 0 ? (
+                        <tr>
+                          <td colSpan={4} className="px-4 py-8 text-center text-gray-500">
+                            No students found.
+                          </td>
+                        </tr>
+                      ) : (
+                        students.map((student) => (
+                          <tr 
+                            key={student.id} 
+                            className={`hover:bg-gray-50 cursor-pointer transition-colors ${
+                              selectedStudentId === student.id ? 'bg-purple-50' : ''
+                            }`}
+                            onClick={() => handleStudentClick(student)}
+                          >
+                            {/* Full Name */}
+                            <td className="px-4 py-4 whitespace-nowrap">
+                              <div className="flex items-center">
+                                <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center mr-3">
+                                  <span className="text-sm font-medium text-gray-600">
+                                    {student.firstName.charAt(0)}{student.lastName.charAt(0)}
+                                  </span>
+                                </div>
+                                <div>
+                                  <div className="text-sm font-medium text-gray-900">
+                                    {student.firstName} {student.lastName}
+                                  </div>
+                                </div>
+                              </div>
+                            </td>
+                            {/* Contact */}
+                            <td className="px-4 py-4 whitespace-nowrap">
+                              <div className="text-sm text-gray-900">
+                                {student.phone || 'No contact info'}
+                              </div>
+                            </td>
+                            {/* Year */}
+                            <td className="px-4 py-4 whitespace-nowrap">
+                              <div className="text-sm text-gray-900">{student.yearName || 'N/A'}</div>
+                            </td>
+                            {/* Field */}
+                            <td className="px-4 py-4 whitespace-nowrap">
+                              <div className="text-sm text-gray-900">{student.fieldName || 'N/A'}</div>
+                            </td>
+                          </tr>
+                        ))
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Pagination */}
+                {pagination && pagination.totalPages > 1 && (
+                  <div className="px-4 py-3 bg-gray-50 border-t border-gray-200 flex items-center justify-between">
+                    <div className="text-sm text-gray-700">
+                      Showing {((currentPage - 1) * studentsPerPage) + 1} to {Math.min(currentPage * studentsPerPage, pagination.total)} of {pagination.total} results
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <ModernButton
+                        variant="outline"
+                        size="sm"
+                        disabled={currentPage === 1}
+                        onClick={() => setCurrentPage(currentPage - 1)}
+                      >
+                        Previous
+                      </ModernButton>
+                      
+                      {[...Array(Math.min(5, pagination.totalPages))].map((_, index) => {
+                        const pageNum = currentPage <= 3 ? index + 1 : currentPage - 2 + index;
+                        if (pageNum > pagination.totalPages) return null;
+                        
+                        return (
+                          <ModernButton
+                            key={pageNum}
+                            variant={currentPage === pageNum ? 'solid' : 'outline'}
+                            size="sm"
+                            onClick={() => setCurrentPage(pageNum)}
+                          >
+                            {pageNum}
+                          </ModernButton>
+                        );
+                      })}
+                      
+                      <ModernButton
+                        variant="outline"
+                        size="sm"
+                        disabled={currentPage === pagination.totalPages}
+                        onClick={() => setCurrentPage(currentPage + 1)}
+                      >
+                        Next
+                      </ModernButton>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <div className="mt-4 text-center">
+                <ModernButton variant="outline" size="sm">
+                  See More ∨
+                </ModernButton>
+              </div>
+            </div>
+          </div>
+
+        {/* Inline Drawer */}
+        {isDrawerOpen && (
+          <div className="w-[40%] transition-all duration-300">
+            <StudentDrawerWithQuery
+              studentId={selectedStudentId}
+              isOpen={isDrawerOpen}
+              onClose={() => {
+                setIsDrawerOpen(false);
+                setSelectedStudentId(null);
+              }}
+              onEdit={handleEditStudent as any}
+              onDelete={handleDeleteStudent}
+              onPayment={() => setIsPaymentModalOpen(true)}
+            />
+          </div>
+        )}
       </div>
 
-      {/* Filters */}
-      <Card className="surface mb-6">
-        <CardContent className="p-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {/* Search */}
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-text-muted" />
-              <input
-                type="text"
-                placeholder="Search students..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 border border-border rounded-lg bg-background text-text-primary focus-brutalist"
-              />
-            </div>
-
-            {/* Field Filter */}
-            <select
-              value={selectedField}
-              onChange={(e) => setSelectedField(e.target.value)}
-              className="w-full px-4 py-3 border border-border rounded-lg bg-background text-text-primary focus-brutalist"
-            >
-              <option value="">All Fields</option>
-              {fields.map(field => (
-                <option key={field.id} value={field.id}>{field.name}</option>
-              ))}
-            </select>
-
-            {/* Year Filter */}
-            <select
-              value={selectedYear}
-              onChange={(e) => setSelectedYear(e.target.value)}
-              className="w-full px-4 py-3 border border-border rounded-lg bg-background text-text-primary focus-brutalist"
-            >
-              <option value="">All Years</option>
-              {years.map(year => (
-                <option key={year.id} value={year.id}>{year.name}</option>
-              ))}
-            </select>
-
-
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Students List */}
-      <Card className="surface">
-        <CardHeader>
-          <CardTitle className="flex items-center justify-between">
-            <span>Students List ({pagination?.total || 0})</span>
-            <span className="text-caption text-text-secondary font-normal">
-              Page {currentPage} of {pagination?.totalPages || 1}
-            </span>
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="p-0">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="border-b border-border">
-                <tr>
-                  <th className="text-left p-4 text-micro text-text-muted font-semibold">Student</th>
-                  <th className="text-left p-4 text-micro text-text-muted font-semibold">Contact</th>
-                  <th className="text-left p-4 text-micro text-text-muted font-semibold">Academic</th>
-                  <th className="text-left p-4 text-micro text-text-muted font-semibold">Subjects</th>
-                  <th className="text-left p-4 text-micro text-text-muted font-semibold">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {studentsLoading ? (
-                  <tr>
-                    <td colSpan={5} className="p-8 text-center text-text-secondary">
-                      Loading students...
-                    </td>
-                  </tr>
-                ) : studentsError ? (
-                  <tr>
-                    <td colSpan={5} className="p-8 text-center text-red-600">
-                      Error loading students. Please try again.
-                    </td>
-                  </tr>
-                ) : students.length === 0 ? (
-                  <tr>
-                    <td colSpan={5} className="p-8 text-center text-text-secondary">
-                      No students found.
-                    </td>
-                  </tr>
-                ) : (
-                  students.map((student) => (
-                    <tr key={student.id} className="border-b border-border hover:bg-surface-hover transition-colors">
-                      <td className="p-4">
-                        <div>
-                          <div className="font-medium text-text-primary">
-                            {student.firstName} {student.lastName}
-                          </div>
-                          <div className="text-caption text-text-secondary">
-                            {student.sex} • {student.tag === 'ss' ? 'Special Schedule' : 'Regular'}
-                          </div>
-                        </div>
-                      </td>
-                      <td className="p-4">
-                        <div className="text-caption text-text-secondary">
-                          <div>{student.phone}</div>
-                          <div>Parent: {student.parentPhone}</div>
-                        </div>
-                      </td>
-                      <td className="p-4">
-                        <div className="text-caption text-text-secondary">
-                          <div>{student.yearName || 'Unknown Year'}</div>
-                          <div>{student.fieldName || 'Unknown Field'}</div>
-                        </div>
-                      </td>
-                      <td className="p-4">
-                        <div className="text-caption text-text-primary max-w-48">
-                          {getStudentSubjects(student.enrollments)}
-                      </div>
-                    </td>
-                    <td className="p-4">
-                      <div className="flex items-center justify-center">
-                        <button 
-                          className="p-2 rounded-md hover:bg-surface-hover text-text-secondary hover:text-text-primary focus-brutalist transition-colors"
-                          onClick={() => handleViewStudent(student)}
-                          title="View Student Details"
-                        >
-                          <Eye className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
-
-          {/* Pagination */}
-          {pagination && pagination.totalPages > 1 && (
-            <div className="p-4 border-t border-border flex items-center justify-between">
-              <div className="text-caption text-text-secondary">
-                Showing {((currentPage - 1) * studentsPerPage) + 1} to {Math.min(currentPage * studentsPerPage, pagination.total)} of {pagination.total} students
-              </div>
-              <div className="flex items-center space-x-2">
-                <BrutalistButton
-                  variant="outline"
-                  size="sm"
-                  disabled={currentPage === 1}
-                  onClick={() => setCurrentPage(currentPage - 1)}
-                >
-                  Previous
-                </BrutalistButton>
-                
-                {[...Array(Math.min(5, pagination.totalPages))].map((_, index) => {
-                  const pageNum = currentPage <= 3 ? index + 1 : currentPage - 2 + index;
-                  if (pageNum > pagination.totalPages) return null;
-                  
-                  return (
-                    <BrutalistButton
-                      key={pageNum}
-                      variant={currentPage === pageNum ? 'primary' : 'outline'}
-                      size="sm"
-                      onClick={() => setCurrentPage(pageNum)}
-                    >
-                      {pageNum}
-                    </BrutalistButton>
-                  );
-                })}
-                
-                <BrutalistButton
-                  variant="outline"
-                  size="sm"
-                  disabled={currentPage === pagination.totalPages}
-                  onClick={() => setCurrentPage(currentPage + 1)}
-                >
-                  Next
-                </BrutalistButton>
-              </div>
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
+      {/* Modals */}
       <AddStudentWizard
         isOpen={isAddStudentOpen}
         onClose={() => {
@@ -468,10 +473,8 @@ export const Students: React.FC = () => {
         }}
         onSave={(student) => {
           if (isEditing) {
-            console.log('Updating student:', student);
             updateStudentMutation.mutate(student);
           } else {
-            console.log('Creating student:', student);
             createStudentMutation.mutate(student);
           }
         }}
@@ -479,20 +482,6 @@ export const Students: React.FC = () => {
         initialStudent={editingStudent}
         isEditing={isEditing}
       />
-
-      {selectedStudentId && (
-        <StudentDrawerWithQuery
-          studentId={selectedStudentId}
-          isOpen={isDrawerOpen}
-          onClose={() => {
-            setIsDrawerOpen(false);
-            setSelectedStudentId(null);
-          }}
-          onEdit={handleEditStudent as any}
-          onDelete={handleDeleteStudent}
-          onPayment={() => setIsPaymentModalOpen(true)}
-        />
-      )}
 
       {selectedStudentId && (
         <PaymentModalWithQuery

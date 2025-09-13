@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { BrutalistButton } from '@/components/ui/BrutalistButton';
+import { ModernButton } from '@/components/ui';
 import { Modal } from '@/components/ui/Modal';
 import { FormField, Input, Select } from '@/components/ui/FormField';
 import { 
@@ -20,7 +20,7 @@ import {
 } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiService, Year, Field } from '@/services/api';
+import { apiService, Year, Field, CreateYearRequest, CreateFieldRequest } from '@/services/api';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -73,7 +73,7 @@ export const Settings: React.FC = () => {
 
   // Mutations for Years
   const createYearMutation = useMutation({
-    mutationFn: (data) => apiService.createYear(data),
+    mutationFn: (data: CreateYearRequest) => apiService.createYear(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['years'] });
       toast({ title: 'Success', description: 'Year created successfully' });
@@ -112,7 +112,7 @@ export const Settings: React.FC = () => {
 
   // Mutations for Fields
   const createFieldMutation = useMutation({
-    mutationFn: (data) => apiService.createField(data),
+    mutationFn: (data: CreateFieldRequest) => apiService.createField(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['fields'] });
       toast({ title: 'Success', description: 'Field created successfully' });
@@ -338,13 +338,14 @@ export const Settings: React.FC = () => {
                     Change the system access code for security
                   </p>
                 </div>
-                <BrutalistButton 
+                <ModernButton 
                   variant="outline"
+                  icon={Key}
+                  iconPosition="left"
                   onClick={() => setIsChangeCodeOpen(true)}
                 >
-                  <Key className="w-4 h-4 mr-2" />
                   Change Code
-                </BrutalistButton>
+                </ModernButton>
               </div>
 
               <div className="border-t border-border pt-6">
@@ -417,9 +418,9 @@ export const Settings: React.FC = () => {
                 </div>
 
                 <div className="pt-4 border-t border-border">
-                  <BrutalistButton variant="primary" onClick={handleSaveSettings} className="w-full">
+                  <ModernButton variant="solid" onClick={handleSaveSettings} className="w-full">
                     Save Preferences
-                  </BrutalistButton>
+                  </ModernButton>
                 </div>
               </CardContent>
             </Card>
@@ -433,32 +434,35 @@ export const Settings: React.FC = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
-                <BrutalistButton 
+                <ModernButton 
                   variant="outline" 
                   className="w-full"
+                  icon={Download}
+                  iconPosition="left"
                   onClick={() => handleExportCSV('students')}
                 >
-                  <Download className="w-4 h-4 mr-2" />
                   Export Students
-                </BrutalistButton>
+                </ModernButton>
                 
-                <BrutalistButton 
+                <ModernButton 
                   variant="outline" 
                   className="w-full"
+                  icon={Download}
+                  iconPosition="left"
                   onClick={() => handleExportCSV('payments')}
                 >
-                  <Download className="w-4 h-4 mr-2" />
                   Export Payments
-                </BrutalistButton>
+                </ModernButton>
                 
-                <BrutalistButton 
+                <ModernButton 
                   variant="outline" 
                   className="w-full"
+                  icon={Download}
+                  iconPosition="left"
                   onClick={() => handleExportCSV('attendance')}
                 >
-                  <Download className="w-4 h-4 mr-2" />
                   Export Attendance
-                </BrutalistButton>
+                </ModernButton>
               </CardContent>
             </Card>
 
@@ -505,14 +509,15 @@ export const Settings: React.FC = () => {
                   <GraduationCap className="w-5 h-5" />
                   <span>Academic Structure</span>
                 </CardTitle>
-                <BrutalistButton 
+                <ModernButton 
                   variant="outline"
                   size="sm"
+                  icon={Plus}
+                  iconPosition="left"
                   onClick={() => setIsAddYearOpen(true)}
                 >
-                  <Plus className="w-4 h-4 mr-2" />
                   Add Year
-                </BrutalistButton>
+                </ModernButton>
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -641,21 +646,21 @@ export const Settings: React.FC = () => {
                                 </label>
                               </div>
                               <div className="flex items-center space-x-2">
-                                <BrutalistButton
-                                  variant="primary"
+                                <ModernButton
+                                  variant="solid"
                                   size="sm"
                                   onClick={() => handleAddFieldInline(year.id)}
                                   disabled={!fieldForm.name.trim() || createFieldMutation.isPending}
                                 >
                                   Add Field
-                                </BrutalistButton>
-                                <BrutalistButton
+                                </ModernButton>
+                                <ModernButton
                                   variant="outline"
                                   size="sm"
                                   onClick={cancelAddingField}
                                 >
                                   Cancel
-                                </BrutalistButton>
+                                </ModernButton>
                               </div>
                             </div>
                           </div>
@@ -715,20 +720,20 @@ export const Settings: React.FC = () => {
           </FormField>
 
           <div className="flex items-center space-x-4">
-            <BrutalistButton
+            <ModernButton
               variant="outline"
               className="flex-1"
               onClick={() => setIsChangeCodeOpen(false)}
             >
               Cancel
-            </BrutalistButton>
-            <BrutalistButton
-              variant="primary"
+            </ModernButton>
+            <ModernButton
+              variant="solid"
               className="flex-1"
               onClick={handleChangeCode}
             >
               Change Code
-            </BrutalistButton>
+            </ModernButton>
           </div>
         </div>
       </Modal>
@@ -775,21 +780,21 @@ export const Settings: React.FC = () => {
           </div>
 
           <div className="flex items-center space-x-4">
-            <BrutalistButton
+            <ModernButton
               variant="outline"
               className="flex-1"
               onClick={() => setIsAddYearOpen(false)}
             >
               Cancel
-            </BrutalistButton>
-            <BrutalistButton
-              variant="primary"
+            </ModernButton>
+            <ModernButton
+              variant="solid"
               className="flex-1"
               onClick={handleAddYear}
               disabled={!yearForm.name || createYearMutation.isPending}
             >
               Add Year
-            </BrutalistButton>
+            </ModernButton>
           </div>
         </div>
       </Modal>
@@ -834,21 +839,21 @@ export const Settings: React.FC = () => {
           </div>
 
           <div className="flex items-center space-x-4">
-            <BrutalistButton
+            <ModernButton
               variant="outline"
               className="flex-1"
               onClick={() => setIsEditYearOpen(false)}
             >
               Cancel
-            </BrutalistButton>
-            <BrutalistButton
-              variant="primary"
+            </ModernButton>
+            <ModernButton
+              variant="solid"
               className="flex-1"
               onClick={handleUpdateYear}
               disabled={!yearForm.name || updateYearMutation.isPending}
             >
               Update Year
-            </BrutalistButton>
+            </ModernButton>
           </div>
         </div>
       </Modal>
@@ -896,21 +901,21 @@ export const Settings: React.FC = () => {
           </div>
 
           <div className="flex items-center space-x-4">
-            <BrutalistButton
+            <ModernButton
               variant="outline"
               className="flex-1"
               onClick={() => setIsEditFieldOpen(false)}
             >
               Cancel
-            </BrutalistButton>
-            <BrutalistButton
-              variant="primary"
+            </ModernButton>
+            <ModernButton
+              variant="solid"
               className="flex-1"
               onClick={handleUpdateField}
               disabled={!fieldForm.name || !fieldForm.yearId || updateFieldMutation.isPending}
             >
               Update Field
-            </BrutalistButton>
+            </ModernButton>
           </div>
         </div>
       </Modal>

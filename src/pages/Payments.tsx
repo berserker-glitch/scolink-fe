@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { BrutalistButton } from '@/components/ui/BrutalistButton';
+import { ModernButton } from '@/components/ui';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { PaymentRecordModal } from '@/components/Payment/PaymentRecordModal';
@@ -196,32 +196,39 @@ export const Payments: React.FC = () => {
         </div>
         
         <div className="flex items-center space-x-4 mt-4 lg:mt-0">
-          <BrutalistButton 
+          <ModernButton 
             variant="outline"
+            icon={TrendingUp}
+            iconPosition="left"
             onClick={() => setShowAnalytics(!showAnalytics)}
           >
-            <TrendingUp className="w-4 h-4 mr-2" />
             {showAnalytics ? 'Hide' : 'Show'} Analytics
-          </BrutalistButton>
-          <BrutalistButton 
+          </ModernButton>
+          <ModernButton 
             variant="outline"
+            icon={RefreshCw}
+            iconPosition="left"
             onClick={handleRefresh}
             disabled={isRefreshing}
+            className={isRefreshing ? '[&_svg]:animate-spin' : ''}
           >
-            <RefreshCw className={`w-4 h-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
             Refresh
-          </BrutalistButton>
-          <BrutalistButton 
-            variant="primary"
+          </ModernButton>
+          <ModernButton 
+            variant="solid"
+            icon={Plus}
+            iconPosition="left"
             onClick={() => handleOpenPaymentRecord()}
           >
-            <Plus className="w-4 h-4 mr-2" />
             Record Payment
-          </BrutalistButton>
-          <BrutalistButton variant="outline">
-            <Download className="w-4 h-4 mr-2" />
+          </ModernButton>
+          <ModernButton 
+            variant="outline"
+            icon={Download}
+            iconPosition="left"
+          >
             Export CSV
-          </BrutalistButton>
+          </ModernButton>
         </div>
       </div>
 
@@ -395,30 +402,27 @@ export const Payments: React.FC = () => {
                       </td>
                       <td className="p-4">
                         <div className="flex items-center gap-2">
-                          <BrutalistButton
+                          <ModernButton
                             variant="outline"
                             size="sm"
+                            icon={Eye}
                             onClick={() => handleViewPayment(payment)}
                             title="View Details"
-                          >
-                            <Eye className="w-3 h-3" />
-                          </BrutalistButton>
-                          <BrutalistButton
+                          />
+                          <ModernButton
                             variant="outline"
                             size="sm"
+                            icon={Edit}
                             onClick={() => handleEditPayment(payment)}
                             title="Edit Payment"
-                          >
-                            <Edit className="w-3 h-3" />
-                          </BrutalistButton>
-                          <BrutalistButton
+                          />
+                          <ModernButton
                             variant="outline"
                             size="sm"
+                            icon={Trash2}
                             onClick={() => handleDeletePayment(payment.id)}
                             title="Delete Payment"
-                          >
-                            <Trash2 className="w-3 h-3" />
-                          </BrutalistButton>
+                          />
                         </div>
                       </td>
                     </tr>
@@ -435,40 +439,40 @@ export const Payments: React.FC = () => {
                 Showing {(currentPage - 1) * paymentsPerPage + 1} to {Math.min(currentPage * paymentsPerPage, pagination.total)} of {pagination.total} payments
               </div>
               <div className="flex items-center space-x-2">
-                <BrutalistButton
+                <ModernButton
                   variant="outline"
                   size="sm"
                   disabled={currentPage === 1 || isLoading}
                   onClick={() => setCurrentPage(currentPage - 1)}
                 >
                   Previous
-                </BrutalistButton>
+                </ModernButton>
                 
                 {[...Array(Math.min(5, pagination.totalPages))].map((_, index) => {
                   const pageNum = currentPage <= 3 ? index + 1 : currentPage - 2 + index;
                   if (pageNum > pagination.totalPages) return null;
                   
                   return (
-                    <BrutalistButton
+                    <ModernButton
                       key={pageNum}
-                      variant={currentPage === pageNum ? 'primary' : 'outline'}
+                      variant={currentPage === pageNum ? 'solid' : 'outline'}
                       size="sm"
                       onClick={() => setCurrentPage(pageNum)}
                       disabled={isLoading}
                     >
                       {pageNum}
-                    </BrutalistButton>
+                    </ModernButton>
                   );
                 })}
                 
-                <BrutalistButton
+                <ModernButton
                   variant="outline"
                   size="sm"
                   disabled={currentPage === pagination.totalPages || isLoading}
                   onClick={() => setCurrentPage(currentPage + 1)}
                 >
                   Next
-                </BrutalistButton>
+                </ModernButton>
               </div>
             </div>
           )}

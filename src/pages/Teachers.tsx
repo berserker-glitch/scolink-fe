@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { BrutalistButton } from '@/components/ui/BrutalistButton';
+import { ModernButton } from '@/components/ui';
 import { Modal } from '@/components/ui/Modal';
 import { FormField, Input, Textarea } from '@/components/ui/FormField';
 import { TeacherDetailDrawer } from '@/components/Teacher/TeacherDetailDrawer';
@@ -196,13 +196,14 @@ export const Teachers: React.FC = () => {
           </p>
         </div>
         
-        <BrutalistButton 
-          variant="primary" 
+        <ModernButton 
+          variant="solid" 
+          icon={Plus}
+          iconPosition="left"
           onClick={() => setIsAddTeacherOpen(true)}
         >
-          <Plus className="w-4 h-4 mr-2" />
           Add Teacher
-        </BrutalistButton>
+        </ModernButton>
       </div>
 
       {/* Search */}
@@ -266,12 +267,12 @@ export const Teachers: React.FC = () => {
                       </p>
                     </div>
                   </div>
-                  <button 
-                    className="p-2 rounded-md hover:bg-surface-secondary text-text-secondary hover:text-text-primary"
+                  <ModernButton
+                    variant="ghost"
+                    size="sm"
+                    icon={Eye}
                     onClick={() => handleViewTeacher(teacher)}
-                  >
-                    <Eye className="w-4 h-4" />
-                  </button>
+                  />
                 </div>
 
                 {/* Contact Info */}
@@ -302,33 +303,32 @@ export const Teachers: React.FC = () => {
 
                 {/* Actions */}
                 <div className="flex items-center space-x-2">
-                  <BrutalistButton 
+                  <ModernButton 
                     variant="outline" 
                     size="sm" 
                     className="flex-1"
+                    icon={FileText}
+                    iconPosition="left"
                     onClick={() => handlePrintSchedule(teacher)}
                   >
-                    <FileText className="w-4 h-4 mr-1" />
                     Print Schedule
-                  </BrutalistButton>
-                  <BrutalistButton 
+                  </ModernButton>
+                  <ModernButton 
                     variant="outline" 
                     size="sm"
+                    icon={Edit}
                     onClick={() => handleEditTeacher(teacher)}
-                  >
-                    <Edit className="w-4 h-4" />
-                  </BrutalistButton>
-                  <BrutalistButton 
+                  />
+                  <ModernButton 
                     variant="outline" 
                     size="sm"
+                    icon={Trash2}
                     onClick={() => {
                       if (confirm('Are you sure you want to delete this teacher?')) {
                         deleteTeacherMutation.mutate(teacher.id);
                       }
                     }}
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </BrutalistButton>
+                  />
                 </div>
               </CardContent>
             </Card>
@@ -383,21 +383,21 @@ export const Teachers: React.FC = () => {
           </FormField>
 
           <div className="flex items-center space-x-4 pt-4">
-            <BrutalistButton 
+            <ModernButton 
               variant="outline" 
               className="flex-1"
               onClick={() => setIsAddTeacherOpen(false)}
             >
               Cancel
-            </BrutalistButton>
-            <BrutalistButton 
-              variant="primary" 
+            </ModernButton>
+            <ModernButton 
+              variant="solid" 
               className="flex-1"
               onClick={handleSaveTeacher}
               disabled={createTeacherMutation.isPending}
             >
               {createTeacherMutation.isPending ? 'Adding...' : 'Add Teacher'}
-            </BrutalistButton>
+            </ModernButton>
           </div>
         </div>
       </Modal>
@@ -450,21 +450,21 @@ export const Teachers: React.FC = () => {
           </FormField>
 
           <div className="flex items-center space-x-4 pt-4">
-            <BrutalistButton 
+            <ModernButton 
               variant="outline" 
               className="flex-1"
               onClick={() => setIsEditTeacherOpen(false)}
             >
               Cancel
-            </BrutalistButton>
-            <BrutalistButton 
-              variant="primary" 
+            </ModernButton>
+            <ModernButton 
+              variant="solid" 
               className="flex-1"
               onClick={handleUpdateTeacher}
               disabled={updateTeacherMutation.isPending}
             >
               {updateTeacherMutation.isPending ? 'Updating...' : 'Update Teacher'}
-            </BrutalistButton>
+            </ModernButton>
           </div>
         </div>
       </Modal>

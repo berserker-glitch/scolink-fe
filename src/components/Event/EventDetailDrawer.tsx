@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { BrutalistButton } from '@/components/ui/BrutalistButton';
+import { ModernButton } from '@/components/ui';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { FormField, Input, Select, Textarea } from '@/components/ui/FormField';
 import { 
@@ -374,22 +374,22 @@ export const EventDetailDrawer: React.FC<EventDetailDrawerProps> = ({
 
               {/* Actions */}
               <div className="flex items-center gap-3">
-                <BrutalistButton 
+                <ModernButton 
                   variant="outline" 
                   onClick={() => onEdit ? onEdit(event) : setIsEditOpen(true)}
                   className="flex-1"
                 >
                   <Edit className="w-4 h-4 mr-2" />
                   Edit Event
-                </BrutalistButton>
-                <BrutalistButton 
+                </ModernButton>
+                <ModernButton 
                   variant="danger" 
                   onClick={handleDeleteEvent}
                   className="flex-1"
                 >
                   <Trash2 className="w-4 h-4 mr-2" />
                   Delete Event
-                </BrutalistButton>
+                </ModernButton>
               </div>
             </>
           ) : (
@@ -404,7 +404,7 @@ export const EventDetailDrawer: React.FC<EventDetailDrawerProps> = ({
                       Enrolled Students ({students.length})
                     </CardTitle>
                     <div className="flex items-center gap-2">
-                      <BrutalistButton
+                      <ModernButton
                         variant="outline"
                         size="sm"
                         onClick={() => {
@@ -414,7 +414,7 @@ export const EventDetailDrawer: React.FC<EventDetailDrawerProps> = ({
                       >
                         <Plus className="w-4 h-4 mr-2" />
                         Add Student
-                      </BrutalistButton>
+                      </ModernButton>
                     </div>
                   </div>
                 </CardHeader>
@@ -423,8 +423,8 @@ export const EventDetailDrawer: React.FC<EventDetailDrawerProps> = ({
                     <div className="text-center py-8">
                       <Users className="w-12 h-12 mx-auto mb-3 opacity-50 text-text-muted" />
                       <p className="text-text-secondary">No students enrolled in this event yet.</p>
-                      <BrutalistButton
-                        variant="primary"
+                      <ModernButton
+                        variant="solid"
                         size="sm"
                         className="mt-4"
                         onClick={() => {
@@ -434,7 +434,7 @@ export const EventDetailDrawer: React.FC<EventDetailDrawerProps> = ({
                       >
                         <Plus className="w-4 h-4 mr-2" />
                         Add First Student
-                      </BrutalistButton>
+                      </ModernButton>
                     </div>
                   ) : (
                     <div className="space-y-3 max-h-[75vh] overflow-y-auto">
@@ -457,7 +457,7 @@ export const EventDetailDrawer: React.FC<EventDetailDrawerProps> = ({
                                     {event.fee} DH
                                   </span>
                                 )}
-                                <BrutalistButton
+                                <ModernButton
                                   variant="outline"
                                   size="sm"
                                   onClick={() => {
@@ -481,7 +481,7 @@ export const EventDetailDrawer: React.FC<EventDetailDrawerProps> = ({
                                   }}
                                 >
                                   <Trash2 className="w-4 h-4" />
-                                </BrutalistButton>
+                                </ModernButton>
                               </div>
                             </div>
                           </CardContent>
@@ -575,18 +575,18 @@ export const EventDetailDrawer: React.FC<EventDetailDrawerProps> = ({
               )}
 
               <div className="flex items-center justify-end gap-2 pt-4 border-t border-border">
-                <BrutalistButton 
+                <ModernButton 
                   variant="outline" 
                   onClick={() => setIsEditOpen(false)}
                 >
                   Cancel
-                </BrutalistButton>
-                <BrutalistButton 
-                  variant="primary" 
+                </ModernButton>
+                <ModernButton 
+                  variant="solid" 
                   onClick={handleEditEvent}
                 >
                   Update Event
-                </BrutalistButton>
+                </ModernButton>
               </div>
             </div>
           </DialogContent>
@@ -657,7 +657,7 @@ export const EventDetailDrawer: React.FC<EventDetailDrawerProps> = ({
               </div>
 
               <div className="flex items-center justify-end gap-2 pt-4 border-t border-border">
-                <BrutalistButton 
+                <ModernButton 
                   variant="outline" 
                   onClick={() => {
                     setIsAddStudentOpen(false);
@@ -665,9 +665,9 @@ export const EventDetailDrawer: React.FC<EventDetailDrawerProps> = ({
                   }}
                 >
                   Cancel
-                </BrutalistButton>
-                <BrutalistButton 
-                  variant="primary" 
+                </ModernButton>
+                <ModernButton 
+                  variant="solid" 
                   onClick={() => {
                     const selectedElement = document.querySelector('input[name="selectedStudent"]:checked') as HTMLInputElement;
                     if (selectedElement?.value) {
@@ -676,7 +676,7 @@ export const EventDetailDrawer: React.FC<EventDetailDrawerProps> = ({
                   }}
                 >
                   Add Student
-                </BrutalistButton>
+                </ModernButton>
               </div>
             </div>
           </DialogContent>
@@ -708,13 +708,13 @@ export const EventDetailDrawer: React.FC<EventDetailDrawerProps> = ({
               </p>
 
               <div className="flex items-center justify-end gap-2 pt-4 border-t border-border">
-                <BrutalistButton 
+                <ModernButton 
                   variant="outline" 
                   onClick={() => setIsRemoveStudentOpen(false)}
                 >
                   Cancel
-                </BrutalistButton>
-                <BrutalistButton 
+                </ModernButton>
+                <ModernButton 
                   variant="danger" 
                   onClick={() => {
                     if (selectedStudent) {
@@ -723,7 +723,7 @@ export const EventDetailDrawer: React.FC<EventDetailDrawerProps> = ({
                   }}
                 >
                   Remove Student
-                </BrutalistButton>
+                </ModernButton>
               </div>
             </div>
           </DialogContent>

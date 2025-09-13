@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { BrutalistButton } from '@/components/ui/BrutalistButton';
+import { ModernButton } from '@/components/ui';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -262,16 +262,16 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
 
         {/* Footer Actions */}
         <div className="flex items-center justify-end gap-3 pt-6 border-t border-border">
-          <BrutalistButton 
+          <ModernButton 
             variant="outline" 
             onClick={onClose}
             disabled={isProcessing}
           >
             Cancel
-          </BrutalistButton>
+          </ModernButton>
           
-          <BrutalistButton 
-            variant="primary" 
+          <ModernButton 
+            variant="solid" 
             onClick={handlePayment}
             disabled={!isPaymentValid || isProcessing}
             className="min-w-[120px]"
@@ -287,7 +287,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
                 Complete Payment
               </>
             )}
-          </BrutalistButton>
+          </ModernButton>
         </div>
       </DialogContent>
     </Dialog>

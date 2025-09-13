@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { BrutalistButton } from '@/components/ui/BrutalistButton';
+import { ModernButton } from '@/components/ui';
 import { Badge } from '@/components/ui/badge';
 import { useQuery } from '@tanstack/react-query';
 import { apiService } from '@/services/api';
@@ -371,17 +371,16 @@ export const PaymentNotifications: React.FC<PaymentNotificationsProps> = ({
                       </div>
                     </div>
                     
-                    <BrutalistButton
+                    <ModernButton
                       variant="outline"
                       size="sm"
+                      icon={X}
                       onClick={(e) => {
                         e.stopPropagation();
                         handleDismissNotification(notification.id);
                       }}
                       className="ml-2"
-                    >
-                      <X className="w-3 h-3" />
-                    </BrutalistButton>
+                    />
                   </div>
                 </div>
               ))}

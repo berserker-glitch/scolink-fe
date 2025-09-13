@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { BrutalistButton } from '@/components/ui/BrutalistButton';
+import { ModernButton } from '@/components/ui';
 import { Badge } from '@/components/ui/badge';
 import { 
   TrendingUp, 
@@ -195,10 +195,9 @@ export const PaymentAnalytics: React.FC<PaymentAnalyticsProps> = ({
         </div>
         
         <div className="flex items-center gap-2">
-          <BrutalistButton variant="outline" size="sm">
-            <Download className="w-4 h-4 mr-2" />
+          <ModernButton variant="outline" size="sm" icon={Download} iconPosition="left">
             Export
-          </BrutalistButton>
+          </ModernButton>
         </div>
       </div>
 

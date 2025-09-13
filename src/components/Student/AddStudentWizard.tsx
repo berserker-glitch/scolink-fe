@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Modal } from '@/components/ui/Modal';
-import { BrutalistButton } from '@/components/ui/BrutalistButton';
+import { ModernButton } from '@/components/ui';
 import { FormField, Input, Select, Textarea } from '@/components/ui/FormField';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { ArrowLeft, ArrowRight, User } from 'lucide-react';
@@ -321,15 +321,15 @@ export const AddStudentWizard: React.FC<AddStudentWizardProps> = ({ isOpen, onCl
 
         {/* Navigation */}
         <div className="flex items-center justify-end gap-3 pt-6 border-t border-border">
-          <BrutalistButton
+          <ModernButton
             variant="outline"
             onClick={onClose}
           >
             Cancel
-          </BrutalistButton>
+          </ModernButton>
 
-          <BrutalistButton 
-            variant="primary" 
+          <ModernButton 
+            variant="solid" 
             onClick={handleNext}
             disabled={isLoading}
           >
@@ -337,7 +337,7 @@ export const AddStudentWizard: React.FC<AddStudentWizardProps> = ({ isOpen, onCl
               ? (isEditing ? 'Updating Student...' : 'Creating Student...') 
               : (isEditing ? 'Update Student' : 'Save Student')
             }
-          </BrutalistButton>
+          </ModernButton>
         </div>
       </div>
     </Modal>
