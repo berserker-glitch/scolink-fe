@@ -60,7 +60,7 @@ interface CardTitleProps {
 }
 
 export const CardTitle: React.FC<CardTitleProps> = ({ children, className }) => (
-  <h3 className={cn('text-subheading font-semibold text-text-primary', className)}>
+  <h3 className={cn('text-lg font-semibold text-text-primary', className)}>
     {children}
   </h3>
 );
@@ -71,7 +71,7 @@ interface CardDescriptionProps {
 }
 
 export const CardDescription: React.FC<CardDescriptionProps> = ({ children, className }) => (
-  <p className={cn('text-body text-text-secondary mt-1', className)}>
+  <p className={cn('text-sm text-text-secondary mt-1', className)}>
     {children}
   </p>
 );

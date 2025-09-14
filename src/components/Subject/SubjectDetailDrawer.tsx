@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetFooter } from '@/components/ui/sheet';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { ModernButton } from '@/components/ui';
 import { Badge } from '@/components/ui/badge';
@@ -18,7 +18,8 @@ import {
   Plus,
   Eye,
   X,
-  Search
+  Search,
+  BarChart3
 } from 'lucide-react';
 
 interface SubjectDetailDrawerProps {
@@ -37,6 +38,7 @@ export const SubjectDetailDrawer: React.FC<SubjectDetailDrawerProps> = ({
   const [isAddGroupOpen, setIsAddGroupOpen] = useState(false);
   const [isEditGroupOpen, setIsEditGroupOpen] = useState(false);
   const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
+  const [activeTab, setActiveTab] = useState('info');
   const [groupForm, setGroupForm] = useState({
     name: '',
     capacity: '',
@@ -259,188 +261,288 @@ export const SubjectDetailDrawer: React.FC<SubjectDetailDrawerProps> = ({
     setIsEditGroupOpen(true);
   };
 
-  return (
-    <Sheet open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <SheetContent side="right" className="!w-[50%] !max-w-[50vw] h-full overflow-hidden" style={{ width: '50%', maxWidth: '50vw' }}>
-        <SheetHeader className="border-b border-border">
-          <div className="flex items-center justify-between">
-            <div>
-              <SheetTitle className="text-xl font-bold flex items-center gap-2">
-                <BookOpen className="w-6 h-6" />
-                {subject.name}
-              </SheetTitle>
-              <p className="text-sm text-text-secondary mt-1">
-                Subject Details & Groups
-              </p>
-            </div>
-            <div className="flex items-center gap-2">
-              <ModernButton
-                variant="danger"
-                size="sm"
-                onClick={() => {
-                  if (confirm('Are you sure you want to delete this subject? This will also delete all associated groups.')) {
-                    deleteSubjectMutation.mutate();
-                  }
-                }}
-                disabled={deleteSubjectMutation.isPending}
-              >
-                <Trash2 className="w-4 h-4 mr-1" />
-                {deleteSubjectMutation.isPending ? 'Deleting...' : 'Delete'}
-              </ModernButton>
-            </div>
-          </div>
-        </SheetHeader>
+  if (!isOpen) return null;
 
-        <div className="flex-1 overflow-y-auto p-6">
-          {/* Subject Card */}
-          <Card className="mb-6">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+  return (
+    <div className="w-full bg-white h-full overflow-hidden flex flex-col shadow-lg">
+      {/* Header - Similar to Student Drawer */}
+      <div className="p-4 shrink-0 shadow-sm">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-xl font-bold text-gray-900">
+              {subject.name}
+            </h2>
+            <p className="text-sm text-gray-600 mt-1">
+              {subject.yearName} • {subject.fieldName} • {subject.monthlyFee} DH/month
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <Badge variant="outline" className="text-xs">
+              Subject ID: {subject.id?.slice(-6)?.toUpperCase()}
+            </Badge>
+            <ModernButton
+              variant="ghost"
+              size="sm"
+              onClick={onClose}
+            >
+              <X className="w-4 h-4" />
+            </ModernButton>
+          </div>
+        </div>
+      </div>
+
+      {/* Tab Navigation - Similar to Student Drawer */}
+      <div className="flex-1 overflow-hidden">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
+          <div className="px-6 pt-4 shadow-sm">
+            <TabsList className="grid w-full grid-cols-2 bg-surface-secondary p-1 rounded-lg h-12 shadow-sm">
+              <TabsTrigger 
+                value="info" 
+                className="flex items-center justify-center rounded-sm data-[state=active]:bg-interactive data-[state=active]:text-white data-[state=inactive]:text-text-muted hover:text-text-primary transition-all duration-200"
+              >
                 <BookOpen className="w-5 h-5" />
-                Subject Information
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
+              </TabsTrigger>
+              <TabsTrigger 
+                value="groups" 
+                className="flex items-center justify-center rounded-sm data-[state=active]:bg-interactive data-[state=active]:text-white data-[state=inactive]:text-text-muted hover:text-text-primary transition-all duration-200"
+              >
+                <Users className="w-5 h-5" />
+              </TabsTrigger>
+            </TabsList>
+          </div>
+
+          <div className="flex-1 overflow-y-auto p-6">
+            {/* Subject Info Tab */}
+            <TabsContent value="info" className="space-y-4">
+              {/* Subject Header */}
+              <div className="text-center py-6 bg-surface rounded-lg shadow-sm">
+                <div className="w-16 h-16 mx-auto mb-3 bg-interactive rounded-full flex items-center justify-center shadow-md">
+                  <BookOpen className="w-8 h-8 text-white" />
+                </div>
+                <h2 className="text-xl font-bold text-text-primary mb-1">
+                  {subject.name}
+                </h2>
+                <p className="text-sm text-text-secondary">
+                  {subject.yearName} • {subject.fieldName}
+                </p>
+              </div>
+
+              {/* Subject Details Grid */}
               <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="text-sm font-medium text-text-secondary">Name</label>
+                <div className="p-4 bg-surface rounded-lg shadow-sm">
+                  <div className="flex items-center gap-2 mb-2">
+                    <BookOpen className="w-4 h-4 text-interactive" />
+                    <span className="text-sm font-medium text-text-secondary">Subject Name</span>
+                  </div>
                   <p className="text-text-primary font-medium">{subject.name}</p>
                 </div>
-                <div>
-                  <label className="text-sm font-medium text-text-secondary">Monthly Fee</label>
+                
+                <div className="p-4 bg-surface rounded-lg shadow-sm">
+                  <div className="flex items-center gap-2 mb-2">
+                    <BarChart3 className="w-4 h-4 text-interactive" />
+                    <span className="text-sm font-medium text-text-secondary">Monthly Fee</span>
+                  </div>
                   <p className="text-text-primary font-medium">{subject.monthlyFee} DH</p>
                 </div>
-                <div>
-                  <label className="text-sm font-medium text-text-secondary">Year</label>
+                
+                <div className="p-4 bg-surface rounded-lg shadow-sm">
+                  <div className="flex items-center gap-2 mb-2">
+                    <BookOpen className="w-4 h-4 text-interactive" />
+                    <span className="text-sm font-medium text-text-secondary">Academic Year</span>
+                  </div>
                   <p className="text-text-primary font-medium">{subject.yearName}</p>
                 </div>
-                <div>
-                  <label className="text-sm font-medium text-text-secondary">Field</label>
+                
+                <div className="p-4 bg-surface rounded-lg shadow-sm">
+                  <div className="flex items-center gap-2 mb-2">
+                    <BarChart3 className="w-4 h-4 text-interactive" />
+                    <span className="text-sm font-medium text-text-secondary">Field of Study</span>
+                  </div>
                   <p className="text-text-primary font-medium">{subject.fieldName}</p>
                 </div>
-                <div>
-                  <label className="text-sm font-medium text-text-secondary">Total Groups</label>
+
+                <div className="p-4 bg-surface rounded-lg shadow-sm">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Users className="w-4 h-4 text-interactive" />
+                    <span className="text-sm font-medium text-text-secondary">Total Groups</span>
+                  </div>
                   <p className="text-text-primary font-medium">{subjectGroups.length}</p>
                 </div>
-                <div>
-                  <label className="text-sm font-medium text-text-secondary">Total Students</label>
+                
+                <div className="p-4 bg-surface rounded-lg shadow-sm">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Users className="w-4 h-4 text-interactive" />
+                    <span className="text-sm font-medium text-text-secondary">Total Students</span>
+                  </div>
                   <p className="text-text-primary font-medium">{totalStudents}</p>
                 </div>
               </div>
-            </CardContent>
-          </Card>
 
-          {/* Groups Section */}
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-text-primary">Groups ({groupsLoading ? '...' : subjectGroups.length})</h3>
-            <ModernButton 
-              variant="solid" 
-              size="sm"
-              onClick={() => setIsAddGroupOpen(true)}
-              disabled={groupsLoading}
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              Add Group
-            </ModernButton>
-          </div>
+              {/* Subject Status */}
+              <div className="flex justify-center">
+                <div className="inline-flex items-center px-3 py-1 bg-surface rounded-full shadow-sm">
+                  <div className="w-2 h-2 rounded-full mr-2 bg-green-500"></div>
+                  <span className="text-sm font-medium text-text-primary">Active Subject</span>
+                </div>
+              </div>
+            </TabsContent>
 
-          {groupsLoading ? (
-            <Card className="surface-secondary">
-              <CardContent className="p-8 text-center">
-                <Users className="w-12 h-12 mx-auto mb-3 opacity-50 text-text-muted" />
-                <p className="text-text-secondary">Loading groups...</p>
-              </CardContent>
-            </Card>
-          ) : subjectGroups.length === 0 ? (
-            <Card className="surface-secondary">
-              <CardContent className="p-8 text-center">
-                <Users className="w-12 h-12 mx-auto mb-3 opacity-50 text-text-muted" />
-                <p className="text-text-secondary">No groups created for this subject yet.</p>
-                <p className="text-sm text-text-muted mt-1">Click "Add Group" to create the first group.</p>
-              </CardContent>
-            </Card>
-          ) : (
-            <div className="space-y-4">
-              {subjectGroups.map((group) => {
-                const teacher = getGroupTeacher(group.teacherId);
-                
-                return (
-                  <Card key={group.id} className="surface-secondary hover:bg-surface-hover transition-colors">
-                    <CardContent className="p-4">
-                      <div className="flex items-start justify-between mb-3">
-                        <h4 className="font-medium text-text-primary">{group.name}</h4>
-                        <div className="flex items-center gap-2">
+            {/* Groups Tab */}
+            <TabsContent value="groups" className="space-y-4">
+              {/* Header with Add Button */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Users className="w-5 h-5 text-interactive" />
+                  <h3 className="text-lg font-semibold text-text-primary">Subject Groups</h3>
+                </div>
+                <ModernButton 
+                  variant="solid" 
+                  size="sm"
+                  onClick={() => setIsAddGroupOpen(true)}
+                  disabled={groupsLoading}
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Group
+                </ModernButton>
+              </div>
+
+              {/* Groups List */}
+              <div className="space-y-3">
+                {groupsLoading ? (
+                  <div className="text-center py-12 bg-surface rounded-lg shadow-sm">
+                    <Users className="w-16 h-16 mx-auto mb-4 text-text-muted opacity-50" />
+                    <h4 className="text-lg font-medium text-text-primary mb-2">Loading Groups...</h4>
+                    <p className="text-text-secondary">Please wait while we fetch the groups data.</p>
+                  </div>
+                ) : subjectGroups.length === 0 ? (
+                  <div className="text-center py-12 bg-surface rounded-lg shadow-sm">
+                    <Users className="w-16 h-16 mx-auto mb-4 text-text-muted opacity-50" />
+                    <h4 className="text-lg font-medium text-text-primary mb-2">No Groups Yet</h4>
+                    <p className="text-text-secondary mb-4">This subject doesn't have any groups created yet.</p>
+                    <ModernButton 
+                      variant="outline" 
+                      onClick={() => setIsAddGroupOpen(true)}
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      Create First Group
+                    </ModernButton>
+                  </div>
+                ) : (
+                  subjectGroups.map((group) => {
+                    const teacher = getGroupTeacher(group.teacherId);
+                    const occupancyPercentage = group.capacity > 0 ? ((group.studentCount || 0) / group.capacity) * 100 : 0;
+                    
+                    return (
+                      <div key={group.id} className="bg-surface rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow">
+                        {/* Group Header */}
+                        <div className="flex items-center justify-between mb-3">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 bg-interactive/10 rounded-lg flex items-center justify-center">
+                              <Users className="w-5 h-5 text-interactive" />
+                            </div>
+                            <div>
+                              <h4 className="font-semibold text-text-primary">{group.name}</h4>
+                              <p className="text-sm text-text-secondary">Room {group.classNumber}</p>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-sm font-medium text-text-primary">{group.studentCount || 0}/{group.capacity}</p>
+                            <p className="text-xs text-text-secondary">students</p>
+                          </div>
+                        </div>
+
+                        {/* Group Details Grid */}
+                        <div className="grid grid-cols-2 gap-3 mb-4">
+                          <div className="flex items-center gap-2">
+                            <Clock className="w-4 h-4 text-text-muted" />
+                            <div>
+                              <p className="text-xs text-text-secondary">Schedule</p>
+                              <p className="text-sm font-medium text-text-primary">
+                                {group.schedules.map((s, index) => (
+                                  <span key={index}>
+                                    {s.day} {s.startTime}-{s.endTime}
+                                    {index < group.schedules.length - 1 ? ', ' : ''}
+                                  </span>
+                                ))}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <MapPin className="w-4 h-4 text-text-muted" />
+                            <div>
+                              <p className="text-xs text-text-secondary">Location</p>
+                              <p className="text-sm font-medium text-text-primary">{group.classNumber}</p>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Capacity Progress */}
+                        <div className="mb-4">
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="text-sm text-text-secondary">Capacity</span>
+                            <span className="text-sm font-medium text-text-primary">{Math.round(occupancyPercentage)}%</span>
+                          </div>
+                          <div className="w-full bg-surface-secondary rounded-full h-2">
+                            <div 
+                              className={`h-2 rounded-full transition-all duration-300 ${
+                                occupancyPercentage >= 90 ? 'bg-red-500' : 
+                                occupancyPercentage >= 70 ? 'bg-yellow-500' : 'bg-green-500'
+                              }`}
+                              style={{ width: `${Math.min(occupancyPercentage, 100)}%` }}
+                            ></div>
+                          </div>
+                        </div>
+
+                        {/* Teacher Info */}
+                        {teacher && (
+                          <div className="mb-4 p-3 bg-surface-secondary rounded-lg">
+                            <p className="text-xs text-text-secondary mb-1">Assigned Teacher</p>
+                            <p className="text-sm font-medium text-text-primary">{teacher.name}</p>
+                          </div>
+                        )}
+
+                        {/* Action Buttons */}
+                        <div className="flex items-center justify-end gap-2">
                           <ModernButton 
                             variant="outline" 
                             size="sm"
                             onClick={() => openEditGroup(group)}
                           >
-                            <Edit className="w-3 h-3 mr-1" />
+                            <Edit className="w-4 h-4 mr-1" />
                             Edit
                           </ModernButton>
                           <ModernButton 
-                            variant="outline" 
+                            variant="ghost" 
                             size="sm"
                             onClick={() => handleDeleteGroup(group.id)}
+                            className="text-red-600 hover:text-red-700 hover:bg-red-50"
                           >
-                            <Trash2 className="w-3 h-3" />
+                            <Trash2 className="w-4 h-4" />
                           </ModernButton>
                         </div>
                       </div>
-                      
-                      <div className="grid grid-cols-2 gap-4 text-sm">
-                        <div className="space-y-2">
-                          <div className="flex items-center gap-2 text-text-secondary">
-                            <Clock className="w-4 h-4" />
-                            <span>
-                              {group.schedules.map((schedule, index) => (
-                                <span key={index}>
-                                  {schedule.day} {schedule.startTime}-{schedule.endTime}
-                                  {index < group.schedules.length - 1 ? ', ' : ''}
-                                </span>
-                              ))}
-                            </span>
-                          </div>
-                          
-                          <div className="flex items-center gap-2 text-text-secondary">
-                            <MapPin className="w-4 h-4" />
-                            <span>{group.classNumber}</span>
-                          </div>
-                        </div>
-                        
-                        <div className="space-y-2">
-                          <div className="flex items-center gap-2 text-text-secondary">
-                            <Users className="w-4 h-4" />
-                            <span>{group.studentCount || 0}/{group.capacity} students</span>
-                          </div>
-                          
-                          {teacher && (
-                            <div className="pt-2 border-t border-border">
-                              <p className="text-text-primary font-medium text-sm">{teacher.name}</p>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                );
-              })}
-            </div>
-          )}
-        </div>
+                    );
+                  })
+                )}
+              </div>
+            </TabsContent>
 
-        {/* Add Group Modal */}
-        <Dialog open={isAddGroupOpen} onOpenChange={setIsAddGroupOpen}>
-          <DialogContent className="max-w-2xl">
-            <DialogHeader>
-              <DialogTitle className="flex items-center gap-2">
-                <Plus className="w-5 h-5" />
-                Add New Group to {subject.name} - Step {groupFormStep} of 2
-              </DialogTitle>
-            </DialogHeader>
-            <div className="space-y-6">
-              {/* Step Progress Indicator */}
-              <div className="flex items-center space-x-4 mb-6">
+          </div>
+        </Tabs>
+      </div>
+
+      {/* Add Group Modal */}
+      <Dialog open={isAddGroupOpen} onOpenChange={setIsAddGroupOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Plus className="w-5 h-5" />
+              Add New Group to {subject.name} - Step {groupFormStep} of 2
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-6">
+            {/* Step Progress Indicator */}
+            <div className="flex items-center space-x-4 mb-6">
                 <div className={`flex items-center space-x-2 ${groupFormStep >= 1 ? 'text-interactive' : 'text-text-muted'}`}>
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
                     groupFormStep >= 1 ? 'bg-interactive text-background' : 'bg-surface-secondary text-text-muted'
@@ -849,7 +951,6 @@ export const SubjectDetailDrawer: React.FC<SubjectDetailDrawerProps> = ({
             </div>
           </DialogContent>
         </Dialog>
-      </SheetContent>
-    </Sheet>
+    </div>
   );
 };

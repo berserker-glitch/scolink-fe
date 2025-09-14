@@ -88,7 +88,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, isDark, onThe
                 onClick={() => window.innerWidth < 1024 && onClose()}
               >
                 <item.icon className="w-5 h-5 mr-4" />
-                <span className="font-medium">{item.name}</span>
+                <span className="text-sm font-medium">{item.name}</span>
               </NavLink>
             ))}
           </div>
@@ -117,7 +117,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, isDark, onThe
             className="flex items-center w-full px-4 py-3 sidebar-text-secondary hover:bg-white/10 hover:sidebar-text rounded-xl transition-all duration-200"
           >
             {isDark ? <Sun className="w-5 h-5 mr-3" /> : <Moon className="w-5 h-5 mr-3" />}
-            <span className="font-medium">{isDark ? 'Light Mode' : 'Dark Mode'}</span>
+            <span className="text-sm font-medium">{isDark ? 'Light Mode' : 'Dark Mode'}</span>
           </button>
           
           {/* Logout */}
@@ -126,7 +126,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, isDark, onThe
             className="flex items-center w-full px-4 py-3 sidebar-text-secondary hover:bg-white/10 hover:sidebar-text rounded-xl transition-all duration-200"
           >
             <LogOut className="w-5 h-5 mr-3" />
-            <span className="font-medium">Logout</span>
+            <span className="text-sm font-medium">Logout</span>
           </button>
         </div>
       </div>

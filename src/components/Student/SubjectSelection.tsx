@@ -1,7 +1,6 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/Card';
 import { Check } from 'lucide-react';
-import { mockSubjects } from '@/data/mockData';
 
 interface SubjectSelectionProps {
   selectedSubjects: string[];

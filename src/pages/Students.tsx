@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { ModernButton } from '@/components/ui';
 import { AddStudentWizard } from '@/components/Student/AddStudentWizard';
 import { StudentDrawer } from '@/components/Student/StudentDrawer';
 import { PaymentModal } from '@/components/Student/PaymentModal';
-import { Student as MockStudent } from '@/data/mockData';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiService, Student, Year, Field } from '@/services/api';
 import { useAuth } from '@/contexts/AuthContext';
@@ -17,7 +16,7 @@ import {
 
 // Wrapper component to fetch student by ID for the drawer
 const StudentDrawerWithQuery: React.FC<{
-  studentId: string | null;
+  studentId: string;
   isOpen: boolean;
   onClose: () => void;
   onEdit: (student: Student) => void;
@@ -26,33 +25,25 @@ const StudentDrawerWithQuery: React.FC<{
 }> = ({ studentId, isOpen, onClose, onEdit, onDelete, onPayment }) => {
   const { data: student, isLoading } = useQuery({
     queryKey: ['students', studentId],
-    queryFn: () => apiService.getStudentById(studentId!),
+    queryFn: () => apiService.getStudentById(studentId),
     enabled: isOpen && !!studentId,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
   });
-
-  if (!isOpen) {
-    return null;
-  }
 
   if (isLoading) {
     return (
-      <div className="w-full h-full bg-white border-l border-gray-200 flex items-center justify-center">
+      <div className="w-full h-full bg-white flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading student...</p>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600 mx-auto mb-2"></div>
+          <p className="text-sm text-gray-600">Loading student...</p>
         </div>
       </div>
     );
   }
 
   if (!student) {
-    return (
-      <div className="w-full h-full bg-white border-l border-gray-200 flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-gray-600">No student selected</p>
-        </div>
-      </div>
-    );
+    return null;
   }
 
   return (
@@ -101,9 +92,25 @@ export const Students: React.FC = () => {
   const { toast } = useToast();
   
   const [searchQuery, setSearchQuery] = useState('');
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
   const [selectedYear, setSelectedYear] = useState('');
   const [selectedField, setSelectedField] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+
+  // Debounce search query
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      // Search immediately for any input (like Subjects page)
+      setDebouncedSearchQuery(searchQuery.trim());
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  // Reset to page 1 when search or filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [debouncedSearchQuery, selectedYear, selectedField]);
   const [isAddStudentOpen, setIsAddStudentOpen] = useState(false);
   const [selectedStudentId, setSelectedStudentId] = useState<string | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -114,11 +121,11 @@ export const Students: React.FC = () => {
 
   // Fetch students with pagination and filters
   const { data: studentsData, isLoading: studentsLoading, error: studentsError } = useQuery({
-    queryKey: ['students', currentPage, searchQuery, selectedYear, selectedField],
+    queryKey: ['students', currentPage, debouncedSearchQuery, selectedYear, selectedField],
     queryFn: () => apiService.getStudents(
       currentPage, 
       studentsPerPage, 
-      searchQuery || undefined, 
+      debouncedSearchQuery || undefined, 
       selectedYear || undefined, 
       selectedField || undefined,
       true // only active students
@@ -246,16 +253,16 @@ export const Students: React.FC = () => {
         <div className="flex h-screen">
           {/* Main Content */}
           <div className={`transition-all duration-300 overflow-hidden ${isDrawerOpen ? 'w-[60%]' : 'w-full'}`}>
-            <div className="p-6 h-full overflow-y-auto">
+            <div className="p-6 lg:p-8 h-full overflow-y-auto">
               {/* Header */}
-              <div className="flex items-center justify-between mb-6">
+              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8">
                 <div>
-                  <h1 className="text-2xl font-bold text-gray-900 mb-1">Students Database</h1>
+                  <h1 className="text-2xl font-bold text-gray-900 mb-2">Students Database</h1>
                   <p className="text-sm text-gray-600">
                     {pagination?.total || 0} results • Welcome to Edu-Center Dashboard
                   </p>
                 </div>
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-4 mt-4 lg:mt-0">
                   <ModernButton variant="outline" size="sm">
                     Filter
                   </ModernButton>
@@ -283,7 +290,7 @@ export const Students: React.FC = () => {
                       <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                       <input
                         type="text"
-                        placeholder="Search here..."
+                        placeholder="Search by name, phone, ID card, year, field..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
@@ -437,17 +444,12 @@ export const Students: React.FC = () => {
                 )}
               </div>
 
-              <div className="mt-4 text-center">
-                <ModernButton variant="outline" size="sm">
-                  See More ∨
-                </ModernButton>
-              </div>
             </div>
           </div>
 
         {/* Inline Drawer */}
-        {isDrawerOpen && (
-          <div className="w-[40%] transition-all duration-300">
+        <div className={`w-[40%] transition-all duration-300 ${isDrawerOpen && selectedStudentId ? 'block' : 'hidden'}`}>
+          {selectedStudentId && (
             <StudentDrawerWithQuery
               studentId={selectedStudentId}
               isOpen={isDrawerOpen}
@@ -459,8 +461,8 @@ export const Students: React.FC = () => {
               onDelete={handleDeleteStudent}
               onPayment={() => setIsPaymentModalOpen(true)}
             />
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       {/* Modals */}

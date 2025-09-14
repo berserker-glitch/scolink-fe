@@ -171,6 +171,16 @@ Inspired by Notion's clean minimalism
     background: hsl(var(--surface-secondary));
   }
 
+  /* Hide scrollbar utility class */
+  .hide-scrollbar {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+  }
+
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+  }
+
   /* Brutalist typography scale */
   .text-hero {
     @apply text-4xl font-bold tracking-tight leading-tight;

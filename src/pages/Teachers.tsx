@@ -190,8 +190,8 @@ export const Teachers: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8">
         <div>
-          <h1 className="text-hero text-text-primary mb-2">Teachers</h1>
-          <p className="text-body text-text-secondary">
+          <h1 className="text-2xl font-bold text-text-primary mb-2">Teachers</h1>
+          <p className="text-sm text-text-secondary">
             Manage your teaching staff and assign them to subjects and groups.
           </p>
         </div>

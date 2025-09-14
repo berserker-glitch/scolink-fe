@@ -50,7 +50,7 @@ export const Modal: React.FC<ModalProps> = ({
         {/* Header */}
         {title && (
           <div className="flex items-center justify-between p-6 border-b border-border">
-            <h2 className="text-subheading font-semibold text-text-primary">{title}</h2>
+            <h2 className="text-lg font-semibold text-text-primary">{title}</h2>
             <button
               onClick={onClose}
               className="p-2 rounded-md hover:bg-surface-hover text-text-secondary hover:text-text-primary focus-brutalist"

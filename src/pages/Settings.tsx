@@ -299,8 +299,8 @@ export const Settings: React.FC = () => {
     <div className="min-h-screen bg-background p-6 lg:p-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-hero text-text-primary mb-2">Settings</h1>
-        <p className="text-body text-text-secondary">
+        <h1 className="text-2xl font-bold text-text-primary mb-2">Settings</h1>
+        <p className="text-sm text-text-secondary">
           Configure system preferences, security settings, and data management.
         </p>
       </div>

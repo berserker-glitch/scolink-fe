@@ -4,6 +4,7 @@ import { ModernButton } from '@/components/ui';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Student } from '@/services/api';
 import { 
   Calendar, 
   CreditCard, 
@@ -11,7 +12,6 @@ import {
   XCircle,
   AlertCircle
 } from 'lucide-react';
-import { Student, mockSubjects } from '@/data/mockData';
 
 interface PaymentModalProps {
   isOpen: boolean;
@@ -59,8 +59,8 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
   }, [isOpen, student]);
 
   const getSubjectFee = (subjectId: string) => {
-    const subject = mockSubjects.find(s => s.id === subjectId);
-    return subject?.monthlyFee || 0;
+    // TODO: Implement API call to get subject fee
+    return 100; // Default fee
   };
 
   const getTotalAmount = () => {
@@ -70,8 +70,8 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
   };
 
   const getSubjectName = (subjectId: string) => {
-    const subject = mockSubjects.find(s => s.id === subjectId);
-    return subject?.name || 'Unknown';
+    // TODO: Implement API call to get subject name
+    return 'Subject'; // Default name
   };
 
   const handleSubjectToggle = (subjectId: string) => {
@@ -165,9 +165,8 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
             <CardContent>
               <div className="space-y-3">
                 {(student.subjects || []).map((subject) => {
-                  const subjectData = mockSubjects.find(s => s.id === subject.subjectId);
                   const isSelected = selectedSubjects.includes(subject.subjectId);
-                  const fee = subjectData?.monthlyFee || 0;
+                  const fee = getSubjectFee(subject.subjectId);
                   
                   return (
                     <div key={subject.subjectId} className="flex items-center space-x-3 p-3 border border-border rounded-lg">
@@ -183,7 +182,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
                         <div className="flex items-center justify-between">
                           <div>
                             <div className="font-medium text-text-primary">
-                              {subjectData?.name}
+                              {getSubjectName(subject.subjectId)}
                             </div>
                             <div className="text-sm text-text-secondary">
                               Group: {subject.groupId}

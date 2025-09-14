@@ -18,13 +18,13 @@ export const FormField: React.FC<FormFieldProps> = ({
 }) => {
   return (
     <div className={cn('space-y-2', className)}>
-      <label className="block text-caption font-medium text-text-primary">
+      <label className="block text-sm font-medium text-text-primary">
         {label}
         {required && <span className="text-status-error ml-1">*</span>}
       </label>
       {children}
       {error && (
-        <p className="text-caption text-status-error">{error}</p>
+        <p className="text-sm text-status-error">{error}</p>
       )}
     </div>
   );

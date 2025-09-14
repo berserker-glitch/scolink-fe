@@ -1,6 +1,5 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getAnalytics } from '@/data/mockData';
 import { 
   Users, 
   UserPlus, 
@@ -26,7 +25,19 @@ import {
 
 export const Dashboard: React.FC = () => {
   const navigate = useNavigate();
-  const analytics = getAnalytics();
+  // TODO: Implement API call for analytics
+  const analytics = {
+    studentsCount: 0,
+    teachersCount: 0,
+    subjectsCount: 0,
+    totalRevenue: 0,
+    activitiesThisWeek: [],
+    totalStudents: 0,
+    newStudentsThisMonth: 0,
+    monthlyRevenue: 0,
+    groupsToday: 0,
+    attendanceRate: 0
+  };
   const currentDate = new Date();
   const timeString = currentDate.toLocaleTimeString('en-US', { 
     hour12: false, 
@@ -116,8 +127,8 @@ export const Dashboard: React.FC = () => {
       <div className="mb-8">
         <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Dashboard</h1>
-            <p className="text-gray-600 text-lg">
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">Dashboard</h1>
+            <p className="text-sm text-gray-600">
               Hi, Habib! Welcome to Edu-Center Dashboard
             </p>
           </div>

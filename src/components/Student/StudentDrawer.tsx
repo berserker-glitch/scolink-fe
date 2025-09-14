@@ -28,7 +28,6 @@ import {
   Users,
   AlertCircle
 } from 'lucide-react';
-import { Student as MockStudent } from '@/data/mockData';
 import { Student } from '@/services/api';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiService } from '@/services/api';
@@ -40,8 +39,8 @@ import { PaymentRecordModal } from '../Payment/PaymentRecordModal';
 interface StudentDrawerProps {
   isOpen: boolean;
   onClose: () => void;
-  student: Student | MockStudent | null;
-  onEdit: (student: Student | MockStudent) => void;
+  student: Student | null;
+  onEdit: (student: Student) => void;
   onDelete: (studentId: string) => void;
   onOpenPaymentModal: () => void;
 }
@@ -133,7 +132,7 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
   };
 
   const getPaymentStatus = (month: string) => {
-    const payments = (student as MockStudent)?.payments || [];
+    const payments = student?.payments || [];
     const payment = payments.find(p => p.month === month);
     return payment?.status || 'unpaid';
   };
@@ -183,13 +182,13 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
   // Subject and Group management functions
   const getAvailableSubjects = () => {
     const enrollments = student.enrollments || [];
-    const currentSubjectNames = enrollments.map(e => e.subjectName);
+    const currentSubjectIds = enrollments.map(e => e.subjectId);
     
     // Filter subjects by student's year and field, and exclude already enrolled subjects
     return availableSubjects.filter(subject => 
       subject.yearId === student.yearId && 
       subject.fieldId === student.fieldId && 
-      !currentSubjectNames.includes(subject.name) &&
+      !currentSubjectIds.includes(subject.id) &&
       subject.isActive
     );
   };
@@ -342,8 +341,8 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
   if (!isOpen) return null;
   
   return (
-    <div className="w-full bg-white border-l border-gray-200 h-full overflow-hidden flex flex-col shadow-lg">
-        <div className="border-b border-gray-200 p-4 shrink-0">
+    <div className="w-full bg-white h-full overflow-hidden flex flex-col shadow-lg">
+        <div className="p-4 shrink-0 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-xl font-bold text-gray-900">
@@ -360,6 +359,14 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
               <ModernButton
                 variant="ghost"
                 size="sm"
+                onClick={() => onEdit(student)}
+                className="text-text-muted hover:text-interactive"
+              >
+                <Edit className="w-4 h-4" />
+              </ModernButton>
+              <ModernButton
+                variant="ghost"
+                size="sm"
                 onClick={onClose}
               >
                 <X className="w-4 h-4" />
@@ -370,8 +377,8 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
 
         <div className="flex-1 overflow-hidden">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
-            <div className="px-6 pt-4 border-b border-border">
-              <TabsList className="grid w-full grid-cols-4 bg-surface-secondary p-1 rounded-lg h-12">
+            <div className="px-6 pt-4 shadow-sm">
+              <TabsList className="grid w-full grid-cols-4 bg-surface-secondary p-1 rounded-lg h-12 shadow-sm">
                 <TabsTrigger 
                   value="info" 
                   className="flex items-center justify-center rounded-sm data-[state=active]:bg-interactive data-[state=active]:text-white data-[state=inactive]:text-text-muted hover:text-text-primary transition-all duration-200"
@@ -461,281 +468,372 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
                 </div>
 
                 {/* Notes - Only if exists */}
-                {(student as MockStudent)?.notes && (
+                {student?.notes && (
                   <div className="p-4 bg-surface rounded-lg shadow-sm">
                     <div className="flex items-center gap-2 mb-2">
                       <FileText className="w-4 h-4 text-text-muted" />
                       <span className="text-sm font-medium text-text-secondary">Notes</span>
                     </div>
-                    <p className="text-text-primary text-sm">{(student as MockStudent)?.notes}</p>
+                    <p className="text-text-primary text-sm">{student?.notes}</p>
                   </div>
                 )}
               </TabsContent>
 
               {/* Subjects & Groups Tab */}
-              <TabsContent value="subjects" className="space-y-6">
-                <Card>
-                  <CardHeader>
-                    <div className="flex items-center justify-between">
-                      <CardTitle className="flex items-center gap-2">
-                        <BookOpen className="w-5 h-5" />
-                        Current Subjects & Groups
-                      </CardTitle>
+              <TabsContent value="subjects" className="space-y-4">
+                {/* Header with Add Button */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <BookOpen className="w-5 h-5 text-interactive" />
+                    <h3 className="text-lg font-semibold text-text-primary">Current Subjects</h3>
+                  </div>
+                  <ModernButton 
+                    variant="solid" 
+                    size="sm"
+                    onClick={() => setIsAddSubjectModalOpen(true)}
+                    disabled={getAvailableSubjects().length === 0}
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add Subject
+                  </ModernButton>
+                </div>
+
+                {/* Subjects List */}
+                <div className="space-y-3">
+                  {(!student.enrollments || student.enrollments.length === 0) ? (
+                    <div className="text-center py-12 bg-surface rounded-lg shadow-sm">
+                      <BookOpen className="w-16 h-16 mx-auto mb-4 text-text-muted opacity-50" />
+                      <h4 className="text-lg font-medium text-text-primary mb-2">No Subjects Enrolled</h4>
+                      <p className="text-text-secondary mb-4">The student is not enrolled in any subjects yet.</p>
                       <ModernButton 
-                        variant="solid" 
-                        size="sm"
+                        variant="outline" 
                         onClick={() => setIsAddSubjectModalOpen(true)}
                         disabled={getAvailableSubjects().length === 0}
                       >
                         <Plus className="w-4 h-4 mr-2" />
-                        Add Subject
+                        Add First Subject
                       </ModernButton>
                     </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {(!student.enrollments || student.enrollments.length === 0) ? (
-                        <div className="text-center py-8 text-text-secondary">
-                          <BookOpen className="w-12 h-12 mx-auto mb-3 opacity-50" />
-                          <p>No subjects assigned yet.</p>
-                          <p className="text-sm">Click "Add Subject" to get started.</p>
-                        </div>
-                      ) : (
-                        (student.enrollments || []).map((enrollment, index) => {
-                        const subjectData = availableSubjects.find(s => s.name === enrollment.subjectName);
-                        const groupData = availableGroups.find(g => g.id === enrollment.groupId);
-                          
-                          return (
-                            <div key={index} className="p-4 border border-border rounded-lg">
-                              <div className="flex items-center justify-between mb-3">
-                                <h4 className="font-semibold text-text-primary">
-                                  {subjectData?.name}
-                                </h4>
-                                <div className="flex items-center gap-2">
-                                  <Badge variant="outline">
-                                    {subjectData?.monthlyFee} DH/month
-                                  </Badge>
-                                  <ModernButton 
-                                    variant="outline" 
-                                    size="sm"
-                                    onClick={() => {
-                                      setSelectedSubjectForGroupChange(enrollment);
-                                      setIsChangeGroupModalOpen(true);
-                                    }}
-                                  >
-                                    <Edit className="w-4 h-4 mr-2" />
-                                    Change Group
-                                  </ModernButton>
-                                  <ModernButton 
-                                    variant="ghost" 
-                                    size="sm"
-                                    className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                                    onClick={() => handleRemoveSubject(enrollment.id)}
-                                  >
-                                    <Trash2 className="w-4 h-4 mr-2" />
-                                    Remove
-                                  </ModernButton>
-                                </div>
+                  ) : (
+                    (student.enrollments || []).map((enrollment, index) => {
+                      const subjectData = availableSubjects.find(s => s.name === enrollment.subjectName);
+                      const groupData = availableGroups.find(g => g.id === enrollment.groupId);
+                      const attendanceRate = getAttendancePercentage(enrollment.id);
+                      
+                      return (
+                        <div key={index} className="bg-surface rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow">
+                          {/* Subject Header */}
+                          <div className="flex items-center justify-between mb-3">
+                            <div className="flex items-center gap-3">
+                              <div className="w-10 h-10 bg-interactive/10 rounded-lg flex items-center justify-center">
+                                <BookOpen className="w-5 h-5 text-interactive" />
                               </div>
-                              
-                              <div className="grid grid-cols-2 gap-4 text-sm">
-                                <div>
-                                  <span className="text-text-secondary">Group: </span>
-                                  <span className="text-text-primary">{enrollment.groupName}</span>
-                                </div>
-                                <div>
-                                  <span className="text-text-secondary">Teacher: </span>
-                                  <span className="text-text-primary">{'Assigned Teacher'}</span>
-                                </div>
-                                <div>
-                                  <span className="text-text-secondary">Schedule: </span>
-                                  <span className="text-text-primary">
-                                    {groupData?.schedules && groupData.schedules.length > 0 
-                                      ? `${(groupData.schedules[0] as any).day} ${(groupData.schedules[0] as any).startTime}-${(groupData.schedules[0] as any).endTime}`
-                                      : 'Not scheduled'
-                                    }
-                                  </span>
-                                </div>
-                                <div>
-                                  <span className="text-text-secondary">Room: </span>
-                                  <span className="text-text-primary">{groupData?.classNumber}</span>
-                                </div>
-                              </div>
-                              
-                              <div className="mt-3 pt-3 border-t border-border">
-                                <div className="flex items-center justify-between">
-                                  <span className="text-sm text-text-secondary">Attendance Rate</span>
-                                  <span className="text-sm font-medium text-text-primary">
-                                    {getAttendancePercentage(enrollment.id)}%
-                                  </span>
-                                </div>
-                                <div className="mt-2 w-full bg-muted rounded-full h-2">
-                                  <div 
-                                    className="bg-primary h-2 rounded-full transition-all duration-300"
-                                    style={{ width: `${getAttendancePercentage(enrollment.id)}%` }}
-                                  />
-                                </div>
+                              <div>
+                                <h4 className="font-semibold text-text-primary">{subjectData?.name}</h4>
+                                <p className="text-sm text-text-secondary">{enrollment.groupName}</p>
                               </div>
                             </div>
-                          );
-                        })
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
+                            <div className="text-right">
+                              <p className="text-sm font-medium text-text-primary">{subjectData?.monthlyFee} DH</p>
+                              <p className="text-xs text-text-secondary">per month</p>
+                            </div>
+                          </div>
+
+                          {/* Subject Details Grid */}
+                          <div className="grid grid-cols-2 gap-3 mb-4">
+                            <div className="flex items-center gap-2">
+                              <Users className="w-4 h-4 text-text-muted" />
+                              <div>
+                                <p className="text-xs text-text-secondary">Group</p>
+                                <p className="text-sm font-medium text-text-primary">{enrollment.groupName}</p>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <MapPin className="w-4 h-4 text-text-muted" />
+                              <div>
+                                <p className="text-xs text-text-secondary">Room</p>
+                                <p className="text-sm font-medium text-text-primary">{groupData?.classNumber || 'N/A'}</p>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Clock className="w-4 h-4 text-text-muted" />
+                              <div>
+                                <p className="text-xs text-text-secondary">Schedule</p>
+                                <p className="text-sm font-medium text-text-primary">
+                                  {groupData?.schedules && groupData.schedules.length > 0 
+                                    ? `${(groupData.schedules[0] as any).day} ${(groupData.schedules[0] as any).startTime}-${(groupData.schedules[0] as any).endTime}`
+                                    : 'Not scheduled'
+                                  }
+                                </p>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <User className="w-4 h-4 text-text-muted" />
+                              <div>
+                                <p className="text-xs text-text-secondary">Teacher</p>
+                                <p className="text-sm font-medium text-text-primary">Assigned Teacher</p>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Attendance Progress */}
+                          <div className="mb-4">
+                            <div className="flex items-center justify-between mb-2">
+                              <span className="text-sm text-text-secondary">Attendance Rate</span>
+                              <span className="text-sm font-medium text-text-primary">{attendanceRate}%</span>
+                            </div>
+                            <div className="w-full bg-surface-secondary rounded-full h-2">
+                              <div 
+                                className={`h-2 rounded-full transition-all duration-300 ${
+                                  attendanceRate >= 80 ? 'bg-green-500' : 
+                                  attendanceRate >= 60 ? 'bg-yellow-500' : 'bg-red-500'
+                                }`}
+                                style={{ width: `${attendanceRate}%` }}
+                              ></div>
+                            </div>
+                          </div>
+
+                          {/* Action Buttons */}
+                          <div className="flex items-center justify-end gap-2">
+                            <ModernButton 
+                              variant="outline" 
+                              size="sm"
+                              onClick={() => {
+                                setSelectedSubjectForGroupChange(enrollment);
+                                setIsChangeGroupModalOpen(true);
+                              }}
+                            >
+                              <Edit className="w-4 h-4 mr-1" />
+                              Change Group
+                            </ModernButton>
+                            <ModernButton 
+                              variant="ghost" 
+                              size="sm"
+                              onClick={() => handleRemoveSubject(enrollment.id)}
+                              className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </ModernButton>
+                          </div>
+                        </div>
+                      );
+                    })
+                  )}
+                </div>
               </TabsContent>
 
               {/* Payments Tab */}
-              <TabsContent value="payments" className="space-y-6">
-                <Card>
-                  <CardHeader>
-                    <div className="flex items-center justify-between">
-                      <CardTitle className="flex items-center gap-2">
-                        <CreditCard className="w-5 h-5" />
-                        Payment History
-                      </CardTitle>
-                      <ModernButton 
-                        variant="solid" 
-                        size="sm"
-                        onClick={() => {
-                          setSelectedPaymentMonth('');
-                          setIsPaymentRecordModalOpen(true);
-                        }}
-                      >
-                        <Plus className="w-4 h-4 mr-2" />
-                        Record Payment
-                      </ModernButton>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {months.slice(0, 6).map((month, index) => {
-                        const monthKey = new Date().getFullYear() + '-' + String(index + 1).padStart(2, '0');
-                        const payments = (student as MockStudent)?.payments || [];
-                        const payment = payments.find(p => p.month === monthKey);
-                        const status = getPaymentStatus(monthKey);
-                        
-                        return (
-                          <div key={month} className="flex items-center justify-between p-3 border border-border rounded-lg hover:bg-surface-hover transition-colors">
-                            <div className="flex items-center gap-3">
-                              <Calendar className="w-4 h-4 text-text-secondary" />
-                              <span className="font-medium text-text-primary">{month}</span>
-                            </div>
-                            
-                            <div className="flex items-center gap-4">
-                              <span className="text-text-primary font-medium">
-                                {payment ? `${payment.amount} DH` : `${getMonthlyFee()} DH`}
-                              </span>
-                              
-                              <div className="flex items-center gap-2">
-                                <Badge 
-                                  variant={status === 'paid' ? 'default' : status === 'pending' ? 'secondary' : 'destructive'}
-                                  className="flex items-center gap-1"
-                                >
-                                  {status === 'paid' && <CheckCircle className="w-3 h-3" />}
-                                  {status === 'overdue' && <X className="w-3 h-3" />}
-                                  {status === 'pending' && <ClockIcon className="w-3 h-3" />}
-                                  {status.charAt(0).toUpperCase() + status.slice(1)}
-                                </Badge>
-                                
-                                {status !== 'paid' && (
-                                  <ModernButton
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() => {
-                                      setSelectedPaymentMonth(monthKey);
-                                      setIsPaymentRecordModalOpen(true);
-                                    }}
-                                  >
-                                    <CreditCard className="w-3 h-3 mr-1" />
-                                    Pay
-                                  </ModernButton>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
+              <TabsContent value="payments" className="space-y-4">
+                {/* Header with Record Payment Button */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <CreditCard className="w-5 h-5 text-interactive" />
+                    <h3 className="text-lg font-semibold text-text-primary">Payment History</h3>
+                  </div>
+                  <ModernButton 
+                    variant="solid" 
+                    size="sm"
+                    onClick={() => {
+                      setSelectedPaymentMonth('');
+                      setIsPaymentRecordModalOpen(true);
+                    }}
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Record Payment
+                  </ModernButton>
+                </div>
 
-              {/* Reports & Attendance Tab */}
-              <TabsContent value="reports" className="space-y-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <BarChart3 className="w-5 h-5" />
-                      Attendance by Subject
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-6">
-                      {/* Subject Selection */}
-                      {(student.enrollments || []).length === 0 ? (
-                        <div className="text-center py-8">
-                          <BarChart3 className="w-12 h-12 mx-auto mb-3 opacity-50 text-text-muted" />
-                          <h4 className="font-medium text-text-primary mb-2">No Subjects Enrolled</h4>
-                          <p className="text-text-secondary">The student is not enrolled in any subjects yet.</p>
-                        </div>
-                      ) : (
-                        <>
-                        <div className="bg-status-success/10 border border-status-success/20 rounded-lg p-4 mb-6">
-                          <div className="flex items-start gap-3">
-                            <CheckCircle className="w-5 h-5 text-status-success flex-shrink-0 mt-0.5" />
+                {/* Payment Summary */}
+                <div className="grid grid-cols-3 gap-4 mb-4">
+                  <div className="bg-surface rounded-lg shadow-sm p-4 text-center">
+                    <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                      <CheckCircle className="w-4 h-4 text-green-600" />
+                    </div>
+                    <p className="text-sm text-text-secondary">Paid</p>
+                    <p className="text-lg font-semibold text-text-primary">
+                      {months.slice(0, 6).filter((_, index) => {
+                        const monthKey = new Date().getFullYear() + '-' + String(index + 1).padStart(2, '0');
+                        return getPaymentStatus(monthKey) === 'paid';
+                      }).length}
+                    </p>
+                  </div>
+                  <div className="bg-surface rounded-lg shadow-sm p-4 text-center">
+                    <div className="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                      <ClockIcon className="w-4 h-4 text-yellow-600" />
+                    </div>
+                    <p className="text-sm text-text-secondary">Pending</p>
+                    <p className="text-lg font-semibold text-text-primary">
+                      {months.slice(0, 6).filter((_, index) => {
+                        const monthKey = new Date().getFullYear() + '-' + String(index + 1).padStart(2, '0');
+                        return getPaymentStatus(monthKey) === 'pending';
+                      }).length}
+                    </p>
+                  </div>
+                  <div className="bg-surface rounded-lg shadow-sm p-4 text-center">
+                    <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                      <X className="w-4 h-4 text-red-600" />
+                    </div>
+                    <p className="text-sm text-text-secondary">Overdue</p>
+                    <p className="text-lg font-semibold text-text-primary">
+                      {months.slice(0, 6).filter((_, index) => {
+                        const monthKey = new Date().getFullYear() + '-' + String(index + 1).padStart(2, '0');
+                        return getPaymentStatus(monthKey) === 'overdue';
+                      }).length}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Payment List */}
+                <div className="space-y-3">
+                  {months.slice(0, 6).map((month, index) => {
+                    const monthKey = new Date().getFullYear() + '-' + String(index + 1).padStart(2, '0');
+                    const payments = student?.payments || [];
+                    const payment = payments.find(p => p.month === monthKey);
+                    const status = getPaymentStatus(monthKey);
+                    const amount = payment ? payment.amount : getMonthlyFee();
+                    
+                    return (
+                      <div key={month} className="bg-surface rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                              status === 'paid' ? 'bg-green-100' : 
+                              status === 'pending' ? 'bg-yellow-100' : 'bg-red-100'
+                            }`}>
+                              {status === 'paid' && <CheckCircle className="w-5 h-5 text-green-600" />}
+                              {status === 'overdue' && <X className="w-5 h-5 text-red-600" />}
+                              {status === 'pending' && <ClockIcon className="w-5 h-5 text-yellow-600" />}
+                            </div>
                             <div>
-                              <h4 className="font-medium text-text-primary mb-1">Attendance Tracking Active</h4>
+                              <h4 className="font-medium text-text-primary">{month}</h4>
                               <p className="text-sm text-text-secondary">
-                                View real-time attendance data and statistics for this student across all enrolled subjects.
+                                {payment ? `Paid on ${payment.date}` : 'Not paid yet'}
                               </p>
                             </div>
                           </div>
-                        </div>
-                          <div>
-                            <h4 className="font-medium text-text-primary mb-3">Select Subject to View Attendance</h4>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                              {(student.enrollments || []).map((enrollment, index) => {
-                        const subjectData = availableSubjects.find(s => s.name === enrollment.subjectName);
-                        const groupData = availableGroups.find(g => g.id === enrollment.groupId);
-                            const attendancePercentage = getAttendancePercentage(enrollment.id);
+                          
+                          <div className="flex items-center gap-4">
+                            <div className="text-right">
+                              <p className="text-lg font-semibold text-text-primary">{amount} DH</p>
+                              <p className="text-sm text-text-secondary">Monthly fee</p>
+                            </div>
                             
-                            return (
-                              <button
-                                key={index}
-                                onClick={() => setSelectedSubjectForAttendance(enrollment.id)}
-                                className={`p-4 border rounded-lg text-left transition-all ${
-                                  selectedSubjectForAttendance === enrollment.id
-                                    ? 'border-primary bg-primary/10 text-primary'
-                                    : 'border-border hover:border-primary/50 hover:bg-surface-hover'
-                                }`}
-                              >
-                                <div className="flex items-center justify-between mb-2">
-                                  <h5 className="font-semibold text-text-primary">
-                                    {subjectData?.name}
-                                  </h5>
-                                  <Badge variant="outline">
-                                    {attendancePercentage > 0 ? `${attendancePercentage}%` : 'No data'}
-                                  </Badge>
-                                </div>
-                                <div className="text-sm text-text-secondary">
-                                  Group: {groupData?.name}
-                                </div>
-                                <div className="mt-2 w-full bg-muted rounded-full h-2">
-                                  <div 
-                                    className="bg-primary h-2 rounded-full transition-all duration-300"
-                                    style={{ width: `${attendancePercentage}%` }}
-                                  />
-                                </div>
-                              </button>
-                            );
-                          })}
+                            <div className="flex items-center gap-2">
+                              <div className={`px-3 py-1 rounded-full text-xs font-medium ${
+                                status === 'paid' ? 'bg-green-100 text-green-800' : 
+                                status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'
+                              }`}>
+                                {status.charAt(0).toUpperCase() + status.slice(1)}
+                              </div>
+                              
+                              {status !== 'paid' && (
+                                <ModernButton
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => {
+                                    setSelectedPaymentMonth(monthKey);
+                                    setIsPaymentRecordModalOpen(true);
+                                  }}
+                                >
+                                  <CreditCard className="w-4 h-4 mr-1" />
+                                  Pay Now
+                                </ModernButton>
+                              )}
+                            </div>
+                          </div>
                         </div>
                       </div>
+                    );
+                  })}
+                </div>
+              </TabsContent>
+
+              {/* Reports & Attendance Tab */}
+              <TabsContent value="reports" className="space-y-4">
+                {/* Header */}
+                <div className="flex items-center gap-2">
+                  <BarChart3 className="w-5 h-5 text-interactive" />
+                  <h3 className="text-lg font-semibold text-text-primary">Attendance Reports</h3>
+                </div>
+
+                {/* Status Banner */}
+                <div className="bg-green-50 rounded-lg p-4 shadow-sm">
+                  <div className="flex items-start gap-3">
+                    <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <h4 className="font-medium text-text-primary mb-1">Attendance Tracking Active</h4>
+                      <p className="text-sm text-text-secondary">
+                        View real-time attendance data and statistics for this student across all enrolled subjects.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Subject Selection */}
+                {(student.enrollments || []).length === 0 ? (
+                  <div className="text-center py-12 bg-surface rounded-lg shadow-sm">
+                    <BarChart3 className="w-16 h-16 mx-auto mb-4 text-text-muted opacity-50" />
+                    <h4 className="text-lg font-medium text-text-primary mb-2">No Subjects Enrolled</h4>
+                    <p className="text-text-secondary">The student is not enrolled in any subjects yet.</p>
+                  </div>
+                ) : (
+                  <>
+                    <div>
+                      <h4 className="font-medium text-text-primary mb-3">Select Subject to View Attendance</h4>
+                      <div className="grid grid-cols-1 gap-3">
+                        {(student.enrollments || []).map((enrollment, index) => {
+                          const subjectData = availableSubjects.find(s => s.name === enrollment.subjectName);
+                          const groupData = availableGroups.find(g => g.id === enrollment.groupId);
+                          const attendancePercentage = getAttendancePercentage(enrollment.id);
+                          
+                          return (
+                            <div
+                              key={index}
+                              onClick={() => setSelectedSubjectForAttendance(enrollment.id)}
+                              className={`p-4 rounded-lg cursor-pointer transition-all ${
+                                selectedSubjectForAttendance === enrollment.id
+                                  ? 'bg-interactive/10 border-2 border-interactive'
+                                  : 'bg-surface shadow-sm hover:shadow-md hover:bg-surface-hover'
+                              }`}
+                            >
+                              <div className="flex items-center justify-between mb-3">
+                                <div className="flex items-center gap-3">
+                                  <div className="w-10 h-10 bg-interactive/10 rounded-lg flex items-center justify-center">
+                                    <BarChart3 className="w-5 h-5 text-interactive" />
+                                  </div>
+                                  <div>
+                                    <h5 className="font-semibold text-text-primary">{subjectData?.name}</h5>
+                                    <p className="text-sm text-text-secondary">Group: {groupData?.name}</p>
+                                  </div>
+                                </div>
+                                <div className="text-right">
+                                  <div className={`px-3 py-1 rounded-full text-sm font-medium ${
+                                    attendancePercentage >= 80 ? 'bg-green-100 text-green-800' : 
+                                    attendancePercentage >= 60 ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'
+                                  }`}>
+                                    {attendancePercentage > 0 ? `${attendancePercentage}%` : 'No data'}
+                                  </div>
+                                </div>
+                              </div>
+                              
+                              <div className="w-full bg-surface-secondary rounded-full h-2">
+                                <div 
+                                  className={`h-2 rounded-full transition-all duration-300 ${
+                                    attendancePercentage >= 80 ? 'bg-green-500' : 
+                                    attendancePercentage >= 60 ? 'bg-yellow-500' : 'bg-red-500'
+                                  }`}
+                                  style={{ width: `${attendancePercentage}%` }}
+                                />
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
 
                       {/* Selected Subject Attendance Details */}
                       {selectedSubjectForAttendance && (
-                        <div className="border border-border rounded-lg p-4">
+                        <div className="bg-surface rounded-lg p-4 shadow-sm">
                           <div className="flex items-center justify-between mb-4">
                             <h4 className="font-medium text-text-primary">
                               {student.enrollments?.find(e => e.id === selectedSubjectForAttendance)?.subjectName} - Attendance Calendar
@@ -870,7 +968,7 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
                               </div>
                               
                               {selectedAttendanceRecord?.note && (
-                                <div className="pt-3 border-t border-border">
+                                <div className="pt-3">
                                   <span className="text-sm font-medium text-text-primary block mb-2">Teacher Note:</span>
                                   <p className="text-sm text-text-secondary bg-surface p-3 rounded-md">
                                     {selectedAttendanceRecord.note}
@@ -886,14 +984,14 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
                       <div>
                         <h4 className="font-medium text-text-primary mb-3">Teacher Notes</h4>
                         <textarea
-                          className="w-full p-3 border border-border rounded-lg bg-background text-text-primary focus-brutalist"
+                          className="w-full p-3 rounded-lg bg-background text-text-primary focus-brutalist shadow-sm"
                           rows={4}
                           placeholder="Add teacher notes about the student..."
                         />
                       </div>
 
                       {/* Generate Report Button */}
-                      <div className="pt-4 border-t border-border">
+                      <div className="pt-4">
                         <ModernButton 
                           variant="solid" 
                           className="w-full"
@@ -906,14 +1004,40 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
                           Generate Student Report
                         </ModernButton>
                       </div>
-                        </>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
+                    </>
+                  )}
               </TabsContent>
             </div>
           </Tabs>
+        
+
+        {/* Action Buttons */}
+        <div className="p-4 shrink-0 shadow-sm">
+          <div className="flex items-center justify-between w-full">
+            <div className="flex items-center gap-2">
+              <ModernButton 
+                variant="outline" 
+                size="sm"
+                onClick={() => onEdit(student)}
+              >
+                <Edit className="w-4 h-4 mr-2" />
+                Edit Student
+              </ModernButton>
+              <ModernButton 
+                variant="ghost" 
+                size="sm"
+                onClick={() => onDelete(student.id)}
+                className="text-red-600 hover:text-red-700 hover:bg-red-50"
+              >
+                <Trash2 className="w-4 h-4 mr-2" />
+                Delete Student
+              </ModernButton>
+            </div>
+            
+            <div className="text-sm text-gray-600">
+              Monthly Fee: <span className="font-medium text-gray-900">{getMonthlyFee()} DH</span>
+            </div>
+          </div>
         </div>
 
         {/* Add Subject Modal */}
@@ -987,7 +1111,7 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
                   </div>
                 )}
                 
-                <div className="flex items-center justify-end gap-2 pt-4 border-t border-border">
+                <div className="flex items-center justify-end gap-2 pt-4">
                   <ModernButton 
                     variant="outline" 
                     size="sm"
@@ -1022,7 +1146,7 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
                   const selectedGroup = selectedGroupsForAddition[subjectId];
                   
                   return (
-                    <div key={subjectId} className="p-4 border border-border rounded-lg">
+                    <div key={subjectId} className="p-4 bg-surface rounded-lg shadow-sm">
                       <div className="mb-3">
                         <div className="font-medium text-text-primary">{subject?.name}</div>
                         <div className="text-sm text-text-secondary">Select a group:</div>
@@ -1040,7 +1164,7 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
                               className={`p-3 border rounded-lg cursor-pointer transition-colors ${
                                 selectedGroup === group.id 
                                   ? 'border-primary bg-primary/5 ring-2 ring-primary/20' 
-                                  : 'border-border hover:border-primary/50 hover:bg-surface-hover'
+                                  : 'shadow-sm hover:shadow-md hover:bg-surface-hover'
                               }`}
                               onClick={() => handleGroupSelect(subjectId, group.id)}
                             >
@@ -1080,7 +1204,7 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
                   </div>
                 </div>
                 
-                <div className="flex items-center justify-end gap-2 pt-4 border-t border-border">
+                <div className="flex items-center justify-end gap-2 pt-4">
                   <ModernButton 
                     variant="outline" 
                     size="sm"
@@ -1125,11 +1249,11 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
                         }}
                         showSummary={false}
                         availableSubjects={availableSubjects}
-                        availableGroups={availableGroups.filter(g => g.subjectName === selectedSubjectForGroupChange.subjectName)}
+                        availableGroups={availableGroups.filter(g => g.subjectId === selectedSubjectForGroupChange.subjectId)}
                       />
                     )}
                     
-                    <div className="flex items-center justify-end gap-2 pt-4 border-t border-border">
+                    <div className="flex items-center justify-end gap-2 pt-4">
                       <ModernButton 
                         variant="outline" 
                         size="sm"
@@ -1153,34 +1277,6 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
                   </DialogContent>
                 </Dialog>
 
-        <div className="border-t border-gray-200 p-4 shrink-0">
-          <div className="flex items-center justify-between w-full">
-            <div className="flex items-center gap-2">
-              <ModernButton 
-                variant="outline" 
-                size="sm"
-                onClick={() => onEdit(student)}
-              >
-                <Edit className="w-4 h-4 mr-2" />
-                Edit Student
-              </ModernButton>
-              <ModernButton 
-                variant="ghost" 
-                size="sm"
-                onClick={() => onDelete(student.id)}
-                className="text-red-600 hover:text-red-700 hover:bg-red-50"
-              >
-                <Trash2 className="w-4 h-4 mr-2" />
-                Delete Student
-              </ModernButton>
-            </div>
-            
-            <div className="text-sm text-gray-600">
-              Monthly Fee: <span className="font-medium text-gray-900">{getMonthlyFee()} DH</span>
-            </div>
-          </div>
-        </div>
-
         {/* Payment Record Modal */}
         <PaymentRecordModal
           isOpen={isPaymentRecordModalOpen}
@@ -1196,6 +1292,7 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
             queryClient.invalidateQueries({ queryKey: ['students', student.id] });
           }}
         />
+      </div>
     </div>
   );
 };

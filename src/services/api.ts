@@ -1,5 +1,5 @@
-//const API_BASE_URL = 'https://api.scolink.ink/api/v1';
-const API_BASE_URL = 'http://localhost:3001/api/v1';
+const API_BASE_URL = 'https://api.scolink.ink/api/v1';
+//const API_BASE_URL = 'http://localhost:3001/api/v1';
 
 interface ApiResponse<T = any> {
   success: boolean;
@@ -181,18 +181,9 @@ interface Group {
   }[];
 }
 
-interface CreateSubjectRequest {
-  name: string;
-  code: string;
-  monthlyFee: number;
-  yearId: string;
-  fieldId: string;
-  isActive?: boolean;
-}
 
 interface UpdateSubjectRequest {
   name?: string;
-  code?: string;
   monthlyFee?: number;
   yearId?: string;
   fieldId?: string;
@@ -243,8 +234,22 @@ interface Student {
     id: string;
     groupId: string;
     groupName?: string;
+    subjectId?: string;
     subjectName?: string;
   }>;
+  payments?: Array<{
+    id: string;
+    month: string;
+    subjectIds: string[];
+    amount: number;
+    date: string;
+    status: 'paid' | 'pending' | 'overdue';
+  }>;
+  subjects?: Array<{
+    subjectId: string;
+    groupId: string;
+  }>;
+  notes?: string;
 }
 
 interface CreateGroupRequest {
@@ -1263,13 +1268,87 @@ class ApiService {
     classDays: string[];
     today: string;
   }> {
-    const response = await this.request(`/attendance/group/${groupId}/class-today`);
-    const fallback = { 
-      isClassToday: false, 
-      classDays: [], 
-      today: new Date().toLocaleDateString('en-CA') // YYYY-MM-DD format
-    };
-    return (response.data as { isClassToday: boolean; classDays: string[]; today: string; }) || fallback;
+    try {
+      const response = await this.request(`/attendance/group/${groupId}/class-today`);
+      if (response && response.data) {
+        return response.data as {
+          isClassToday: boolean;
+          classDays: string[];
+          today: string;
+        };
+      }
+      return { 
+        isClassToday: false, 
+        classDays: [], 
+        today: new Date().toLocaleDateString('en-CA') // YYYY-MM-DD format
+      };
+    } catch (error) {
+      console.error('Error checking class today:', error);
+      return { 
+        isClassToday: false, 
+        classDays: [], 
+        today: new Date().toLocaleDateString('en-CA') // YYYY-MM-DD format
+      };
+    }
+  }
+
+  async getGroupMonthlyAttendance(groupId: string, year: number, month: number): Promise<{
+    groupId: string;
+    groupName: string;
+    subject: string;
+    teacher: string;
+    classDays: string[];
+    classDatesList: string[];
+    students: Array<{
+      id: string;
+      firstName: string;
+      lastName: string;
+      enrollmentId: string;
+    }>;
+    attendanceRecords: any[];
+  }> {
+    try {
+      const response = await this.request(`/attendance/group/${groupId}/monthly/${year}/${month}`);
+      if (response && response.data) {
+        return response.data as {
+          groupId: string;
+          groupName: string;
+          subject: string;
+          teacher: string;
+          classDays: string[];
+          classDatesList: string[];
+          students: Array<{
+            id: string;
+            firstName: string;
+            lastName: string;
+            enrollmentId: string;
+          }>;
+          attendanceRecords: any[];
+        };
+      }
+      return {
+        groupId,
+        groupName: '',
+        subject: '',
+        teacher: '',
+        classDays: [],
+        classDatesList: [],
+        students: [],
+        attendanceRecords: []
+      };
+    } catch (error) {
+      console.error('Error fetching monthly attendance:', error);
+      return {
+        groupId,
+        groupName: '',
+        subject: '',
+        teacher: '',
+        classDays: [],
+        classDatesList: [],
+        students: [],
+        attendanceRecords: []
+      };
+    }
   }
 
   // Event API methods

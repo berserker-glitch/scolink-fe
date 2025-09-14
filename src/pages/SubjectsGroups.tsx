@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { ModernButton } from '@/components/ui';
 import { Modal } from '@/components/ui/Modal';
@@ -19,7 +19,8 @@ import {
   MapPin,
   Edit,
   Trash2,
-  Eye
+  Eye,
+  Filter
 } from 'lucide-react';
 
 export const SubjectsGroups: React.FC = () => {
@@ -28,10 +29,21 @@ export const SubjectsGroups: React.FC = () => {
   const { isAuthenticated, isLoading: authLoading } = useAuth();
 
   const [searchQuery, setSearchQuery] = useState('');
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
   const [selectedSubject, setSelectedSubject] = useState('');
+
+  // Debounce search query
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      // Search immediately for any input
+      setDebouncedSearchQuery(searchQuery.trim());
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
   const [isAddSubjectOpen, setIsAddSubjectOpen] = useState(false);
   const [isAddGroupOpen, setIsAddGroupOpen] = useState(false);
-  const [isSubjectDrawerOpen, setIsSubjectDrawerOpen] = useState(false);
+  const [isModalSubjectDrawerOpen, setIsModalSubjectDrawerOpen] = useState(false);
   const [isGroupDrawerOpen, setIsGroupDrawerOpen] = useState(false);
   const [selectedSubjectForDrawer, setSelectedSubjectForDrawer] = useState<Subject | null>(null);
   const [selectedGroupForDrawer, setSelectedGroupForDrawer] = useState<Group | null>(null);
@@ -58,6 +70,13 @@ export const SubjectsGroups: React.FC = () => {
   
   const [groupFormStep, setGroupFormStep] = useState(1);
   const [teacherSearchQuery, setTeacherSearchQuery] = useState('');
+  
+  // UI State Management for better UX
+  const [subjectFilter, setSubjectFilter] = useState('all');
+  
+  // Split Layout State (like Students tab)
+  const [isSubjectDrawerOpen, setIsSubjectDrawerOpen] = useState(false);
+  const [selectedSubjectForSplit, setSelectedSubjectForSplit] = useState<Subject | null>(null);
 
   const dayOptions = [
     { value: 'Monday', label: 'Monday' },
@@ -107,9 +126,9 @@ export const SubjectsGroups: React.FC = () => {
   const fields = fieldsData?.fields || [];
 
   const filteredSubjects = subjects.filter(subject =>
-    subject.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    subject.yearName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    subject.fieldName?.toLowerCase().includes(searchQuery.toLowerCase())
+    subject.name.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
+    subject.yearName?.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
+    subject.fieldName?.toLowerCase().includes(debouncedSearchQuery.toLowerCase())
   );
 
   // Mutations
@@ -234,6 +253,38 @@ export const SubjectsGroups: React.FC = () => {
     return true;
   };
 
+  // UX Helper Functions
+  const getFilteredSubjectsWithGroups = () => {
+    let filtered = subjects.filter(subject =>
+      subject.name.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
+      subject.yearName?.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
+      subject.fieldName?.toLowerCase().includes(debouncedSearchQuery.toLowerCase())
+    );
+
+    // Apply subject filter
+    if (subjectFilter !== 'all') {
+      if (subjectFilter === 'with-groups') {
+        filtered = filtered.filter(subject => getSubjectGroups(subject.id).length > 0);
+      } else if (subjectFilter === 'without-groups') {
+        filtered = filtered.filter(subject => getSubjectGroups(subject.id).length === 0);
+      }
+    }
+
+    return filtered;
+  };
+
+  const getAllGroups = () => {
+    return groups.filter(group => {
+      const subject = subjects.find(s => s.id === group.subjectId);
+      if (!subject) return false;
+      
+      return subject.name.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
+             subject.yearName?.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
+             subject.fieldName?.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
+             group.name.toLowerCase().includes(debouncedSearchQuery.toLowerCase());
+    });
+  };
+
   const handleNextStep = () => {
     if (groupFormStep === 1) {
       setGroupFormStep(2);
@@ -252,7 +303,6 @@ export const SubjectsGroups: React.FC = () => {
 
     const subjectData = {
       name: subjectForm.name,
-      code: subjectForm.name.substring(0, 3).toUpperCase() + Math.random().toString(36).substr(2, 3).toUpperCase(),
       monthlyFee: parseFloat(subjectForm.monthlyFee),
       yearId: subjectForm.yearId,
       fieldId: subjectForm.fieldId,
@@ -297,7 +347,7 @@ export const SubjectsGroups: React.FC = () => {
 
   const openSubjectDrawer = (subject: any) => {
     setSelectedSubjectForDrawer(subject);
-    setIsSubjectDrawerOpen(true);
+    setIsModalSubjectDrawerOpen(true);
   };
 
   const openGroupDrawer = (group: any) => {
@@ -305,246 +355,255 @@ export const SubjectsGroups: React.FC = () => {
     setIsGroupDrawerOpen(true);
   };
 
+  // Split Layout Handlers (like Students tab)
+  const handleSubjectClick = (subject: Subject) => {
+    setSelectedSubjectForSplit(subject);
+    setIsSubjectDrawerOpen(true);
+  };
+
   return (
-    <div className="min-h-screen bg-background p-6 lg:p-8">
-      {/* Header */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8">
-        <div>
-          <h1 className="text-hero text-text-primary mb-2">Subjects & Groups</h1>
-          <p className="text-body text-text-secondary">
-            Manage subjects, organize groups, and assign teachers to classes.
-          </p>
-        </div>
-        
-        <div className="flex items-center space-x-4 mt-4 lg:mt-0">
-          <ModernButton 
-            variant="outline" 
-            icon={Plus}
-            iconPosition="left"
-            onClick={() => setIsAddGroupOpen(true)}
-          >
-            Add Group
-          </ModernButton>
-          <ModernButton 
-            variant="solid" 
-            icon={Plus}
-            iconPosition="left"
-            onClick={() => setIsAddSubjectOpen(true)}
-          >
-            Add Subject
-          </ModernButton>
-        </div>
-      </div>
+    <div className="min-h-screen bg-background">
+      <div className="flex h-screen">
+        {/* Main Content */}
+        <div className={`transition-all duration-300 overflow-hidden ${isSubjectDrawerOpen ? 'w-[60%]' : 'w-full'}`}>
+          <div className="p-6 lg:p-8 h-full overflow-y-auto">
+            {/* Header */}
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8">
+              <div>
+                <h1 className="text-2xl font-bold text-text-primary mb-2">Subjects & Groups</h1>
+                <p className="text-sm text-text-secondary">
+                  Manage subjects, organize groups, and assign teachers to classes. • {getFilteredSubjectsWithGroups().length} subjects • {getAllGroups().length} groups
+                </p>
+              </div>
+              
+              <div className="flex items-center space-x-4 mt-4 lg:mt-0">
+                <ModernButton 
+                  variant="outline" 
+                  icon={Plus}
+                  iconPosition="left"
+                  onClick={() => setIsAddGroupOpen(true)}
+                >
+                  Add Group
+                </ModernButton>
+                <ModernButton 
+                  variant="solid" 
+                  icon={Plus}
+                  iconPosition="left"
+                  onClick={() => setIsAddSubjectOpen(true)}
+                >
+                  Add Subject
+                </ModernButton>
+              </div>
+            </div>
 
-      {/* Search */}
-      <Card className="surface mb-6">
-        <CardContent className="p-6">
-          <div className="relative max-w-md">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-text-muted" />
-            <input
-              type="text"
-              placeholder="Search subjects by name, year, or field..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 border border-border rounded-lg bg-background text-text-primary focus-brutalist"
-            />
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Subjects List */}
-      <div className="space-y-6">
-        {authLoading ? (
-          <div className="flex items-center justify-center py-8">
-            <div className="text-text-secondary">Authenticating...</div>
-          </div>
-        ) : !isAuthenticated ? (
-          <div className="flex items-center justify-center py-8">
-            <div className="text-status-error">Please log in to view subjects</div>
-          </div>
-        ) : subjectsLoading || groupsLoading || teachersLoading || yearsLoading || fieldsLoading ? (
-          <div className="flex items-center justify-center py-8">
-            <div className="text-text-secondary">Loading subjects and groups...</div>
-          </div>
-        ) : subjectsError || groupsError || teachersError || yearsError || fieldsError ? (
-          <div className="flex items-center justify-center py-8">
-            <div className="text-status-error">Failed to load data</div>
-          </div>
-        ) : filteredSubjects.length === 0 ? (
-          <div className="text-center py-8 text-text-secondary">
-            <BookOpen className="w-12 h-12 mx-auto mb-4 opacity-50" />
-            <p>No subjects found</p>
-            <p className="text-sm">Create your first subject to get started</p>
-          </div>
-        ) : (
-          filteredSubjects.map((subject) => {
-            const groups = getSubjectGroups(subject.id);
-            
-            return (
-              <Card key={subject.id} className="surface">
-                <CardHeader className="pb-3">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-interactive rounded-lg flex items-center justify-center">
-                        <BookOpen className="w-5 h-5 text-background" />
-                      </div>
-                      <div>
-                        <CardTitle className="text-text-primary">{subject.name}</CardTitle>
-                        <p className="text-caption text-text-secondary">
-{subject.monthlyFee} DH/month • {subject.yearName} • {subject.fieldName} • {groups.length} groups
-                        </p>
-                      </div>
-                    </div>
+            {/* Search & Filters */}
+            <div className="mb-6">
+              <div className="bg-white rounded-lg border border-gray-200 p-4">
+                <div className="flex items-center space-x-4">
+                  {/* Search */}
+                  <div className="flex-1 relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                    <input
+                      type="text"
+                      placeholder="Search subjects by name, year, or field..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    />
+                  </div>
+                  
+                  {/* Filters */}
                   <div className="flex items-center space-x-2">
-                    <ModernButton 
-                      variant="outline" 
-                      size="sm"
-                      icon={Eye}
-                      onClick={() => openSubjectDrawer(subject)}
+                    <Filter className="w-4 h-4 text-gray-400" />
+                    <Select
+                      value={subjectFilter}
+                      onChange={(e) => setSubjectFilter(e.target.value)}
+                      options={[
+                        { value: 'all', label: 'All Subjects' },
+                        { value: 'with-groups', label: 'With Groups' },
+                        { value: 'without-groups', label: 'Without Groups' }
+                      ]}
+                      className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 min-w-40"
                     />
-                    <ModernButton 
-                      variant="outline" 
-                      size="sm"
-                      icon={Edit}
-                      onClick={() => {
-      setSubjectForm({
-        name: subject.name,
-        monthlyFee: subject.monthlyFee.toString(),
-        yearId: subject.yearId,
-        fieldId: subject.fieldId
-      });
-                        setIsEditSubjectMode(true);
-                        setEditingSubjectId(subject.id);
-                        setIsAddSubjectOpen(true);
-                      }}
-                    />
-                    <ModernButton 
-                      variant="outline" 
-                      size="sm"
-                      icon={Trash2}
-                      onClick={() => {
-                        if (confirm('Are you sure you want to delete this subject? This will also delete all associated groups.')) {
-                          deleteSubjectMutation.mutate({ id: subject.id, cascade: true });
-                        }
-                      }}
-                    />
-                    <ModernButton 
-                      variant="outline" 
-                      size="sm"
-                      icon={Plus}
-                      iconPosition="left"
-                      onClick={() => {
-                        setGroupForm(prev => ({ ...prev, subjectId: subject.id }));
-                        setIsEditMode(false);
-                        setEditingGroupId(null);
-                        setIsAddGroupOpen(true);
-                      }}
-                    >
-                      Add Group
-                    </ModernButton>
                   </div>
                 </div>
-              </CardHeader>
-              
-              <CardContent>
-                {groups.length === 0 ? (
-                  <div className="text-center py-8 text-text-muted">
-                    <Users className="w-12 h-12 mx-auto mb-3 opacity-50" />
-                    <p>No groups created for this subject yet.</p>
+              </div>
+            </div>
+
+            {/* Subjects List */}
+            <div className="space-y-6">
+              {authLoading ? (
+                <div className="flex items-center justify-center py-8">
+                  <div className="text-text-secondary">Authenticating...</div>
+                </div>
+              ) : !isAuthenticated ? (
+                <div className="flex items-center justify-center py-8">
+                  <div className="text-status-error">Please log in to view subjects</div>
+                </div>
+              ) : subjectsLoading || groupsLoading || teachersLoading || yearsLoading || fieldsLoading ? (
+                <div className="flex items-center justify-center py-8">
+                  <div className="text-text-secondary">Loading subjects and groups...</div>
+                </div>
+              ) : subjectsError || groupsError || teachersError || yearsError || fieldsError ? (
+                <div className="flex items-center justify-center py-8">
+                  <div className="text-status-error">Failed to load data</div>
+                </div>
+              ) : getFilteredSubjectsWithGroups().length === 0 ? (
+                <div className="text-center py-12 text-text-secondary">
+                  <div className="max-w-md mx-auto">
+                    <BookOpen className="w-16 h-16 mx-auto mb-4 opacity-50" />
+                    <h3 className="text-lg font-medium text-text-primary mb-2">
+                      {debouncedSearchQuery || subjectFilter !== 'all' ? 'No subjects found' : 'No subjects yet'}
+                    </h3>
+                    <p className="text-sm mb-6">
+                      {debouncedSearchQuery 
+                        ? 'Try adjusting your search terms or filters'
+                        : subjectFilter !== 'all'
+                        ? 'No subjects match the selected filter'
+                        : 'Create your first subject to organize your curriculum'
+                      }
+                    </p>
+                    {!debouncedSearchQuery && subjectFilter === 'all' && (
+                      <ModernButton 
+                        variant="solid" 
+                        icon={Plus}
+                        iconPosition="left"
+                        onClick={() => setIsAddSubjectOpen(true)}
+                      >
+                        Create First Subject
+                      </ModernButton>
+                    )}
                   </div>
-                ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {groups.map((group) => {
-                      const teacher = getGroupTeacher(group.teacherId);
-                      
-                      return (
-                        <Card key={group.id} className="surface-secondary hover:bg-surface-hover transition-colors">
-                          <CardContent className="p-4">
-                            <div className="flex items-start justify-between mb-3">
-                              <h4 className="font-medium text-text-primary">{group.name}</h4>
-                              <ModernButton
-                                variant="ghost"
-                                size="sm"
-                                icon={Eye}
-                                onClick={() => openGroupDrawer(group)}
-                              />
-                            </div>
-                            
-                            <div className="space-y-2 text-caption text-text-secondary">
-                              <div className="flex items-center space-x-2">
-                                <Clock className="w-4 h-4" />
-                                <span>
-                                  {group.schedules.map((s, index) => (
-                                    <span key={index}>
-                                      {s.day} {s.startTime}-{s.endTime}
-                                      {index < group.schedules.length - 1 ? ', ' : ''}
-                                    </span>
-                                  ))}
-                                </span>
+                </div>
+              ) : (
+                // Subjects Grid
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                  {getFilteredSubjectsWithGroups().map((subject) => {
+                    const groups = getSubjectGroups(subject.id);
+                    const totalStudents = groups.reduce((sum, g) => sum + (g.studentCount || 0), 0);
+                    const totalCapacity = groups.reduce((sum, g) => sum + g.capacity, 0);
+                    const groupsWithTeachers = groups.filter(g => g.teacherId).length;
+                    
+                    return (
+                      <Card 
+                        key={subject.id} 
+                        className={`surface hover:shadow-lg transition-all duration-200 cursor-pointer ${
+                          selectedSubjectForSplit?.id === subject.id ? 'ring-2 ring-interactive' : ''
+                        }`}
+                        onClick={() => handleSubjectClick(subject)}
+                      >
+                        <CardContent className="p-6">
+                          {/* Subject Header */}
+                          <div className="flex items-start justify-between mb-4 gap-3">
+                            <div className="flex items-center space-x-3 flex-1 min-w-0">
+                              <div className="w-12 h-12 bg-interactive rounded-xl flex items-center justify-center flex-shrink-0">
+                                <BookOpen className="w-6 h-6 text-background" />
                               </div>
-                              
-                              <div className="flex items-center space-x-2">
-                                <MapPin className="w-4 h-4" />
-                                <span>{group.classNumber}</span>
-                              </div>
-                              
-                              <div className="flex items-center space-x-2">
-                                <Users className="w-4 h-4" />
-                                <span>{group.studentCount || 0}/{group.capacity} students</span>
-                              </div>
-                              
-                              {teacher && (
-                                <div className="pt-2 border-t border-border">
-                                  <p className="text-text-primary font-medium">{teacher.name}</p>
+                              <div className="flex-1 min-w-0">
+                                <h3 className="font-bold text-text-primary text-lg truncate">{subject.name}</h3>
+                                <div className="flex items-center space-x-2 mt-1">
+                                  <span className="text-sm font-medium text-interactive truncate">{subject.monthlyFee} DH/month</span>
+                                  <span className="text-text-muted">•</span>
+                                  <span className="text-xs text-text-secondary truncate">{subject.yearName}</span>
                                 </div>
-                              )}
+                                <p className="text-xs text-text-muted truncate">{subject.fieldName}</p>
+                              </div>
                             </div>
                             
-                            <div className="flex items-center space-x-2 mt-4">
+                            <div className="flex items-center space-x-1 flex-shrink-0">
                               <ModernButton 
-                                variant="outline" 
-                                size="sm" 
-                                className="flex-1"
-                                icon={Edit}
-                                iconPosition="left"
-                                onClick={() => {
-                                  setGroupForm({
-                                    subjectId: group.subjectId,
-                                    name: group.name,
-                                    capacity: group.capacity.toString(),
-                                    classNumber: group.classNumber,
-                                    schedules: group.schedules,
-                                    teacherId: group.teacherId || ''
-                                  });
-                                  setIsEditMode(true);
-                                  setEditingGroupId(group.id);
-                                  setIsAddGroupOpen(true);
-                                }}
-                              >
-                                Edit
-                              </ModernButton>
-                              <ModernButton 
-                                variant="outline" 
+                                variant="ghost" 
                                 size="sm"
-                                icon={Trash2}
-                                onClick={() => {
-                                  if (confirm('Are you sure you want to delete this group?')) {
-                                    deleteGroupMutation.mutate(group.id);
-                                  }
+                                icon={Edit}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setSubjectForm({
+                                    name: subject.name,
+                                    monthlyFee: subject.monthlyFee.toString(),
+                                    yearId: subject.yearId,
+                                    fieldId: subject.fieldId
+                                  });
+                                  setIsEditSubjectMode(true);
+                                  setEditingSubjectId(subject.id);
+                                  setIsAddSubjectOpen(true);
                                 }}
                               />
                             </div>
-                          </CardContent>
-                        </Card>
-                      );
-                    })}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          );
-        })
-        )}
+                          </div>
+
+                          {/* Subject Stats */}
+                          <div className="grid grid-cols-3 gap-4 mb-4 p-3 bg-surface-secondary rounded-lg">
+                            <div className="text-center">
+                              <p className="text-lg font-bold text-text-primary">{groups.length}</p>
+                              <p className="text-xs text-text-secondary">Groups</p>
+                            </div>
+                            <div className="text-center">
+                              <p className="text-lg font-bold text-text-primary">{totalStudents}/{totalCapacity}</p>
+                              <p className="text-xs text-text-secondary">Students</p>
+                            </div>
+                            <div className="text-center">
+                              <p className="text-lg font-bold text-text-primary">{groupsWithTeachers}/{groups.length}</p>
+                              <p className="text-xs text-text-secondary">With Teacher</p>
+                            </div>
+                          </div>
+
+                          {/* Action Buttons */}
+                          <div className="flex items-center space-x-2 pt-2 border-t border-border">
+                            <ModernButton
+                              variant="solid"
+                              size="sm"
+                              icon={Plus}
+                              iconPosition="left"
+                              className="flex-1"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setGroupForm(prev => ({ ...prev, subjectId: subject.id }));
+                                setIsEditMode(false);
+                                setEditingGroupId(null);
+                                setIsAddGroupOpen(true);
+                              }}
+                            >
+                              Add Group
+                            </ModernButton>
+                            <ModernButton 
+                              variant="outline" 
+                              size="sm"
+                              icon={Trash2}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                if (confirm('Are you sure you want to delete this subject? This will also delete all associated groups.')) {
+                                  deleteSubjectMutation.mutate({ id: subject.id, cascade: true });
+                                }
+                              }}
+                            />
+                          </div>
+                        </CardContent>
+                      </Card>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Inline Subject Drawer */}
+        <div className={`w-[40%] transition-all duration-300 bg-background border-l border-border ${
+          isSubjectDrawerOpen && selectedSubjectForSplit ? 'block' : 'hidden'
+        }`}>
+          {selectedSubjectForSplit && (
+            <div className="h-full overflow-y-auto">
+              <SubjectDetailDrawer
+                isOpen={isSubjectDrawerOpen}
+                onClose={() => {
+                  setIsSubjectDrawerOpen(false);
+                  setSelectedSubjectForSplit(null);
+                }}
+                subject={selectedSubjectForSplit}
+              />
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Add/Edit Subject Modal */}
@@ -953,9 +1012,9 @@ export const SubjectsGroups: React.FC = () => {
       {/* Subject Detail Drawer */}
       {selectedSubjectForDrawer && (
         <SubjectDetailDrawer
-          isOpen={isSubjectDrawerOpen}
+          isOpen={isModalSubjectDrawerOpen}
           onClose={() => {
-            setIsSubjectDrawerOpen(false);
+            setIsModalSubjectDrawerOpen(false);
             setSelectedSubjectForDrawer(null);
           }}
           subject={selectedSubjectForDrawer}
