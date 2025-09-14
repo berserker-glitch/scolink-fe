@@ -1,5 +1,10 @@
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/api/v1';
 
+// Debug: Log the API base URL being used
+console.log('🌐 Frontend is using API_BASE_URL:', API_BASE_URL);
+console.log('🌐 Environment mode:', import.meta.env.MODE);
+console.log('🌐 All env vars starting with VITE_:', Object.keys(import.meta.env).filter(k => k.startsWith('VITE_')));
+
 interface ApiResponse<T = any> {
   success: boolean;
   data?: T;
@@ -587,6 +592,8 @@ class ApiService {
     try {
       console.log(`Making API request to: ${API_BASE_URL}${endpoint}`);
       console.log('Request config:', config);
+      console.log('🔍 REQUEST METHOD:', config.method || 'GET (default)');
+      console.log('🔍 REQUEST BODY:', config.body || 'No body');
       
       const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
       
