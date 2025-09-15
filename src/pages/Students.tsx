@@ -259,7 +259,7 @@ export const Students: React.FC = () => {
                 <div>
                   <h1 className="text-2xl font-bold text-gray-900 mb-2">Students Database</h1>
                   <p className="text-sm text-gray-600">
-                    {pagination?.total || 0} results • Welcome to Edu-Center Dashboard
+                    {pagination?.total || 0} results • Welcome to Scolink Dashboard
                   </p>
                 </div>
                 <div className="flex items-center space-x-4 mt-4 lg:mt-0">

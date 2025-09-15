@@ -60,7 +60,7 @@ export const MainLayout: React.FC = () => {
           >
             <Menu className="w-6 h-6" />
           </button>
-          <h1 className="text-heading font-bold text-text-primary">EduCenter</h1>
+          <h1 className="text-heading font-bold text-text-primary">Scolink</h1>
           <div className="w-10" /> {/* Spacer for balance */}
         </header>
         

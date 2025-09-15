@@ -1,21 +1,22 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import { 
-  LayoutDashboard, 
-  Users, 
-  BookOpen, 
-  Calendar, 
-  CreditCard, 
-  CalendarDays, 
-  UserCheck, 
+import {
+  LayoutDashboard,
+  Users,
+  BookOpen,
+  Calendar,
+  CreditCard,
+  CalendarDays,
+  UserCheck,
   Settings,
   Globe,
   LogOut,
   Moon,
   Sun,
   Menu,
-  X
+  X,
+  GraduationCap
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -56,10 +57,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, isDark, onThe
         {/* Header */}
         <div className="flex items-center justify-between h-20 px-6 border-b border-white/10">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
-              <BookOpen className="w-6 h-6 sidebar-text" />
+            <div className="w-10 h-10 bg-gradient-primary rounded-xl flex items-center justify-center">
+              <GraduationCap className="w-6 h-6 text-white" />
             </div>
-            <h1 className="text-xl font-bold sidebar-text">Edu-Center</h1>
+            <h1 className="text-xl font-bold sidebar-text">Scolink</h1>
           </div>
           <button
             onClick={onClose}

@@ -5,7 +5,7 @@
 @tailwind utilities;
 
 /* 
-Brutalist Educational Center Design System
+Brutalist Scolink Design System
 Inspired by Notion's clean minimalism
 */
 
@@ -283,6 +283,30 @@ Inspired by Notion's clean minimalism
   
   .gradient-orange {
     background: linear-gradient(135deg, hsl(38 92% 50%), hsl(45 93% 47%));
+  }
+
+  /* Modern card styles for login */
+  .card {
+    @apply bg-surface border border-border rounded-xl shadow-xl;
+  }
+
+  /* Custom button animations */
+  .group\/button:hover .group-hover\/button\:duration-1000 {
+    animation-duration: 1000ms;
+  }
+
+  /* Social icon hover effects */
+  .group:hover .group-hover\:scale-y-100 {
+    transform: scaleY(1);
+  }
+
+  .group:hover .group-hover\:rotate-y-360 {
+    transform: rotateY(360deg);
+  }
+
+  /* Input hover effects */
+  .peer:focus {
+    @apply ring-2 ring-interactive ring-offset-2 ring-offset-background;
   }
   
 }

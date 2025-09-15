@@ -129,7 +129,7 @@ export const Dashboard: React.FC = () => {
           <div>
             <h1 className="text-2xl font-bold text-gray-900 mb-2">Dashboard</h1>
             <p className="text-sm text-gray-600">
-              Hi, Habib! Welcome to Edu-Center Dashboard
+              Hi, Habib! Welcome to Scolink Dashboard
             </p>
           </div>
           
