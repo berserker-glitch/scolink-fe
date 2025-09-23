@@ -17,6 +17,7 @@ import { Settings } from "@/pages/Settings";
 import { SuperAdminOverview } from "@/pages/SuperAdminOverview";
 import { SuperAdminManagement } from "@/pages/SuperAdminManagement";
 import Login from "@/pages/Login";
+import Signup from "@/pages/Signup";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -39,6 +40,7 @@ const AppRoutes = () => {
     return (
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     );
@@ -49,6 +51,7 @@ const AppRoutes = () => {
     return (
       <Routes>
         <Route path="/login" element={<Navigate to="/super-admin" replace />} />
+        <Route path="/signup" element={<Navigate to="/super-admin" replace />} />
         <Route path="/" element={<Navigate to="/super-admin" replace />} />
         <Route path="/super-admin" element={<SuperAdminLayout />}>
           <Route index element={<SuperAdminOverview />} />
@@ -63,6 +66,7 @@ const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/login" element={<Navigate to="/" replace />} />
+      <Route path="/signup" element={<Navigate to="/" replace />} />
       <Route path="/" element={<MainLayout />}>
         <Route index element={<Dashboard />} />
         <Route path="students" element={<Students />} />

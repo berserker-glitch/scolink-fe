@@ -12,6 +12,7 @@ export const SuperAdminOverview: React.FC = () => {
     totalUsers: 0,
     totalAdmins: 0,
     activeUsers: 0,
+    planStats: {} as Record<string, number>,
   });
   const [recentCenters, setRecentCenters] = useState<Center[]>([]);
   const [loading, setLoading] = useState(true);
@@ -53,11 +54,19 @@ export const SuperAdminOverview: React.FC = () => {
       
       // Get recent 5 centers for display
       setRecentCenters(centers.slice(0, 5));
+      
+      // Calculate plan statistics
+      const planStats = centers.reduce((acc, center) => {
+        acc[center.plan] = (acc[center.plan] || 0) + 1;
+        return acc;
+      }, {} as Record<string, number>);
+      
       setStats({
         totalCenters: centers.length,
         totalUsers: users.length,
         totalAdmins: users.filter(u => u.role === 'center_admin' || u.role === 'super_admin').length,
         activeUsers: users.filter(u => u.isActive).length,
+        planStats,
       });
     } catch (error) {
       console.error('Error loading overview data:', error);
@@ -68,6 +77,7 @@ export const SuperAdminOverview: React.FC = () => {
         totalUsers: 0,
         totalAdmins: 0,
         activeUsers: 0,
+        planStats: {},
       });
     } finally {
       setLoading(false);
@@ -96,6 +106,36 @@ export const SuperAdminOverview: React.FC = () => {
       </CardContent>
     </Card>
   );
+
+  const getPlanBadgeColor = (plan: string) => {
+    switch (plan) {
+      case 'basic':
+        return 'bg-gray-100 text-gray-800 border-gray-200';
+      case 'pro':
+        return 'bg-blue-100 text-blue-800 border-blue-200';
+      case 'premium':
+        return 'bg-purple-100 text-purple-800 border-purple-200';
+      case 'lifetime':
+        return 'bg-green-100 text-green-800 border-green-200';
+      default:
+        return 'bg-gray-100 text-gray-800 border-gray-200';
+    }
+  };
+
+  const formatPlanName = (plan: string) => {
+    return plan.charAt(0).toUpperCase() + plan.slice(1);
+  };
+
+  const isPlanExpired = (plan: string, planExpiresAt?: string) => {
+    if (plan === 'basic' || plan === 'lifetime') return false;
+    if (!planExpiresAt) return true;
+    return new Date() > new Date(planExpiresAt);
+  };
+
+  const formatExpiryDate = (planExpiresAt?: string) => {
+    if (!planExpiresAt) return null;
+    return new Date(planExpiresAt).toLocaleDateString();
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -170,6 +210,27 @@ export const SuperAdminOverview: React.FC = () => {
           />
         </div>
 
+        {/* Plan Distribution */}
+        {Object.keys(stats.planStats).length > 0 && (
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            {Object.entries(stats.planStats).map(([plan, count]) => (
+              <Card key={plan} className="p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600 mb-1">
+                      {formatPlanName(plan)} Plan
+                    </p>
+                    <p className="text-2xl font-bold text-gray-900">{count}</p>
+                  </div>
+                  <div className={`px-3 py-1 rounded-full text-xs font-medium ${getPlanBadgeColor(plan)}`}>
+                    {formatPlanName(plan)}
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        )}
+
         {/* Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Recent Centers */}
@@ -204,10 +265,26 @@ export const SuperAdminOverview: React.FC = () => {
                       <div className="flex-1 min-w-0">
                         <h4 className="font-medium text-gray-900 truncate">{center.name}</h4>
                         <p className="text-sm text-gray-500 truncate">{center.location}</p>
-                        <div className="flex items-center mt-1">
+                        <div className="flex items-center gap-2 mt-1">
                           <Badge variant="outline" className="text-xs">
                             {center.adminCount || 0} admins
                           </Badge>
+                          {center.plan && (
+                            <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getPlanBadgeColor(center.plan)}`}>
+                              {formatPlanName(center.plan)}
+                            </span>
+                          )}
+                          {center.plan !== 'basic' && center.plan !== 'lifetime' && (
+                            <span className="text-xs text-gray-500">
+                              {isPlanExpired(center.plan, center.planExpiresAt) ? (
+                                <span className="text-red-600 font-medium">Expired</span>
+                              ) : center.planExpiresAt ? (
+                                `Exp: ${formatExpiryDate(center.planExpiresAt)}`
+                              ) : (
+                                <span className="text-red-600">No expiry</span>
+                              )}
+                            </span>
+                          )}
                         </div>
                       </div>
                     </div>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { ModernButton } from '@/components/ui';
 import { AppInput } from '@/components/ui/AppInput';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -9,9 +9,13 @@ import { Loader2, School } from 'lucide-react';
 const Login: React.FC = () => {
   const { login, isLoading, isAuthenticated, user } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  
+  // Check for success message from signup
+  const successMessage = location.state?.message;
 
   // Redirect if already authenticated
   useEffect(() => {
@@ -54,6 +58,11 @@ const Login: React.FC = () => {
                 <h1 className="text-3xl md:text-4xl font-extrabold text-text-primary">Sign in</h1>
               </div>
               <div className="grid gap-4 items-center">
+                {successMessage && (
+                  <Alert className="border-success bg-success/10">
+                    <AlertDescription className="text-success">{successMessage}</AlertDescription>
+                  </Alert>
+                )}
                 {error && (
                   <Alert variant="destructive" className="border-error bg-error/10">
                     <AlertDescription className="text-error">{error}</AlertDescription>
@@ -132,6 +141,26 @@ const Login: React.FC = () => {
                     </svg>
                     Facebook
                   </button>
+                </div>
+
+                <div className="mt-6">
+                  <div className="relative">
+                    <div className="absolute inset-0 flex items-center">
+                      <span className="w-full h-px bg-gradient-to-r from-transparent via-border to-transparent shadow-sm" />
+                    </div>
+                    <div className="relative flex justify-center text-sm">
+                      <span className="px-2 bg-surface text-text-secondary">New to Scolink?</span>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 text-center">
+                    <Link 
+                      to="/signup" 
+                      className="text-interactive hover:text-interactive/80 font-medium text-sm transition-colors"
+                    >
+                      Create your educational center account
+                    </Link>
+                  </div>
                 </div>
               </div>
             </form>

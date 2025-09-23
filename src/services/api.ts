@@ -1,6 +1,6 @@
 //const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/api/v1';
 const API_BASE_URL ='https://api.scolink.ink/api/v1';
-
+//const API_BASE_URL = 'http://localhost:3001/api/v1';
 // Debug: Log the API base URL being used
 //console.log('🌐 Frontend is using API_BASE_URL:', API_BASE_URL);
 console.log('🌐 Environment mode:', import.meta.env.MODE);
@@ -54,6 +54,9 @@ interface Center {
   location: string;
   phoneNumber?: string;
   email?: string;
+  plan: 'basic' | 'pro' | 'premium' | 'lifetime';
+  planExpiresAt?: string;
+  planUpgradedAt?: string;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
@@ -71,6 +74,21 @@ interface CreateCenterAdminRequest {
   password: string;
   fullName: string;
   phoneNumber?: string;
+}
+
+interface SignupRequest {
+  center: {
+    name: string;
+    location: string;
+    phoneNumber: string;
+    email: string;
+  };
+  admin: {
+    email: string;
+    password: string;
+    fullName: string;
+    phoneNumber: string;
+  };
 }
 
 interface Year {
@@ -632,6 +650,15 @@ class ApiService {
   }
 
   // Authentication
+  async signup(signupData: SignupRequest): Promise<{ center: Center; admin: User }> {
+    const response = await this.request<{ center: Center; admin: User }>('/auth/signup', {
+      method: 'POST',
+      body: JSON.stringify(signupData),
+    });
+
+    return response.data!;
+  }
+
   async login(credentials: LoginRequest): Promise<LoginResponse> {
     const response = await this.request<LoginResponse>('/auth/login', {
       method: 'POST',
@@ -1600,6 +1627,7 @@ export type {
   Center, 
   CreateCenterRequest, 
   CreateCenterAdminRequest, 
+  SignupRequest,
   LoginRequest, 
   LoginResponse, 
   Year, 

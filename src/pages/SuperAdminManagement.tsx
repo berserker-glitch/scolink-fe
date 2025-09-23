@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { ModernButton } from '@/components/ui';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { Plus, Search, Building2, Users, Settings, Filter, MoreHorizontal, Eye, Edit, Trash2, Shield, ShieldOff } from 'lucide-react';
+import { Plus, Search, Building2, Users, Settings, Filter, MoreHorizontal, Eye, Edit, Trash2, Shield, ShieldOff, Crown, Star, Gem, Infinity } from 'lucide-react';
 import { apiService, Center, User } from '@/services/api';
 import { TwoStepCenterForm } from '@/components/SuperAdmin/TwoStepCenterForm';
 import {
@@ -29,6 +29,51 @@ export const SuperAdminManagement: React.FC = () => {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [showSuspendDialog, setShowSuspendDialog] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
+
+  const getPlanBadgeColor = (plan: string) => {
+    switch (plan) {
+      case 'basic':
+        return 'bg-gray-100 text-gray-800 border-gray-200';
+      case 'pro':
+        return 'bg-blue-100 text-blue-800 border-blue-200';
+      case 'premium':
+        return 'bg-purple-100 text-purple-800 border-purple-200';
+      case 'lifetime':
+        return 'bg-green-100 text-green-800 border-green-200';
+      default:
+        return 'bg-gray-100 text-gray-800 border-gray-200';
+    }
+  };
+
+  const getPlanIcon = (plan: string) => {
+    switch (plan) {
+      case 'basic':
+        return Users;
+      case 'pro':
+        return Star;
+      case 'premium':
+        return Crown;
+      case 'lifetime':
+        return Infinity;
+      default:
+        return Users;
+    }
+  };
+
+  const formatPlanName = (plan: string) => {
+    return plan.charAt(0).toUpperCase() + plan.slice(1);
+  };
+
+  const isPlanExpired = (plan: string, planExpiresAt?: string) => {
+    if (plan === 'basic' || plan === 'lifetime') return false;
+    if (!planExpiresAt) return true;
+    return new Date() > new Date(planExpiresAt);
+  };
+
+  const formatExpiryDate = (planExpiresAt?: string) => {
+    if (!planExpiresAt) return null;
+    return new Date(planExpiresAt).toLocaleDateString();
+  };
 
   useEffect(() => {
     loadData();
@@ -236,9 +281,16 @@ export const SuperAdminManagement: React.FC = () => {
                     <CardContent className="p-6">
                       <div className="flex items-start justify-between mb-4">
                         <div className="flex-1">
-                          <div className="flex items-center space-x-2 mb-2">
-                            <Building2 className="w-5 h-5 text-blue-600" />
-                            <h3 className="font-semibold text-gray-900 truncate">{center.name}</h3>
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center space-x-2">
+                              <Building2 className="w-5 h-5 text-blue-600" />
+                              <h3 className="font-semibold text-gray-900 truncate">{center.name}</h3>
+                            </div>
+                            {center.plan && (
+                              <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getPlanBadgeColor(center.plan)}`}>
+                                {formatPlanName(center.plan)}
+                              </span>
+                            )}
                           </div>
                           <p className="text-sm text-gray-600 line-clamp-2">{center.location}</p>
                         </div>
@@ -299,12 +351,49 @@ export const SuperAdminManagement: React.FC = () => {
                         )}
                       </div>
 
+                      {/* Plan Information */}
+                      {center.plan && (
+                        <div className="mb-4 p-3 bg-gray-50 rounded-lg">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <div className={`p-1.5 rounded-full ${getPlanBadgeColor(center.plan)}`}>
+                                {React.createElement(getPlanIcon(center.plan), { className: 'w-3 h-3' })}
+                              </div>
+                              <span className="font-medium text-gray-900">
+                                {formatPlanName(center.plan)} Plan
+                              </span>
+                            </div>
+                            {center.plan !== 'basic' && center.plan !== 'lifetime' && (
+                              <span className="text-xs">
+                                {isPlanExpired(center.plan, center.planExpiresAt) ? (
+                                  <span className="text-red-600 font-medium">Expired</span>
+                                ) : center.planExpiresAt ? (
+                                  <span className="text-gray-600">
+                                    Exp: {formatExpiryDate(center.planExpiresAt)}
+                                  </span>
+                                ) : (
+                                  <span className="text-red-600 font-medium">No expiry set</span>
+                                )}
+                              </span>
+                            )}
+                          </div>
+                          {center.planUpgradedAt && (
+                            <p className="text-xs text-gray-500 mt-1">
+                              Upgraded: {new Date(center.planUpgradedAt).toLocaleDateString()}
+                            </p>
+                          )}
+                        </div>
+                      )}
+
                       <div className="flex items-center justify-between pt-4 border-t">
                         <Badge variant="outline">
                           {center.adminCount || 0} admins
                         </Badge>
-                        <Badge variant="secondary" className="text-xs">
-                          Active
+                        <Badge 
+                          variant={center.isActive ? "default" : "secondary"}
+                          className={center.isActive ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}
+                        >
+                          {center.isActive ? 'Active' : 'Inactive'}
                         </Badge>
                       </div>
                     </CardContent>
