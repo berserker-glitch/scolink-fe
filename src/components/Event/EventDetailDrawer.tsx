@@ -1,20 +1,24 @@
 import React, { useState } from 'react';
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { ModernButton } from '@/components/ui';
+import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { FormField, Input, Select, Textarea } from '@/components/ui/FormField';
-import { 
-  Calendar, 
-  Users, 
-  Clock, 
-  Edit, 
-  Trash2, 
+import {
+  Calendar,
+  Users,
+  Clock,
+  Edit,
+  Trash2,
   MapPin,
   DollarSign,
   CalendarDays,
   Plus,
-  Search
+  Search,
+  X,
+  User,
+  BookOpen
 } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiService, Event, Student, Group } from '@/services/api';
@@ -226,276 +230,260 @@ export const EventDetailDrawer: React.FC<EventDetailDrawerProps> = ({
   };
 
   return (
-    <Sheet open={isOpen} onOpenChange={handleOpenChange}>
-      <SheetContent side="right" className="!w-[50%] !max-w-[50vw] h-full flex flex-col" style={{ width: '50%', maxWidth: '50vw' }} disablePointerEvents={isEditOpen || isExternalEditOpen}>
-        <SheetHeader className="border-b border-border flex-shrink-0">
-          <div className="flex items-center justify-between">
-            <div>
-              <SheetTitle className="text-xl font-bold flex items-center gap-2">
-                <Calendar className="w-6 h-6" />
-                {event.name}
-              </SheetTitle>
-              <p className="text-sm text-text-secondary mt-1">
-                Event Details & Management
-              </p>
-            </div>
-            <div className="flex items-center space-x-2">
-              <span className={`text-caption px-2 py-1 rounded-full ${
-                event.type === 'Normal' 
-                  ? 'bg-interactive/20 text-interactive'
-                  : 'bg-status-warning/20 text-status-warning'
-              }`}>
-                {event.type}
-              </span>
-              {isActive && (
-                <span className="text-caption px-2 py-1 rounded-full bg-status-success/20 text-status-success">
-                  Active
-                </span>
-              )}
-              {isExpired && (
-                <span className="text-caption px-2 py-1 rounded-full bg-text-muted/20 text-text-muted">
-                  Expired
-                </span>
-              )}
-            </div>
+    <div className="w-full bg-white h-full overflow-hidden flex flex-col shadow-lg">
+      <div className="p-4 shrink-0 shadow-sm">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+              <Calendar className="w-6 h-6" />
+              {event.name}
+            </h2>
+            <p className="text-sm text-gray-600 mt-1">
+              Event Details & Management
+            </p>
           </div>
-        </SheetHeader>
-
-        {/* Tab Navigation */}
-        <div className="flex border-b border-border flex-shrink-0">
-          <button
-            onClick={() => setActiveTab('details')}
-            className={`px-4 py-2 font-medium transition-colors ${
-              activeTab === 'details'
-                ? 'text-interactive border-b-2 border-interactive'
-                : 'text-text-muted hover:text-text-primary'
-            }`}
-          >
-            Event Details
-          </button>
-          <button
-            onClick={() => setActiveTab('students')}
-            className={`px-4 py-2 font-medium transition-colors ${
-              activeTab === 'students'
-                ? 'text-interactive border-b-2 border-interactive'
-                : 'text-text-muted hover:text-text-primary'
-            }`}
-          >
-            Students ({students.length})
-          </button>
+          <div className="flex items-center space-x-2">
+            <span className={`text-caption px-2 py-1 rounded-full ${
+              event.type === 'Normal'
+                ? 'bg-interactive/20 text-interactive'
+                : 'bg-status-warning/20 text-status-warning'
+            }`}>
+              {event.type}
+            </span>
+            {isActive && (
+              <span className="text-caption px-2 py-1 rounded-full bg-status-success/20 text-status-success">
+                Active
+              </span>
+            )}
+            {isExpired && (
+              <span className="text-caption px-2 py-1 rounded-full bg-text-muted/20 text-text-muted">
+                Expired
+              </span>
+            )}
+            <ModernButton
+              variant="ghost"
+              size="sm"
+              onClick={onClose}
+              className="p-2 hover:bg-gray-100 rounded-md"
+            >
+              <X className="w-4 h-4" />
+            </ModernButton>
+          </div>
         </div>
+      </div>
 
-        {/* Tab Content - Scrollable Area */}
-        <div className="flex-1 overflow-y-auto p-6 min-h-0">
-          {activeTab === 'details' ? (
-            <>
-              {/* Event Information Card */}
-              <Card className="mb-6">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Calendar className="w-5 h-5" />
-                    Event Information
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="text-sm font-medium text-text-secondary">Event Name</label>
-                      <p className="text-text-primary font-medium">{event.name}</p>
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium text-text-secondary">Event Type</label>
-                      <p className="text-text-primary font-medium">{event.type}</p>
-                    </div>
-                    <div className="col-span-2">
-                      <label className="text-sm font-medium text-text-secondary">Event Schedules</label>
-                      <div className="mt-2 space-y-2">
-                        {event.schedules?.map((schedule, index) => (
-                          <div key={index} className="flex items-center space-x-2 text-text-primary">
-                            <Calendar className="w-4 h-4 text-text-muted" />
-                            <span className="font-medium">
-                              {new Date(schedule.date).toLocaleDateString()}
-                            </span>
-                            <Clock className="w-4 h-4 text-text-muted ml-4" />
-                            <span>{schedule.startTime} - {schedule.endTime}</span>
-                          </div>
-                        )) || (
-                          <p className="text-text-muted">No schedules set</p>
-                        )}
-                      </div>
-                    </div>
-                    {event.fee && event.fee > 0 && (
-                      <div>
-                        <label className="text-sm font-medium text-text-secondary">Fee</label>
-                        <p className="text-text-primary font-medium">{event.fee} DH per student</p>
-                      </div>
-                    )}
-                    {event.groups && event.groups.length > 0 && (
-                      <div>
-                        <label className="text-sm font-medium text-text-secondary">Target Groups</label>
-                        <p className="text-text-primary font-medium">{getGroupNames()}</p>
-                      </div>
-                    )}
+      <div className="flex-1 overflow-hidden">
+        <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'details' | 'students')} className="h-full flex flex-col">
+          <div className="px-6 pt-4 shadow-sm">
+            <TabsList className="grid w-full grid-cols-2 bg-surface-secondary p-1 rounded-lg h-12 shadow-sm">
+              <TabsTrigger
+                value="details"
+                className="flex items-center justify-center rounded-sm data-[state=active]:bg-interactive data-[state=active]:text-white data-[state=inactive]:text-text-muted hover:text-text-primary transition-all duration-200"
+              >
+                <Calendar className="w-5 h-5" />
+              </TabsTrigger>
+              <TabsTrigger
+                value="students"
+                className="flex items-center justify-center rounded-sm data-[state=active]:bg-interactive data-[state=active]:text-white data-[state=inactive]:text-text-muted hover:text-text-primary transition-all duration-200"
+              >
+                <Users className="w-5 h-5" />
+              </TabsTrigger>
+            </TabsList>
+          </div>
+
+          <div className="flex-1 overflow-y-auto p-6">
+            <TabsContent value="details" className="space-y-4">
+              {/* Profile Header - Minimal */}
+              <div className="text-center py-6 bg-surface rounded-lg shadow-sm">
+                <div className="w-16 h-16 mx-auto mb-3 bg-interactive rounded-full flex items-center justify-center shadow-md">
+                  <Calendar className="w-8 h-8 text-white" />
+                </div>
+                <h2 className="text-xl font-bold text-text-primary mb-1">
+                  {event.name}
+                </h2>
+                <p className="text-sm text-text-secondary">
+                  {event.type} Event
+                </p>
+                <div className="mt-3 flex items-center justify-center gap-2">
+                  <Badge variant={isActive ? "default" : isExpired ? "secondary" : "outline"}>
+                    {isActive ? 'Active' : isExpired ? 'Expired' : 'Upcoming'}
+                  </Badge>
+                </div>
+              </div>
+
+              {/* Information Grid - Minimal */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="p-4 bg-surface rounded-lg shadow-sm">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Calendar className="w-4 h-4 text-interactive" />
+                    <span className="text-sm font-medium text-text-secondary">Event Type</span>
                   </div>
-                  {event.description && (
-                    <div>
-                      <label className="text-sm font-medium text-text-secondary">Description</label>
-                      <p className="text-text-primary">{event.description}</p>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
+                  <p className="text-text-primary font-medium">{event.type}</p>
+                </div>
 
-              {/* Event Statistics Card */}
-              <Card className="mb-6">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Users className="w-5 h-5" />
-                    Event Statistics
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="text-sm font-medium text-text-secondary">Total Enrolled</label>
-                      <p className="text-2xl font-bold text-text-primary">{students.length}</p>
-                    </div>
-                    {event.fee && event.fee > 0 && (
-                      <div>
-                        <label className="text-sm font-medium text-text-secondary">Total Revenue</label>
-                        <p className="text-2xl font-bold text-text-primary">
-                          {(students.length * event.fee).toLocaleString()} DH
-                        </p>
-                      </div>
-                    )}
+                <div className="p-4 bg-surface rounded-lg shadow-sm">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Users className="w-4 h-4 text-interactive" />
+                    <span className="text-sm font-medium text-text-secondary">Enrolled Students</span>
                   </div>
-                </CardContent>
-              </Card>
+                  <p className="text-text-primary font-medium">{students.length} students</p>
+                </div>
 
-              {/* Actions */}
-              <div className="flex items-center gap-3">
-                <ModernButton 
-                  variant="outline" 
-                  onClick={() => onEdit ? onEdit(event) : setIsEditOpen(true)}
-                  className="flex-1"
+                {event.fee && event.fee > 0 && (
+                  <div className="p-4 bg-surface rounded-lg shadow-sm">
+                    <div className="flex items-center gap-2 mb-2">
+                      <DollarSign className="w-4 h-4 text-interactive" />
+                      <span className="text-sm font-medium text-text-secondary">Fee</span>
+                    </div>
+                    <p className="text-text-primary font-medium">{event.fee} DH per student</p>
+                  </div>
+                )}
+
+                {event.groups && event.groups.length > 0 && (
+                  <div className="p-4 bg-surface rounded-lg shadow-sm">
+                    <div className="flex items-center gap-2 mb-2">
+                      <BookOpen className="w-4 h-4 text-interactive" />
+                      <span className="text-sm font-medium text-text-secondary">Target Groups</span>
+                    </div>
+                    <p className="text-text-primary font-medium">{getGroupNames()}</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Schedules - Only if exists */}
+              {event.schedules && event.schedules.length > 0 && (
+                <div className="p-4 bg-surface rounded-lg shadow-sm">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Clock className="w-4 h-4 text-interactive" />
+                    <span className="text-sm font-medium text-text-secondary">Event Schedules</span>
+                  </div>
+                  <div className="space-y-2">
+                    {event.schedules.map((schedule, index) => (
+                      <div key={index} className="flex items-center space-x-2 text-text-primary text-sm">
+                        <Calendar className="w-4 h-4 text-text-muted" />
+                        <span className="font-medium">
+                          {new Date(schedule.date).toLocaleDateString()}
+                        </span>
+                        <Clock className="w-4 h-4 text-text-muted ml-4" />
+                        <span>{schedule.startTime} - {schedule.endTime}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Description - Only if exists */}
+              {event.description && (
+                <div className="p-4 bg-surface rounded-lg shadow-sm">
+                  <div className="flex items-center gap-2 mb-2">
+                    <User className="w-4 h-4 text-text-muted" />
+                    <span className="text-sm font-medium text-text-secondary">Description</span>
+                  </div>
+                  <p className="text-text-primary text-sm truncate">{event.description}</p>
+                </div>
+              )}
+            </TabsContent>
+
+            <TabsContent value="students" className="space-y-4">
+              {/* Header */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Users className="w-5 h-5 text-interactive" />
+                  <h3 className="text-lg font-semibold text-text-primary">
+                    Enrolled Students ({eventStudents.length})
+                  </h3>
+                </div>
+                <ModernButton
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    setIsAddStudentOpen(true);
+                    setStudentSearchQuery('');
+                  }}
                 >
-                  <Edit className="w-4 h-4 mr-2" />
-                  Edit Event
-                </ModernButton>
-                <ModernButton 
-                  variant="danger" 
-                  onClick={handleDeleteEvent}
-                  className="flex-1"
-                >
-                  <Trash2 className="w-4 h-4 mr-2" />
-                  Delete Event
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Student
                 </ModernButton>
               </div>
-            </>
-          ) : (
-            /* Students Tab */
-            <div className="space-y-6">
-              {/* Student List */}
-              <Card>
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="flex items-center gap-2">
-                      <Users className="w-5 h-5" />
-                      Enrolled Students ({students.length})
-                    </CardTitle>
-                    <div className="flex items-center gap-2">
-                      <ModernButton
-                        variant="outline"
-                        size="sm"
-                        onClick={() => {
-                          setIsAddStudentOpen(true);
-                          setStudentSearchQuery('');
-                        }}
-                      >
-                        <Plus className="w-4 h-4 mr-2" />
-                        Add Student
-                      </ModernButton>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  {eventStudents.length === 0 ? (
-                    <div className="text-center py-8">
-                      <Users className="w-12 h-12 mx-auto mb-3 opacity-50 text-text-muted" />
-                      <p className="text-text-secondary">No students enrolled in this event yet.</p>
-                      <ModernButton
-                        variant="solid"
-                        size="sm"
-                        className="mt-4"
-                        onClick={() => {
-                          setIsAddStudentOpen(true);
-                          setStudentSearchQuery('');
-                        }}
-                      >
-                        <Plus className="w-4 h-4 mr-2" />
-                        Add First Student
-                      </ModernButton>
-                    </div>
-                  ) : (
-                    <div className="space-y-3 max-h-[75vh] overflow-y-auto">
-                      {eventStudents.map(student => (
-                        <Card key={student.id} className="surface-secondary">
-                          <CardContent className="p-4">
-                            <div className="flex items-center justify-between">
-                              <div className="flex-1">
-                                <h4 className="font-medium text-text-primary">
-                                  {student.firstName} {student.lastName}
-                                </h4>
-                                <p className="text-sm text-text-secondary">
-                                  {student.yearName || 'Unknown Year'} • {student.fieldName || 'Unknown Field'}
-                                </p>
-                                {/* Phone removed as it's not in the Student type */}
-                              </div>
-                              <div className="flex items-center gap-2">
-                                {event.fee && event.fee > 0 && (
-                                  <span className="px-2 py-1 rounded-full bg-interactive/20 text-interactive text-xs font-medium">
-                                    {event.fee} DH
-                                  </span>
-                                )}
-                                <ModernButton
-                                  variant="outline"
-                                  size="sm"
-                                  onClick={() => {
-                                // Properly type the student for removal
-                                const fullStudent: Student = {
-                                  ...student,
-                                  sex: 'M',
-                                  yearId: '',
-                                  fieldId: '',
-                                  phone: '',
-                                  parentPhone: '',
-                                  parentType: 'Guardian',
-                                  createdAt: new Date().toISOString(),
-                                  updatedAt: new Date().toISOString(),
-                                  centerId: '',
-                                  isActive: true,
-                                  tag: 'normal'
-                                };
-                                setSelectedStudent(fullStudent);
-                                setIsRemoveStudentOpen(true);
-                                  }}
-                                >
-                                  <Trash2 className="w-4 h-4" />
-                                </ModernButton>
-                              </div>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      ))}
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </div>
-          )}
-        </div>
 
-        {/* Edit Event Modal */}
+              {eventStudents.length === 0 ? (
+                <div className="bg-surface rounded-lg shadow-sm p-8 text-center">
+                  <Users className="w-12 h-12 mx-auto mb-3 opacity-50 text-text-muted" />
+                  <p className="text-text-secondary">No students enrolled in this event yet.</p>
+                  <ModernButton
+                    variant="solid"
+                    size="sm"
+                    className="mt-4"
+                    onClick={() => {
+                      setIsAddStudentOpen(true);
+                      setStudentSearchQuery('');
+                    }}
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add First Student
+                  </ModernButton>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {eventStudents.map(student => (
+                    <div key={student.id} className="bg-surface rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow">
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 bg-interactive/10 rounded-lg flex items-center justify-center">
+                            <User className="w-5 h-5 text-interactive" />
+                          </div>
+                          <div>
+                            <h4 className="font-semibold text-text-primary break-words">
+                              {student.firstName} {student.lastName}
+                            </h4>
+                            <p className="text-sm text-text-secondary break-words">
+                              {student.yearName || 'Unknown Year'} • {student.fieldName || 'Unknown Field'}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          {event.fee && event.fee > 0 && (
+                            <Badge variant="outline">
+                              {event.fee} DH
+                            </Badge>
+                          )}
+                          <ModernButton
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              // Properly type the student for removal
+                              const fullStudent: Student = {
+                                ...student,
+                                sex: 'M',
+                                yearId: '',
+                                fieldId: '',
+                                phone: '',
+                                parentPhone: '',
+                                parentType: 'Guardian',
+                                createdAt: new Date().toISOString(),
+                                updatedAt: new Date().toISOString(),
+                                centerId: '',
+                                isActive: true,
+                                tag: 'normal'
+                              };
+                              setSelectedStudent(fullStudent);
+                              setIsRemoveStudentOpen(true);
+                            }}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </ModernButton>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </TabsContent>
+          </div>
+        </Tabs>
+    </div>
+
+    {/* Edit Event Modal */}
         <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
           <DialogContent className="max-w-2xl">
             <DialogHeader>
@@ -714,8 +702,8 @@ export const EventDetailDrawer: React.FC<EventDetailDrawerProps> = ({
                 >
                   Cancel
                 </ModernButton>
-                <ModernButton 
-                  variant="danger" 
+                <ModernButton
+                  variant="outline"
                   onClick={() => {
                     if (selectedStudent) {
                       handleRemoveStudentFromEvent(selectedStudent.id);
@@ -728,7 +716,6 @@ export const EventDetailDrawer: React.FC<EventDetailDrawerProps> = ({
             </div>
           </DialogContent>
         </Dialog>
-      </SheetContent>
-    </Sheet>
+        </div>
   );
 };

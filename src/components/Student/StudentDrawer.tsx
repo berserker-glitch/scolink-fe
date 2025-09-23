@@ -4,6 +4,16 @@ import { ModernButton } from '@/components/ui';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { 
   User, 
   BookOpen, 
@@ -29,7 +39,7 @@ import {
   AlertCircle
 } from 'lucide-react';
 import { Student } from '@/services/api';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiService } from '@/services/api';
 import { useToast } from '@/hooks/use-toast';
 import { SubjectSelection } from './SubjectSelection';
@@ -65,6 +75,7 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
   const [addSubjectStep, setAddSubjectStep] = useState<'subjects' | 'groups'>('subjects');
   const [selectedSubjectsForAddition, setSelectedSubjectsForAddition] = useState<string[]>([]);
   const [selectedGroupsForAddition, setSelectedGroupsForAddition] = useState<{ [subjectId: string]: string }>({});
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   // Fetch subjects for the student's year and field
   const { data: subjectsData } = useQuery({
@@ -84,6 +95,28 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
   const availableGroups = groupsData?.groups || [];
   const { toast } = useToast();
   const queryClient = useQueryClient();
+
+  // Delete student mutation
+  const deleteStudentMutation = useMutation({
+    mutationFn: () => apiService.deleteStudent(student!.id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['students'] });
+      onClose();
+      if (onDelete && student) {
+        onDelete(student.id);
+      }
+    },
+  });
+
+  const handleDeleteStudent = () => {
+    setIsDeleteDialogOpen(true);
+  };
+
+  const confirmDeleteStudent = () => {
+    if (!student) return;
+    deleteStudentMutation.mutate();
+    setIsDeleteDialogOpen(false);
+  };
 
   if (!student) return null;
 
@@ -352,7 +385,7 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
                 {student.yearName || 'Unknown Year'} • {student.fieldName || 'Unknown Field'}
               </p>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1">
               <Badge variant="outline" className="text-xs">
                 Student ID: {student.id?.slice(-6)?.toUpperCase()}
               </Badge>
@@ -360,14 +393,24 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
                 variant="ghost"
                 size="sm"
                 onClick={() => onEdit(student)}
-                className="text-text-muted hover:text-interactive"
+                className="p-2 hover:bg-gray-100 rounded-md"
               >
                 <Edit className="w-4 h-4" />
               </ModernButton>
               <ModernButton
                 variant="ghost"
                 size="sm"
+                onClick={handleDeleteStudent}
+                disabled={deleteStudentMutation.isPending}
+                className="p-2 hover:bg-red-50 rounded-md text-red-600 hover:text-red-700"
+              >
+                <Trash2 className="w-4 h-4" />
+              </ModernButton>
+              <ModernButton
+                variant="ghost"
+                size="sm"
                 onClick={onClose}
+                className="p-2 hover:bg-gray-100 rounded-md"
               >
                 <X className="w-4 h-4" />
               </ModernButton>
@@ -1292,6 +1335,49 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
             queryClient.invalidateQueries({ queryKey: ['students', student.id] });
           }}
         />
+
+        {/* Delete Confirmation Dialog */}
+        <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+          <AlertDialogContent className="bg-white border border-gray-200 shadow-xl">
+            <AlertDialogHeader className="space-y-3">
+              <AlertDialogTitle className="text-xl font-semibold text-gray-900 flex items-center gap-2">
+                <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
+                  <Trash2 className="w-5 h-5 text-red-600" />
+                </div>
+                Delete Student
+              </AlertDialogTitle>
+              <AlertDialogDescription className="text-gray-600 leading-relaxed">
+                Are you sure you want to delete <span className="font-semibold text-gray-900">{student.firstName} {student.lastName}</span>?
+                <br />
+                <span className="text-sm text-gray-500 mt-2 block">
+                  This action cannot be undone and will permanently remove the student and all associated data including enrollments, payments, and attendance records.
+                </span>
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter className="flex gap-3 pt-6">
+              <AlertDialogCancel className="px-4 py-2 border border-gray-300 text-gray-700 hover:bg-gray-50 focus:ring-2 focus:ring-gray-300">
+                Cancel
+              </AlertDialogCancel>
+              <AlertDialogAction
+                onClick={confirmDeleteStudent}
+                className="px-4 py-2 bg-red-600 hover:bg-red-700 focus:ring-2 focus:ring-red-500 text-white disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                disabled={deleteStudentMutation.isPending}
+              >
+                {deleteStudentMutation.isPending ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    Deleting...
+                  </>
+                ) : (
+                  <>
+                    <Trash2 className="w-4 h-4" />
+                    Delete Student
+                  </>
+                )}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </div>
   );

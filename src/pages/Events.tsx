@@ -33,6 +33,7 @@ export const Events: React.FC = () => {
   const [isAddEventOpen, setIsAddEventOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [isEventDetailOpen, setIsEventDetailOpen] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   
   const [eventForm, setEventForm] = useState({
     name: '',
@@ -182,7 +183,7 @@ export const Events: React.FC = () => {
 
   const handleViewEvent = (event: any) => {
     setSelectedEvent(event);
-    setIsEventDetailOpen(true);
+    setIsDrawerOpen(true);
   };
 
   const handlePrintStudentList = (event: any) => {
@@ -411,9 +412,13 @@ export const Events: React.FC = () => {
   }, [editingEvent]);
 
   return (
-    <div className="min-h-screen bg-background p-6 lg:p-8">
-      {/* Header */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8">
+    <div className="min-h-screen bg-background">
+      <div className="flex h-screen">
+        {/* Main Content */}
+        <div className={`transition-all duration-300 overflow-hidden ${isDrawerOpen ? 'w-[60%]' : 'w-full'}`}>
+          <div className="p-6 lg:p-8 h-full overflow-y-auto">
+            {/* Header */}
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8">
         <div>
           <h1 className="text-2xl font-bold text-text-primary mb-2">Events</h1>
           <p className="text-sm text-text-secondary">
@@ -431,37 +436,37 @@ export const Events: React.FC = () => {
         </ModernButton>
       </div>
 
-      {/* Filters */}
-      <Card className="surface mb-6">
-        <CardContent className="p-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-text-muted" />
+      {/* Search */}
+      <div className="mb-6">
+        <div className="bg-white rounded-lg border border-gray-200 p-4">
+          <div className="flex items-center space-x-4">
+            {/* Search */}
+            <div className="flex-1 relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
               <input
                 type="text"
-                placeholder="Search events..."
+                placeholder="Search events by name..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 border border-border rounded-lg bg-background text-text-primary focus-brutalist"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
             </div>
 
-            <select
-              value={typeFilter}
-              onChange={(e) => setTypeFilter(e.target.value)}
-              className="w-full px-4 py-3 border border-border rounded-lg bg-background text-text-primary focus-brutalist"
-            >
-              <option value="">All Types</option>
-              <option value="Normal">Normal Events</option>
-              <option value="TempAdditionalCourseDay">Additional Course Days</option>
-            </select>
-
-            <div className="text-caption text-text-secondary flex items-center">
-              <span>Total Events: {filteredEvents.length}</span>
+            {/* Filter */}
+            <div className="flex items-center space-x-2">
+              <select
+                value={typeFilter}
+                onChange={(e) => setTypeFilter(e.target.value)}
+                className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 min-w-48"
+              >
+                <option value="">All Types</option>
+                <option value="Normal">Normal Events</option>
+                <option value="TempAdditionalCourseDay">Additional Course Days</option>
+              </select>
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {/* Events Grid */}
       {eventsLoading ? (
@@ -486,90 +491,81 @@ export const Events: React.FC = () => {
           const isExpired = isEventExpired(event);
           
           return (
-            <Card 
-              key={event.id} 
-              className={`surface hover:bg-surface-hover transition-colors ${
-                isActive ? 'border-status-success' : isExpired ? 'border-text-muted' : ''
-              }`}
+            <Card
+              key={event.id}
+              className={`surface hover:shadow-lg transition-all duration-200 cursor-pointer`}
+              onClick={() => handleViewEvent(event)}
             >
               <CardContent className="p-6">
                 {/* Event Header */}
-                <div className="flex items-start justify-between mb-4">
-                  <div>
-                    <h3 className="text-subheading font-semibold text-text-primary mb-1">
-                      {event.name}
-                    </h3>
-                    <div className="flex items-center space-x-2">
-                      <span className={`text-caption px-2 py-1 rounded-full ${
-                        event.type === 'Normal' 
-                          ? 'bg-interactive/20 text-interactive'
-                          : 'bg-status-warning/20 text-status-warning'
-                      }`}>
-                        {event.type}
-                      </span>
-                      {isActive && (
-                        <span className="text-caption px-2 py-1 rounded-full bg-status-success/20 text-status-success">
-                          Active
+                <div className="flex items-start justify-between mb-4 gap-3">
+                  <div className="flex items-center space-x-3 flex-1 min-w-0">
+                    <div className="w-12 h-12 bg-interactive rounded-xl flex items-center justify-center flex-shrink-0">
+                      <Calendar className="w-6 h-6 text-background" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-bold text-text-primary text-lg truncate">{event.name}</h3>
+                      <div className="flex items-center space-x-2 mt-1">
+                        <span className={`text-sm font-medium px-2 py-1 rounded-full ${
+                          event.type === 'Normal'
+                            ? 'bg-interactive/20 text-interactive'
+                            : 'bg-status-warning/20 text-status-warning'
+                        }`}>
+                          {event.type}
                         </span>
-                      )}
-                      {isExpired && (
-                        <span className="text-caption px-2 py-1 rounded-full bg-text-muted/20 text-text-muted">
-                          Expired
-                        </span>
+                      </div>
+                      {event.schedules && event.schedules.length > 0 && (
+                        <p className="text-xs text-text-muted truncate">
+                          {event.schedules.length} date{event.schedules.length !== 1 ? 's' : ''} scheduled
+                        </p>
                       )}
                     </div>
                   </div>
+
+                  <div className="flex items-center space-x-1 flex-shrink-0">
+                    <ModernButton
+                      variant="ghost"
+                      size="sm"
+                      icon={Edit}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleEditEvent(event);
+                      }}
+                    />
+                  </div>
+                </div>
+
+                {/* Event Stats */}
+                <div className="grid grid-cols-3 gap-4 mb-4 p-3 bg-surface-secondary rounded-lg">
+                  <div className="text-center">
+                    <p className="text-lg font-bold text-text-primary">{students.length}</p>
+                    <p className="text-xs text-text-secondary">Students</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-lg font-bold text-text-primary">{event.groups?.length || 0}</p>
+                    <p className="text-xs text-text-secondary">Groups</p>
+                  </div>
+                  <div className="text-center">
+                    <div className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                      isActive
+                        ? 'bg-green-100 text-green-800'
+                        : isExpired
+                        ? 'bg-gray-100 text-gray-800'
+                        : 'bg-blue-100 text-blue-800'
+                    }`}>
+                      {isActive ? 'Active' : isExpired ? 'Expired' : 'Upcoming'}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex items-center space-x-2 pt-2 border-t border-border">
                   <ModernButton
-                    variant="ghost"
+                    variant="solid"
                     size="sm"
-                    icon={Eye}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleViewEvent(event);
-                    }}
-                  />
-                </div>
-
-                {/* Event Details */}
-                <div className="space-y-3 mb-4">
-                  <div className="flex items-center space-x-2 text-caption text-text-secondary">
-                    <Calendar className="w-4 h-4" />
-                    <span>
-                      {event.schedules && event.schedules.length > 0 
-                        ? event.schedules.map(s => new Date(s.date).toLocaleDateString()).join(', ')
-                        : 'No dates scheduled'
-                      }
-                    </span>
-                  </div>
-                  
-                  <div className="flex items-center space-x-2 text-caption text-text-secondary">
-                    <Users className="w-4 h-4" />
-                    <span>{students.length} students enrolled</span>
-                  </div>
-
-                  {event.groups && event.groups.length > 0 && (
-                    <div className="flex items-center space-x-2 text-caption text-text-secondary">
-                      <MapPin className="w-4 h-4" />
-                      <span>{event.groups.map(eg => `${eg.group?.subjectName || 'Unknown'} - ${eg.group?.name || 'Unknown'}`).join(', ')}</span>
-                    </div>
-                  )}
-
-                  {event.fee && event.fee > 0 && (
-                    <div className="flex items-center space-x-2 text-caption text-text-secondary">
-                      <DollarSign className="w-4 h-4" />
-                      <span>{event.fee} DH per student</span>
-                    </div>
-                  )}
-                </div>
-
-                {/* Actions */}
-                <div className="flex items-center space-x-2">
-                  <ModernButton 
-                    variant="outline" 
-                    size="sm" 
-                    className="flex-1"
                     icon={Printer}
                     iconPosition="left"
+                    className="flex-1"
                     onClick={(e) => {
                       e.stopPropagation();
                       handlePrintStudentList(event);
@@ -577,17 +573,8 @@ export const Events: React.FC = () => {
                   >
                     Print Student List
                   </ModernButton>
-                  <ModernButton 
-                    variant="outline" 
-                    size="sm"
-                    icon={Edit}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleEditEvent(event);
-                    }}
-                  />
-                  <ModernButton 
-                    variant="outline" 
+                  <ModernButton
+                    variant="outline"
                     size="sm"
                     icon={Trash2}
                     onClick={(e) => {
@@ -604,6 +591,26 @@ export const Events: React.FC = () => {
         })}
         </div>
       )}
+
+          </div>
+        </div>
+
+        {/* Inline Drawer */}
+        <div className={`w-[40%] transition-all duration-300 ${isDrawerOpen && selectedEvent ? 'block' : 'hidden'}`}>
+          {selectedEvent && (
+            <EventDetailDrawer
+              isOpen={isDrawerOpen}
+              onClose={() => {
+                setIsDrawerOpen(false);
+                setSelectedEvent(null);
+              }}
+              event={selectedEvent}
+              onEdit={handleEditEvent}
+              isExternalEditOpen={isEditEventOpen}
+            />
+          )}
+        </div>
+      </div>
 
       {/* Add Event Modal */}
       <Modal
@@ -1217,14 +1224,6 @@ export const Events: React.FC = () => {
         </div>
       </Modal>
 
-      {/* Event Detail Drawer */}
-      <EventDetailDrawer
-        isOpen={isEventDetailOpen}
-        onClose={() => setIsEventDetailOpen(false)}
-        event={selectedEvent}
-        onEdit={handleEditEvent}
-        isExternalEditOpen={isEditEventOpen}
-      />
     </div>
   );
 };

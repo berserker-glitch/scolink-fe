@@ -9,19 +9,57 @@ import { apiService, Teacher, CreateTeacherRequest } from '@/services/api';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { generateTeacherSchedulePDF } from '@/utils/pdfGenerator';
-import { 
-  Search, 
-  Plus, 
-  Mail, 
-  Phone, 
+import {
+  Search,
+  Plus,
+  Mail,
+  Phone,
   BookOpen,
   Users,
   Edit,
   Trash2,
-  Eye,
   User,
-  FileText
+  FileText,
+  GraduationCap
 } from 'lucide-react';
+
+// Wrapper component to fetch teacher by ID for the drawer
+const TeacherDrawerWithQuery: React.FC<{
+  teacherId: string;
+  isOpen: boolean;
+  onClose: () => void;
+}> = ({ teacherId, isOpen, onClose }) => {
+  const { data: teacher, isLoading } = useQuery({
+    queryKey: ['teachers', teacherId],
+    queryFn: () => apiService.getTeacherById(teacherId),
+    enabled: isOpen && !!teacherId,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
+  });
+
+  if (isLoading) {
+    return (
+      <div className="w-full h-full bg-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600 mx-auto mb-2"></div>
+          <p className="text-sm text-gray-600">Loading teacher...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!teacher) {
+    return null;
+  }
+
+  return (
+    <TeacherDetailDrawer
+      isOpen={isOpen}
+      onClose={onClose}
+      teacher={teacher}
+    />
+  );
+};
 
 export const Teachers: React.FC = () => {
   const queryClient = useQueryClient();
@@ -31,9 +69,9 @@ export const Teachers: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isAddTeacherOpen, setIsAddTeacherOpen] = useState(false);
   const [isEditTeacherOpen, setIsEditTeacherOpen] = useState(false);
-  const [isDetailDrawerOpen, setIsDetailDrawerOpen] = useState(false);
+  const [selectedTeacherId, setSelectedTeacherId] = useState<string | null>(null);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [editingTeacher, setEditingTeacher] = useState<Teacher | null>(null);
-  const [selectedTeacher, setSelectedTeacher] = useState<Teacher | null>(null);
   
   const [teacherForm, setTeacherForm] = useState({
     name: '',
@@ -140,9 +178,9 @@ export const Teachers: React.FC = () => {
     setIsEditTeacherOpen(true);
   };
 
-  const handleViewTeacher = (teacher: Teacher) => {
-    setSelectedTeacher(teacher);
-    setIsDetailDrawerOpen(true);
+  const handleTeacherClick = (teacher: Teacher) => {
+    setSelectedTeacherId(teacher.id);
+    setIsDrawerOpen(true);
   };
 
   const handlePrintSchedule = async (teacher: Teacher) => {
@@ -165,16 +203,6 @@ export const Teachers: React.FC = () => {
     }
   };
 
-  const handleTeacherDrawerEdit = (updatedTeacher: Teacher) => {
-    // The drawer will handle the API call, so we just need to update local state
-    setSelectedTeacher(updatedTeacher);
-  };
-
-  const handleTeacherDrawerDelete = (teacherId: string) => {
-    // Close the drawer and refresh data
-    setIsDetailDrawerOpen(false);
-    setSelectedTeacher(null);
-  };
 
   const resetTeacherForm = () => {
     setTeacherForm({
@@ -186,7 +214,11 @@ export const Teachers: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background p-6 lg:p-8">
+    <div className="min-h-screen bg-background">
+      <div className="flex h-screen">
+        {/* Main Content */}
+        <div className={`transition-all duration-300 overflow-hidden ${isDrawerOpen ? 'w-[60%]' : 'w-full'}`}>
+          <div className="p-6 lg:p-8 h-full overflow-y-auto">
       {/* Header */}
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8">
         <div>
@@ -207,20 +239,23 @@ export const Teachers: React.FC = () => {
       </div>
 
       {/* Search */}
-      <Card className="surface mb-6">
-        <CardContent className="p-6">
-          <div className="relative max-w-md">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-text-muted" />
-            <input
-              type="text"
-              placeholder="Search teachers..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 border border-border rounded-lg bg-background text-text-primary focus-brutalist"
-            />
+      <div className="mb-6">
+        <div className="bg-white rounded-lg border border-gray-200 p-4">
+          <div className="flex items-center space-x-4">
+            {/* Search */}
+            <div className="flex-1 relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search teachers by name or email..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+            </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {/* Teachers Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -248,82 +283,86 @@ export const Teachers: React.FC = () => {
           </div>
         ) : (
           filteredTeachers.map((teacher) => (
-            <Card key={teacher.id} className="surface hover:bg-surface-hover transition-colors">
+            <Card
+              key={teacher.id}
+              className={`surface hover:shadow-lg transition-all duration-200 cursor-pointer ${
+                selectedTeacherId === teacher.id ? 'ring-2 ring-interactive' : ''
+              }`}
+              onClick={() => handleTeacherClick(teacher)}
+            >
               <CardContent className="p-6">
                 {/* Teacher Header */}
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-12 h-12 bg-interactive rounded-lg flex items-center justify-center">
-                      <span className="text-background font-bold text-lg">
-                        {teacher.name.split(' ').map(n => n[0]).join('')}
-                      </span>
+                <div className="flex items-start justify-between mb-4 gap-3">
+                  <div className="flex items-center space-x-3 flex-1 min-w-0">
+                    <div className="w-12 h-12 bg-interactive rounded-xl flex items-center justify-center flex-shrink-0">
+                      <GraduationCap className="w-6 h-6 text-background" />
                     </div>
-                    <div>
-                      <h3 className="text-subheading font-semibold text-text-primary">
-                        {teacher.name}
-                      </h3>
-                      <p className="text-caption text-text-secondary">
-                        {teacher.subjects?.length || 0} subject{(teacher.subjects?.length || 0) !== 1 ? 's' : ''}
-                      </p>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-bold text-text-primary text-lg truncate">{teacher.name}</h3>
+                      <div className="flex items-center space-x-2 mt-1">
+                        <span className="text-sm font-medium text-interactive truncate">{teacher.email}</span>
+                      </div>
+                      {teacher.phone && (
+                        <p className="text-xs text-text-muted truncate">{teacher.phone}</p>
+                      )}
                     </div>
                   </div>
+
+                  <div className="flex items-center space-x-1 flex-shrink-0">
+                    <ModernButton
+                      variant="ghost"
+                      size="sm"
+                      icon={Edit}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleEditTeacher(teacher);
+                      }}
+                    />
+                  </div>
+                </div>
+
+                {/* Teacher Stats */}
+                <div className="grid grid-cols-3 gap-4 mb-4 p-3 bg-surface-secondary rounded-lg">
+                  <div className="text-center">
+                    <p className="text-lg font-bold text-text-primary">{teacher.subjects?.length || 0}</p>
+                    <p className="text-xs text-text-secondary">Subjects</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-lg font-bold text-text-primary">{teacher.groupsCount || 0}</p>
+                    <p className="text-xs text-text-secondary">Groups</p>
+                  </div>
+                  <div className="text-center">
+                    <div className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                      teacher.isActive
+                        ? 'bg-green-100 text-green-800'
+                        : 'bg-gray-100 text-gray-800'
+                    }`}>
+                      {teacher.isActive ? 'Active' : 'Inactive'}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex items-center space-x-2 pt-2 border-t border-border">
                   <ModernButton
-                    variant="ghost"
+                    variant="solid"
                     size="sm"
-                    icon={Eye}
-                    onClick={() => handleViewTeacher(teacher)}
-                  />
-                </div>
-
-                {/* Contact Info */}
-                <div className="space-y-2 mb-4">
-                  <div className="flex items-center space-x-2 text-caption text-text-secondary">
-                    <Mail className="w-4 h-4" />
-                    <span>{teacher.email}</span>
-                  </div>
-                  {teacher.phone && (
-                    <div className="flex items-center space-x-2 text-caption text-text-secondary">
-                      <Phone className="w-4 h-4" />
-                      <span>{teacher.phone}</span>
-                    </div>
-                  )}
-                </div>
-
-                {/* Subject & Group Info */}
-                <div className="space-y-2 mb-4">
-                  <div className="flex items-center space-x-2 text-caption text-text-secondary">
-                    <BookOpen className="w-4 h-4" />
-                    <span>{teacher.subjects?.join(', ') || 'No subjects assigned'}</span>
-                  </div>
-                  <div className="flex items-center space-x-2 text-caption text-text-secondary">
-                    <Users className="w-4 h-4" />
-                    <span>{teacher.groupsCount || 0} groups</span>
-                  </div>
-                </div>
-
-                {/* Actions */}
-                <div className="flex items-center space-x-2">
-                  <ModernButton 
-                    variant="outline" 
-                    size="sm" 
-                    className="flex-1"
                     icon={FileText}
                     iconPosition="left"
-                    onClick={() => handlePrintSchedule(teacher)}
+                    className="flex-1"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handlePrintSchedule(teacher);
+                    }}
                   >
                     Print Schedule
                   </ModernButton>
-                  <ModernButton 
-                    variant="outline" 
-                    size="sm"
-                    icon={Edit}
-                    onClick={() => handleEditTeacher(teacher)}
-                  />
-                  <ModernButton 
-                    variant="outline" 
+                  <ModernButton
+                    variant="outline"
                     size="sm"
                     icon={Trash2}
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.stopPropagation();
                       if (confirm('Are you sure you want to delete this teacher?')) {
                         deleteTeacherMutation.mutate(teacher.id);
                       }
@@ -334,6 +373,24 @@ export const Teachers: React.FC = () => {
             </Card>
           ))
         )}
+      </div>
+
+          </div>
+        </div>
+
+        {/* Inline Drawer */}
+        <div className={`w-[40%] transition-all duration-300 ${isDrawerOpen && selectedTeacherId ? 'block' : 'hidden'}`}>
+          {selectedTeacherId && (
+            <TeacherDrawerWithQuery
+              teacherId={selectedTeacherId}
+              isOpen={isDrawerOpen}
+              onClose={() => {
+                setIsDrawerOpen(false);
+                setSelectedTeacherId(null);
+              }}
+            />
+          )}
+        </div>
       </div>
 
       {/* Add Teacher Modal */}
@@ -469,17 +526,6 @@ export const Teachers: React.FC = () => {
         </div>
       </Modal>
 
-      {/* Teacher Detail Drawer */}
-      <TeacherDetailDrawer
-        isOpen={isDetailDrawerOpen}
-        onClose={() => {
-          setIsDetailDrawerOpen(false);
-          setSelectedTeacher(null);
-        }}
-        teacher={selectedTeacher}
-        onEdit={handleTeacherDrawerEdit}
-        onDelete={handleTeacherDrawerDelete}
-      />
     </div>
   );
 };
