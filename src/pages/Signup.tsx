@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { AppInput } from '@/components/ui/AppInput';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Loader2, School, Building2, Users, ArrowRight, ArrowLeft, Check } from 'lucide-react';
+import { Loader2, Building2, Users, ArrowRight, ArrowLeft, Check } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
 import { apiService, SignupRequest } from '@/services/api';
 
@@ -201,20 +201,18 @@ const Signup: React.FC = () => {
 
   if (success) {
     return (
-      <div className="h-screen w-full bg-background flex items-center justify-center p-4">
-        <div className="card w-[30%] flex justify-center min-h-[400px]">
-          <div className="w-full px-4 lg:px-16 h-full relative overflow-hidden flex items-center justify-center">
-            <div className="text-center">
-              <div className="w-16 h-16 bg-success rounded-full flex items-center justify-center mx-auto mb-6">
-                <Check className="w-8 h-8 text-white" />
-              </div>
-              <h1 className="text-3xl font-extrabold text-text-primary mb-4">Registration Successful!</h1>
-              <p className="text-text-secondary mb-6">
-                Your registration has been submitted successfully. You will be redirected to the login page shortly.
-              </p>
-              <div className="animate-pulse text-interactive">
-                Redirecting...
-              </div>
+      <div className="min-h-screen w-full bg-gradient-to-br from-slate-50 via-purple-50/40 to-blue-50 flex items-center justify-center px-4 py-10">
+        <div className="w-full max-w-xl overflow-hidden rounded-2xl border border-border bg-surface shadow-2xl">
+          <div className="p-10 text-center">
+            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-success/10 text-success">
+              <Check className="h-8 w-8" />
+            </div>
+            <h1 className="text-3xl font-semibold text-text-primary mb-4">Registration Successful!</h1>
+            <p className="text-text-secondary mb-6">
+              Your registration has been submitted successfully. You will be redirected to the login page shortly.
+            </p>
+            <div className="animate-pulse text-interactive text-sm uppercase tracking-[0.3em]">
+              Redirecting...
             </div>
           </div>
         </div>
@@ -410,44 +408,90 @@ const Signup: React.FC = () => {
   );
 
   return (
-    <div className="h-screen w-full bg-background flex items-center justify-center p-4">
-      <div className="card w-[40%] flex justify-center min-h-[700px]">
-        <div className="w-full px-4 lg:px-16 h-full relative overflow-hidden">
-          <div className="form-container h-full z-10">
-            <div className="text-center py-10 grid gap-2">
-              <div className="grid gap-4 mb-6">
-                <div className="flex items-center justify-center gap-2 mb-4">
-                  <School className="w-8 h-8 text-interactive" />
-                  <h1 className="text-3xl md:text-4xl font-extrabold text-text-primary">Join Scolink</h1>
+    <div className="min-h-screen w-full bg-gradient-to-br from-slate-50 via-purple-50/40 to-blue-50 flex items-center justify-center px-4 py-10">
+      <div className="w-full max-w-6xl overflow-hidden rounded-2xl border border-border bg-surface shadow-2xl">
+        <div className="grid lg:grid-cols-[1.1fr_1fr]">
+          <div className="relative hidden flex-col justify-between bg-gradient-to-br from-purple-600 via-purple-500 to-indigo-500 p-12 text-white lg:flex">
+            <div className="absolute inset-0 opacity-10">
+              <div className="h-full w-full bg-[radial-gradient(circle_at_top_left,_rgba(255,255,255,0.6)_0%,_transparent_55%)]" />
+            </div>
+
+            <div className="relative z-10 space-y-6">
+              <div className="flex items-center gap-3">
+                <img src="/favicon.svg" alt="Scolink logo" className="h-14 w-14" />
+                <div>
+                  <p className="text-sm uppercase tracking-[0.2em] text-white/70">Join Scolink</p>
+                  <h2 className="text-2xl font-semibold">Educational Center Suite</h2>
                 </div>
-                <p className="text-text-secondary">Create your educational center account</p>
               </div>
 
-              {renderStepIndicator()}
+              <h1 className="text-3xl font-semibold leading-tight">
+                Onboard your center and empower your administration.
+              </h1>
+
+              <div className="space-y-4 text-sm text-white/80">
+                <p>
+                  Create your center workspace, invite staff, and coordinate operations from one modern platform. Our onboarding flow helps us tailor the experience to your needs.
+                </p>
+                <div className="grid gap-3">
+                  <div className="flex items-start gap-3">
+                    <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-white/15">
+                      <Check className="h-4 w-4" />
+                    </span>
+                    <p>Centralize student records, payments, and academic plans.</p>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-white/15">
+                      <Check className="h-4 w-4" />
+                    </span>
+                    <p>Automate onboarding and approval with guided steps.</p>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-white/15">
+                      <Check className="h-4 w-4" />
+                    </span>
+                    <p>Seamlessly transition to your dashboard once approved.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="relative z-10 mt-10">
+              <div className="rounded-xl border border-white/20 bg-white/10 p-6 backdrop-blur">
+                <p className="text-sm text-white/80">
+                  “The Scolink onboarding guided our team every step of the way. We were operational in days.”
+                </p>
+                <div className="mt-4 text-sm font-medium text-white">- Center Director, Casablanca</div>
+              </div>
+            </div>
+          </div>
+
+          <div className="p-6 sm:p-10">
+            <div className="mx-auto w-full max-w-lg">
+              <div className="mb-8 text-center lg:text-left">
+                <h2 className="text-2xl font-semibold text-text-primary">Create your center account</h2>
+                <p className="mt-2 text-sm text-text-secondary">
+                  Complete the details below. Our team reviews each request to ensure the best fit.
+                </p>
+              </div>
+
+              <div className="mb-8">
+                {renderStepIndicator()}
+              </div>
 
               <div className="text-left">
                 {currentStep === 1 && renderStep1()}
                 {currentStep === 2 && renderStep2()}
               </div>
 
-              <div className="mt-8 text-center">
-                <div className="relative">
-                  <div className="absolute inset-0 flex items-center">
-                    <span className="w-full h-px bg-gradient-to-r from-transparent via-border to-transparent shadow-sm" />
-                  </div>
-                  <div className="relative flex justify-center text-sm">
-                    <span className="px-2 bg-surface text-text-secondary">Already have an account?</span>
-                  </div>
-                </div>
-
-                <div className="mt-4">
-                  <Link 
-                    to="/login" 
-                    className="text-interactive hover:text-interactive/80 font-medium text-sm transition-colors"
-                  >
-                    Sign in here
-                  </Link>
-                </div>
+              <div className="mt-10 text-center text-sm text-text-secondary">
+                Already have an account?{' '}
+                <Link
+                  to="/login"
+                  className="font-medium text-interactive hover:text-interactive/80"
+                >
+                  Sign in here
+                </Link>
               </div>
             </div>
           </div>

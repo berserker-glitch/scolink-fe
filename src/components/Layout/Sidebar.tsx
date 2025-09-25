@@ -14,9 +14,7 @@ import {
   LogOut,
   Moon,
   Sun,
-  Menu,
-  X,
-  GraduationCap
+  X
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -57,9 +55,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, isDark, onThe
         {/* Header */}
         <div className="flex items-center justify-between h-20 px-6 border-b border-white/10">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-primary rounded-xl flex items-center justify-center">
-              <GraduationCap className="w-6 h-6 text-white" />
-            </div>
+            <img src="/favicon.svg" alt="Scolink logo" className="h-12 w-12" />
             <h1 className="text-xl font-bold sidebar-text">Scolink</h1>
           </div>
           <button
