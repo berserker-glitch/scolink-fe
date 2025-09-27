@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { MainLayout } from "@/components/Layout/MainLayout";
 import { SuperAdminLayout } from "@/components/Layout/SuperAdminLayout";
+import PlanStatusChecker from "@/components/PlanStatusChecker";
 import { Dashboard } from "@/pages/Dashboard";
 import { Students } from "@/pages/Students";
 import { Teachers } from "@/pages/Teachers";
@@ -18,6 +19,7 @@ import { SuperAdminOverview } from "@/pages/SuperAdminOverview";
 import { SuperAdminManagement } from "@/pages/SuperAdminManagement";
 import Login from "@/pages/Login";
 import Signup from "@/pages/Signup";
+import PlanSelection from "@/pages/PlanSelection";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -67,6 +69,7 @@ const AppRoutes = () => {
     <Routes>
       <Route path="/login" element={<Navigate to="/" replace />} />
       <Route path="/signup" element={<Navigate to="/" replace />} />
+      <Route path="/plan-selection" element={<PlanSelection />} />
       <Route path="/" element={<MainLayout />}>
         <Route index element={<Dashboard />} />
         <Route path="students" element={<Students />} />
@@ -89,7 +92,9 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <AppRoutes />
+          <PlanStatusChecker>
+            <AppRoutes />
+          </PlanStatusChecker>
         </BrowserRouter>
       </TooltipProvider>
     </AuthProvider>

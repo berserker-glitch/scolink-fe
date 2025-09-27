@@ -659,6 +659,32 @@ class ApiService {
     return response.data!;
   }
 
+  // Center Plan Management
+  async updateCenterPlan(planId: string): Promise<Center> {
+    const response = await this.request<Center>('/plans/plan', {
+      method: 'PUT',
+      body: JSON.stringify({ plan: planId }),
+    });
+
+    return response.data!;
+  }
+
+  async getCenterPlanStatus(): Promise<{
+    plan: string | null;
+    planExpiresAt: string | null;
+    subscriptionStatus: string | null;
+    needsPlanSelection: boolean;
+  }> {
+    const response = await this.request<{
+      plan: string | null;
+      planExpiresAt: string | null;
+      subscriptionStatus: string | null;
+      needsPlanSelection: boolean;
+    }>('/plans/plan-status');
+
+    return response.data!;
+  }
+
   async login(credentials: LoginRequest): Promise<LoginResponse> {
     const response = await this.request<LoginResponse>('/auth/login', {
       method: 'POST',
