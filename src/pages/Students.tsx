@@ -184,12 +184,12 @@ export const Students: React.FC = () => {
       queryClient.invalidateQueries({ queryKey: ['students'] });
       setIsAddStudentOpen(false);
     },
-    onError: (error) => {
+    onError: (error: any) => {
       console.error('Failed to create student:', error);
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to create student. Please try again."
+        description: error.message || "Failed to create student. Please try again."
       });
     },
   });

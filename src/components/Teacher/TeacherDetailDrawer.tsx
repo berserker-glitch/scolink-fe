@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { ModernButton } from '@/components/ui';
 import { Badge } from '@/components/ui/badge';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import { apiService, Teacher, Group } from '@/services/api';
+import { useToast } from '@/hooks/use-toast';
 import {
   User,
   BookOpen,
@@ -14,7 +15,9 @@ import {
   MapPin,
   Clock,
   Calendar,
-  X
+  X,
+  UserCheck,
+  Loader2
 } from 'lucide-react';
 
 interface TeacherDetailDrawerProps {
@@ -45,8 +48,47 @@ export const TeacherDetailDrawer: React.FC<TeacherDetailDrawerProps> = ({
     enabled: isOpen,
   });
 
+  // Check if teacher has a user account
+  const { data: usersData } = useQuery({
+    queryKey: ['users'],
+    queryFn: () => apiService.getUsers(1, 1000), // Get all users to check for teacher account
+    enabled: isOpen,
+  });
+
+  // Get center plan status to check if teacher accounts are allowed
+  const { data: planStatus } = useQuery({
+    queryKey: ['plan-status'],
+    queryFn: () => apiService.getPlanStatus(),
+    enabled: isOpen,
+  });
+
   const teacherGroups = groupsData?.groups?.filter(group => group.teacherId === teacher?.id) || [];
   const subjects = subjectsData?.subjects || [];
+
+  // Check if teacher has a user account
+  const teacherHasAccount = usersData?.users?.some(user => user.email === teacher?.email) || false;
+
+  const { toast } = useToast();
+
+  // Activate teacher account mutation
+  const activateAccountMutation = useMutation({
+    mutationFn: (teacherId: string) => apiService.activateTeacherAccount(teacherId),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+      toast({
+        title: "Account Activated",
+        description: `Teacher account created successfully. Password: ${data.password}`,
+        variant: "default",
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Activation Failed",
+        description: error.message || "Failed to activate teacher account",
+        variant: "destructive",
+      });
+    },
+  });
 
 
   if (!teacher) {
@@ -158,6 +200,50 @@ export const TeacherDetailDrawer: React.FC<TeacherDetailDrawerProps> = ({
                       <span className="text-sm font-medium text-text-secondary">Bio</span>
                     </div>
                     <p className="text-text-primary text-sm truncate">{teacher.bio}</p>
+                  </div>
+                )}
+
+                {/* Account Activation - Only show if teacher doesn't have an account and plan allows it */}
+                {!teacherHasAccount && (planStatus?.plan === 'premium' || planStatus?.plan === 'lifetime') && (
+                  <div className="p-4 bg-surface rounded-lg shadow-sm border-2 border-dashed border-interactive/30">
+                    <div className="text-center">
+                      <UserCheck className="w-8 h-8 mx-auto mb-3 text-interactive" />
+                      <h3 className="text-lg font-semibold text-text-primary mb-2">
+                        Activate Teacher Account
+                      </h3>
+                      <p className="text-sm text-text-secondary mb-4">
+                        Create a user account for this teacher so they can access the teacher dashboard with a simple calendar interface.
+                      </p>
+                      <ModernButton
+                        variant="solid"
+                        onClick={() => activateAccountMutation.mutate(teacher.id)}
+                        disabled={activateAccountMutation.isPending}
+                        className="w-full"
+                        icon={activateAccountMutation.isPending ? Loader2 : UserCheck}
+                        iconPosition="left"
+                      >
+                        {activateAccountMutation.isPending ? 'Creating Account...' : 'Activate Account'}
+                      </ModernButton>
+                    </div>
+                  </div>
+                )}
+
+                {/* Account Status - Show if teacher has an account */}
+                {teacherHasAccount && (
+                  <div className="p-4 bg-green-50 border border-green-200 rounded-lg shadow-sm">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                        <UserCheck className="w-4 h-4 text-green-600" />
+                      </div>
+                      <div>
+                        <h3 className="text-sm font-semibold text-green-800">
+                          Account Active
+                        </h3>
+                        <p className="text-xs text-green-600">
+                          Teacher can access their dashboard
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 )}
             </TabsContent>

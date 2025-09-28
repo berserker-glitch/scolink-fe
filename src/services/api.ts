@@ -1,6 +1,6 @@
 //const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/api/v1';
-const API_BASE_URL ='https://api.scolink.ink/api/v1';
-//const API_BASE_URL = 'http://localhost:3001/api/v1';
+//const API_BASE_URL ='https://api.scolink.ink/api/v1';
+const API_BASE_URL = 'http://localhost:3001/api/v1';
 // Debug: Log the API base URL being used
 //console.log('🌐 Frontend is using API_BASE_URL:', API_BASE_URL);
 console.log('🌐 Environment mode:', import.meta.env.MODE);
@@ -709,6 +709,51 @@ class ApiService {
     return response.data!;
   }
 
+  async changePassword(passwordData: { oldPassword: string; newPassword: string }): Promise<void> {
+    await this.request('/users/change-password', {
+      method: 'PUT',
+      body: JSON.stringify(passwordData),
+    });
+  }
+
+  async createStaff(staffData: { email: string; fullName?: string }): Promise<void> {
+    await this.request('/users/staff', {
+      method: 'POST',
+      body: JSON.stringify(staffData),
+    });
+  }
+
+  async getPlanStatus(): Promise<{
+    plan: string | null;
+    planExpiresAt: string | null;
+    subscriptionStatus: string | null;
+    hasAttendance: boolean;
+    hasEvents: boolean;
+    hasStaffManagement: boolean;
+    maxStudents: number;
+  }> {
+    const response = await this.request<{
+      plan: string | null;
+      planExpiresAt: string | null;
+      subscriptionStatus: string | null;
+    }>('/plans/plan-status');
+
+    const planLimits = {
+      basic: { hasAttendance: false, hasEvents: false, hasStaffManagement: false, maxStudents: 100 },
+      pro: { hasAttendance: true, hasEvents: true, hasStaffManagement: true, maxStudents: 1500 },
+      premium: { hasAttendance: true, hasEvents: true, hasStaffManagement: true, maxStudents: -1 },
+      lifetime: { hasAttendance: true, hasEvents: true, hasStaffManagement: true, maxStudents: -1 }
+    };
+
+    const plan = response.data!.plan || 'basic';
+    const limits = planLimits[plan as keyof typeof planLimits] || planLimits.basic;
+
+    return {
+      ...response.data!,
+      ...limits
+    };
+  }
+
   async logout(): Promise<void> {
     const refreshToken = this.getRefreshToken();
     
@@ -1105,6 +1150,13 @@ class ApiService {
     await this.request(`/teachers/${id}`, {
       method: 'DELETE',
     });
+  }
+
+  async activateTeacherAccount(teacherId: string): Promise<{ password: string }> {
+    const response = await this.request<{ password: string }>(`/teachers/${teacherId}/activate`, {
+      method: 'PUT',
+    });
+    return response.data!;
   }
 
   // Groups

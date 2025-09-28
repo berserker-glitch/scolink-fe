@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { ModernButton } from '@/components/ui';
 import { Modal } from '@/components/ui/Modal';
 import { FormField, Input, Select } from '@/components/ui/FormField';
-import { 
-  Settings as SettingsIcon, 
-  Shield, 
-  Download, 
+import {
+  Settings as SettingsIcon,
+  Shield,
+  Download,
   Users,
   Key,
   FileText,
@@ -16,7 +16,11 @@ import {
   GraduationCap,
   BookOpen,
   ChevronDown,
-  ChevronRight
+  ChevronRight,
+  User,
+  UserPlus,
+  Mail,
+  Crown
 } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -27,7 +31,7 @@ import { useAuth } from '@/contexts/AuthContext';
 export const Settings: React.FC = () => {
   const queryClient = useQueryClient();
   const { toast } = useToast();
-  const { isAuthenticated, isLoading: authLoading } = useAuth();
+  const { user, isAuthenticated, isLoading: authLoading } = useAuth();
   
   const [isChangeCodeOpen, setIsChangeCodeOpen] = useState(false);
   const [currentCode, setCurrentCode] = useState('');
@@ -70,6 +74,39 @@ export const Settings: React.FC = () => {
 
   const years = yearsData?.years || [];
   const fields = fieldsData?.fields || [];
+
+  // Statistics queries
+  const { data: studentsData } = useQuery({
+    queryKey: ['students'],
+    queryFn: () => apiService.getStudents(1, 1),
+    enabled: isAuthenticated && !authLoading,
+  });
+
+  const { data: subjectsData } = useQuery({
+    queryKey: ['subjects'],
+    queryFn: () => apiService.getSubjects(1, 1),
+    enabled: isAuthenticated && !authLoading,
+  });
+
+  const { data: groupsData } = useQuery({
+    queryKey: ['groups'],
+    queryFn: () => apiService.getGroups(1, 1),
+    enabled: isAuthenticated && !authLoading,
+  });
+
+  // Staff queries (only for admins with staff management access)
+  const { data: staffData, isLoading: staffLoading, refetch: refetchStaff } = useQuery({
+    queryKey: ['users'],
+    queryFn: () => apiService.getUsers(1, 100),
+    enabled: isAuthenticated && !authLoading && (user?.role === 'super_admin' || user?.role === 'center_admin'),
+  });
+
+  // Plan status query
+  const { data: planStatus } = useQuery({
+    queryKey: ['plan-status'],
+    queryFn: () => apiService.getPlanStatus(),
+    enabled: isAuthenticated && !authLoading,
+  });
 
   // Mutations for Years
   const createYearMutation = useMutation({
@@ -147,20 +184,37 @@ export const Settings: React.FC = () => {
     },
   });
   
-  const [activeTab, setActiveTab] = useState('security');
+  const [activeTab, setActiveTab] = useState('profile');
   const [expandedYears, setExpandedYears] = useState<Set<string>>(new Set());
   const [addingFieldToYear, setAddingFieldToYear] = useState<string | null>(null);
+
+  // Set default tab for admin users
+  useEffect(() => {
+    if (user && planStatus && (user.role === 'super_admin' || user.role === 'center_admin')) {
+      if (planStatus.hasStaffManagement) {
+        setActiveTab('staff');
+      } else {
+        setActiveTab('profile');
+      }
+    }
+  }, [user, planStatus]);
   
-  const [settings, setSettings] = useState({
-    defaultLanguage: 'en',
-    notifications: true,
-    emailReports: false
+
+  // Password change state
+  const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
+  const [passwordForm, setPasswordForm] = useState({
+    oldPassword: '',
+    newPassword: '',
+    confirmPassword: ''
   });
 
-  const handleSaveSettings = () => {
-    console.log('Saving settings:', settings);
-    // Save settings logic here
-  };
+  // Staff management state
+  const [isAddStaffOpen, setIsAddStaffOpen] = useState(false);
+  const [staffForm, setStaffForm] = useState({
+    email: '',
+    fullName: ''
+  });
+
 
   const handleChangeCode = () => {
     if (newCode !== confirmCode) {
@@ -174,12 +228,72 @@ export const Settings: React.FC = () => {
     setConfirmCode('');
   };
 
+  const handleChangePassword = async () => {
+    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+      toast({ title: 'Error', description: 'New passwords do not match', variant: 'destructive' });
+      return;
+    }
+    
+    if (passwordForm.newPassword.length < 6) {
+      toast({ title: 'Error', description: 'Password must be at least 6 characters long', variant: 'destructive' });
+      return;
+    }
 
-
-  const handleExportCSV = (type: string) => {
-    console.log(`Exporting ${type} as CSV`);
-    // CSV export logic
+    try {
+      await apiService.changePassword({
+        oldPassword: passwordForm.oldPassword,
+        newPassword: passwordForm.newPassword
+      });
+      
+      toast({ title: 'Success', description: 'Password changed successfully' });
+      setIsChangePasswordOpen(false);
+      setPasswordForm({ oldPassword: '', newPassword: '', confirmPassword: '' });
+    } catch (error: any) {
+      toast({ title: 'Error', description: error.message || 'Failed to change password', variant: 'destructive' });
+    }
   };
+
+  // Staff creation mutation
+  const createStaffMutation = useMutation({
+    mutationFn: (data: { email: string; fullName?: string }) => apiService.createStaff(data),
+    onSuccess: () => {
+      refetchStaff();
+      toast({ title: 'Success', description: 'Staff member created and notified via email' });
+      setIsAddStaffOpen(false);
+      setStaffForm({ email: '', fullName: '' });
+    },
+    onError: (error: any) => {
+      toast({ title: 'Error', description: error.message || 'Failed to create staff member', variant: 'destructive' });
+    },
+  });
+
+  // Staff deletion mutation
+  const deleteStaffMutation = useMutation({
+    mutationFn: (userId: string) => apiService.deleteUser(userId),
+    onSuccess: () => {
+      refetchStaff();
+      toast({ title: 'Success', description: 'Staff member deleted successfully' });
+    },
+    onError: (error: any) => {
+      toast({ title: 'Error', description: error.message || 'Failed to delete staff member', variant: 'destructive' });
+    },
+  });
+
+  const handleAddStaff = () => {
+    createStaffMutation.mutate({
+      email: staffForm.email,
+      fullName: staffForm.fullName || undefined,
+    });
+  };
+
+  const handleDeleteStaff = (staffId: string, staffName: string) => {
+    if (confirm(`Are you sure you want to delete ${staffName}? This action cannot be undone.`)) {
+      deleteStaffMutation.mutate(staffId);
+    }
+  };
+
+
+
 
   // Helper functions
   const getFieldsByYear = (yearId: string) => {
@@ -306,199 +420,200 @@ export const Settings: React.FC = () => {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-3 mb-8">
-          <TabsTrigger value="security" className="flex items-center gap-2">
-            <Shield className="w-4 h-4" />
-            Security
-          </TabsTrigger>
-          <TabsTrigger value="application" className="flex items-center gap-2">
-            <SettingsIcon className="w-4 h-4" />
-            Application
-          </TabsTrigger>
-          <TabsTrigger value="academic" className="flex items-center gap-2">
-            <GraduationCap className="w-4 h-4" />
-            Academic
-          </TabsTrigger>
-        </TabsList>
+        <div className="mb-8">
+          <TabsList className="flex w-full bg-surface-secondary p-1 rounded-lg h-12 shadow-sm">
+            <TabsTrigger
+              value="profile"
+              className="flex-1 flex items-center justify-center gap-2 rounded-sm data-[state=active]:bg-interactive data-[state=active]:text-white data-[state=inactive]:text-text-muted hover:text-text-primary transition-all duration-200 px-4 py-2 text-sm font-medium"
+            >
+              <User className="w-4 h-4" />
+              <span>Profile</span>
+            </TabsTrigger>
+            {(user?.role === 'super_admin' || user?.role === 'center_admin') && planStatus?.hasStaffManagement && (
+              <TabsTrigger
+                value="staff"
+                className="flex-1 flex items-center justify-center gap-2 rounded-sm data-[state=active]:bg-interactive data-[state=active]:text-white data-[state=inactive]:text-text-muted hover:text-text-primary transition-all duration-200 px-4 py-2 text-sm font-medium"
+              >
+                <Users className="w-4 h-4" />
+                <span>Staff</span>
+              </TabsTrigger>
+            )}
+            <TabsTrigger
+              value="academic"
+              className="flex-1 flex items-center justify-center gap-2 rounded-sm data-[state=active]:bg-interactive data-[state=active]:text-white data-[state=inactive]:text-text-muted hover:text-text-primary transition-all duration-200 px-4 py-2 text-sm font-medium"
+            >
+              <GraduationCap className="w-4 h-4" />
+              <span>Academic</span>
+            </TabsTrigger>
+          </TabsList>
+        </div>
 
-        {/* Security Tab */}
-        <TabsContent value="security" className="space-y-6">
-          <Card className="surface">
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Shield className="w-5 h-5" />
-                <span>Security & Access</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h4 className="font-medium text-text-primary">Employee Access Code</h4>
-                  <p className="text-caption text-text-secondary">
-                    Change the system access code for security
-                  </p>
-                </div>
-                <ModernButton 
-                  variant="outline"
-                  icon={Key}
-                  iconPosition="left"
-                  onClick={() => setIsChangeCodeOpen(true)}
-                >
-                  Change Code
-                </ModernButton>
-              </div>
-
-              <div className="border-t border-border pt-6">
-                <h4 className="font-medium text-text-primary mb-4">User Permissions</h4>
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-caption text-text-secondary">Multi-user access</span>
-                    <input type="checkbox" defaultChecked className="w-4 h-4" />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-caption text-text-secondary">Admin approval for new students</span>
-                    <input type="checkbox" className="w-4 h-4" />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-caption text-text-secondary">Require confirmation for payments</span>
-                    <input type="checkbox" defaultChecked className="w-4 h-4" />
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* Application Tab */}
-        <TabsContent value="application" className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Application Preferences Card */}
+        {/* Profile Tab */}
+        <TabsContent value="profile" className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* User Profile Info */}
             <Card className="surface">
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
-                  <SettingsIcon className="w-5 h-5" />
-                  <span>Application Preferences</span>
+                  <User className="w-5 h-5" />
+                  <span>Profile Information</span>
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <FormField label="Default Language">
-                  <Select
-                    value={settings.defaultLanguage}
-                    onChange={(e) => setSettings(prev => ({ ...prev, defaultLanguage: e.target.value }))}
-                    options={[
-                      { value: 'en', label: 'English' },
-                      { value: 'ar', label: 'العربية' },
-                      { value: 'fr', label: 'Français' }
-                    ]}
-                  />
-                </FormField>
-
                 <div className="space-y-3">
-                  <h4 className="font-medium text-text-primary">Notifications</h4>
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <span className="text-caption text-text-secondary">Enable system notifications</span>
-                      <input 
-                        type="checkbox" 
-                        checked={settings.notifications}
-                        onChange={(e) => setSettings(prev => ({ ...prev, notifications: e.target.checked }))}
-                        className="w-4 h-4" 
-                      />
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-caption text-text-secondary">Email daily reports</span>
-                      <input 
-                        type="checkbox" 
-                        checked={settings.emailReports}
-                        onChange={(e) => setSettings(prev => ({ ...prev, emailReports: e.target.checked }))}
-                        className="w-4 h-4" 
-                      />
-                    </div>
+                  <div className="flex justify-between">
+                    <span className="text-text-secondary">Full Name:</span>
+                    <span className="text-text-primary font-medium">{user?.fullName || 'N/A'}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-text-secondary">Email:</span>
+                    <span className="text-text-primary font-medium">{user?.email || 'N/A'}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-text-secondary">Role:</span>
+                    <span className="text-text-primary font-medium">
+                      {user?.role === 'super_admin' ? 'Super Admin' : 
+                       user?.role === 'center_admin' ? 'Center Admin' : 
+                       user?.role === 'user' ? 'User' : 'N/A'}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-text-secondary">Phone:</span>
+                    <span className="text-text-primary font-medium">{(user as any)?.phoneNumber || 'N/A'}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-text-secondary">Status:</span>
+                    <span className={`font-medium ${(user as any)?.isActive !== false ? 'text-status-success' : 'text-status-error'}`}>
+                      {(user as any)?.isActive !== false ? 'Active' : 'Inactive'}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-text-secondary">Plan:</span>
+                    <span className="text-text-primary font-medium flex items-center gap-2">
+                      <Crown className="w-4 h-4 text-interactive" />
+                      {planStatus?.plan ? planStatus.plan.charAt(0).toUpperCase() + planStatus.plan.slice(1) : 'Basic'}
+                    </span>
                   </div>
                 </div>
 
                 <div className="pt-4 border-t border-border">
-                  <ModernButton variant="solid" onClick={handleSaveSettings} className="w-full">
-                    Save Preferences
+                  <ModernButton 
+                    variant="outline"
+                    icon={Key}
+                    iconPosition="left"
+                    onClick={() => setIsChangePasswordOpen(true)}
+                    className="w-full"
+                  >
+                    Change Password
                   </ModernButton>
                 </div>
               </CardContent>
             </Card>
 
-            {/* Data Export Card */}
-            <Card className="surface">
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <FileText className="w-5 h-5" />
-                  <span>Data Export</span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <ModernButton 
-                  variant="outline" 
-                  className="w-full"
-                  icon={Download}
-                  iconPosition="left"
-                  onClick={() => handleExportCSV('students')}
-                >
-                  Export Students
-                </ModernButton>
-                
-                <ModernButton 
-                  variant="outline" 
-                  className="w-full"
-                  icon={Download}
-                  iconPosition="left"
-                  onClick={() => handleExportCSV('payments')}
-                >
-                  Export Payments
-                </ModernButton>
-                
-                <ModernButton 
-                  variant="outline" 
-                  className="w-full"
-                  icon={Download}
-                  iconPosition="left"
-                  onClick={() => handleExportCSV('attendance')}
-                >
-                  Export Attendance
-                </ModernButton>
-              </CardContent>
-            </Card>
-
-            {/* System Info Card */}
+            {/* System Statistics */}
             <Card className="surface">
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
                   <Users className="w-5 h-5" />
-                  <span>System Info</span>
+                  <span>System Statistics</span>
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-3 text-caption text-text-secondary">
-                <div className="flex justify-between">
-                  <span>Version:</span>
-                  <span>1.0.0</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Database:</span>
-                  <span className="text-status-success">Online</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Students:</span>
-                  <span>200</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Teachers:</span>
-                  <span>10</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Active Groups:</span>
-                  <span>25</span>
+              <CardContent className="space-y-4">
+                <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <span className="text-text-secondary">Total Students:</span>
+                    <span className="text-text-primary font-medium">{studentsData?.pagination?.total || 0}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-text-secondary">Total Subjects:</span>
+                    <span className="text-text-primary font-medium">{subjectsData?.pagination?.total || 0}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-text-secondary">Total Groups:</span>
+                    <span className="text-text-primary font-medium">{groupsData?.pagination?.total || 0}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-text-secondary">Academic Years:</span>
+                    <span className="text-text-primary font-medium">{years.length}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-text-secondary">Academic Fields:</span>
+                    <span className="text-text-primary font-medium">{fields.length}</span>
+                  </div>
                 </div>
               </CardContent>
             </Card>
           </div>
         </TabsContent>
+
+        {/* Staff Tab */}
+        {(user?.role === 'super_admin' || user?.role === 'center_admin') && planStatus?.hasStaffManagement && (
+          <TabsContent value="staff" className="space-y-6">
+            <Card className="surface">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="flex items-center space-x-2">
+                    <Users className="w-5 h-5" />
+                    <span>Staff Management</span>
+                  </CardTitle>
+                  <ModernButton 
+                    variant="outline"
+                    size="sm"
+                    icon={UserPlus}
+                    iconPosition="left"
+                    onClick={() => setIsAddStaffOpen(true)}
+                  >
+                    Add Staff
+                  </ModernButton>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {staffLoading ? (
+                  <div className="flex items-center justify-center py-8">
+                    <div className="text-text-secondary">Loading staff...</div>
+                  </div>
+                ) : staffData?.users?.length === 0 ? (
+                  <div className="text-center py-8 text-text-secondary">
+                    <Users className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                    <p>No staff members yet</p>
+                    <p className="text-sm">Add your first staff member to get started</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 gap-4">
+                    {staffData?.users?.filter(staff => staff.role === 'staff').map(staff => (
+                      <div key={staff.id} className="flex items-center justify-between p-4 bg-surface-secondary rounded-lg border border-border hover:bg-surface-hover transition-colors">
+                        <div className="flex items-center space-x-3">
+                          <div className={`w-3 h-3 rounded-full ${staff.isActive ? 'bg-status-success' : 'bg-status-error'}`}></div>
+                          <div>
+                            <span className="text-text-primary font-medium">{staff.fullName}</span>
+                            <p className="text-sm text-text-secondary flex items-center gap-2">
+                              <Mail className="w-4 h-4" />
+                              {staff.email}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-3">
+                          <div className="text-xs text-text-secondary">
+                            Added {new Date(staff.createdAt).toLocaleDateString()}
+                          </div>
+                          <button 
+                            className="p-2 rounded hover:bg-surface text-text-secondary hover:text-status-error transition-colors"
+                            onClick={() => handleDeleteStaff(staff.id, staff.fullName)}
+                            disabled={deleteStaffMutation.isPending}
+                            title="Delete staff member"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+                    )) || []}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+        )}
+
 
         {/* Academic Tab */}
         <TabsContent value="academic" className="space-y-6">
@@ -915,6 +1030,124 @@ export const Settings: React.FC = () => {
               disabled={!fieldForm.name || !fieldForm.yearId || updateFieldMutation.isPending}
             >
               Update Field
+            </ModernButton>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Change Password Modal */}
+      <Modal
+        isOpen={isChangePasswordOpen}
+        onClose={() => setIsChangePasswordOpen(false)}
+        title="Change Password"
+        size="md"
+      >
+        <div className="p-6 space-y-6">
+          <FormField label="Current Password" required>
+            <Input
+              type="password"
+              value={passwordForm.oldPassword}
+              onChange={(e) => setPasswordForm(prev => ({ ...prev, oldPassword: e.target.value }))}
+              placeholder="Enter your current password"
+            />
+          </FormField>
+
+          <FormField label="New Password" required>
+            <Input
+              type="password"
+              value={passwordForm.newPassword}
+              onChange={(e) => setPasswordForm(prev => ({ ...prev, newPassword: e.target.value }))}
+              placeholder="Enter new password"
+            />
+          </FormField>
+
+          <FormField label="Confirm New Password" required>
+            <Input
+              type="password"
+              value={passwordForm.confirmPassword}
+              onChange={(e) => setPasswordForm(prev => ({ ...prev, confirmPassword: e.target.value }))}
+              placeholder="Confirm new password"
+            />
+          </FormField>
+
+          <div className="flex items-center space-x-4">
+            <ModernButton
+              variant="outline"
+              className="flex-1"
+              onClick={() => {
+                setIsChangePasswordOpen(false);
+                setPasswordForm({ oldPassword: '', newPassword: '', confirmPassword: '' });
+              }}
+            >
+              Cancel
+            </ModernButton>
+            <ModernButton
+              variant="solid"
+              className="flex-1"
+              onClick={handleChangePassword}
+              disabled={!passwordForm.oldPassword || !passwordForm.newPassword || !passwordForm.confirmPassword}
+            >
+              Change Password
+            </ModernButton>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Add Staff Modal */}
+      <Modal
+        isOpen={isAddStaffOpen}
+        onClose={() => setIsAddStaffOpen(false)}
+        title="Add Staff Member"
+        size="md"
+      >
+        <div className="p-6 space-y-6">
+          <div className="bg-surface-secondary/50 rounded-lg p-4 border border-border">
+            <div className="flex items-start gap-3">
+              <Mail className="w-5 h-5 text-primary mt-0.5" />
+              <div>
+                <p className="text-sm font-medium text-text-primary mb-1">Email Notification</p>
+                <p className="text-xs text-text-secondary">
+                  The system will generate a secure password and send login credentials to the staff member's email automatically.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <FormField label="Email Address" required>
+            <Input
+              type="email"
+              value={staffForm.email}
+              onChange={(e) => setStaffForm(prev => ({ ...prev, email: e.target.value }))}
+              placeholder="staff@example.com"
+            />
+          </FormField>
+
+          <FormField label="Full Name" required>
+            <Input
+              value={staffForm.fullName}
+              onChange={(e) => setStaffForm(prev => ({ ...prev, fullName: e.target.value }))}
+              placeholder="Enter staff member's full name"
+            />
+          </FormField>
+
+          <div className="flex items-center space-x-4">
+            <ModernButton
+              variant="outline"
+              className="flex-1"
+              onClick={() => {
+                setIsAddStaffOpen(false);
+                setStaffForm({ email: '', fullName: '' });
+              }}
+            >
+              Cancel
+            </ModernButton>
+            <ModernButton
+              variant="solid"
+              className="flex-1"
+              onClick={handleAddStaff}
+              disabled={!staffForm.email || !staffForm.fullName || createStaffMutation.isPending}
+            >
+              {createStaffMutation.isPending ? 'Creating...' : 'Add Staff'}
             </ModernButton>
           </div>
         </div>

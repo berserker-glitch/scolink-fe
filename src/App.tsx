@@ -21,6 +21,7 @@ import Login from "@/pages/Login";
 import Signup from "@/pages/Signup";
 import PlanSelection from "@/pages/PlanSelection";
 import NotFound from "./pages/NotFound";
+import TeacherDashboard from "@/pages/TeacherDashboard";
 
 const queryClient = new QueryClient();
 
@@ -59,6 +60,19 @@ const AppRoutes = () => {
           <Route index element={<SuperAdminOverview />} />
           <Route path="management" element={<SuperAdminManagement />} />
         </Route>
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    );
+  }
+
+  // Show teacher interface for teacher users
+  if (user?.role === 'teacher') {
+    return (
+      <Routes>
+        <Route path="/login" element={<Navigate to="/teacher-dashboard" replace />} />
+        <Route path="/signup" element={<Navigate to="/teacher-dashboard" replace />} />
+        <Route path="/" element={<Navigate to="/teacher-dashboard" replace />} />
+        <Route path="/teacher-dashboard" element={<TeacherDashboard />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     );

@@ -42,6 +42,7 @@ import { Student } from '@/services/api';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiService } from '@/services/api';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/contexts/AuthContext';
 import { SubjectSelection } from './SubjectSelection';
 import { GroupAssignment } from './GroupAssignment';
 import { PaymentRecordModal } from '../Payment/PaymentRecordModal';
@@ -95,6 +96,14 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
   const availableGroups = groupsData?.groups || [];
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
+
+  // Plan status query to check attendance permissions
+  const { data: planStatus } = useQuery({
+    queryKey: ['plan-status'],
+    queryFn: () => apiService.getPlanStatus(),
+    enabled: isAuthenticated && !authLoading,
+  });
 
   // Delete student mutation
   const deleteStudentMutation = useMutation({
@@ -143,11 +152,11 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
     }, 0);
   };
 
-  // Fetch attendance data for an enrollment
+  // Fetch attendance data for an enrollment - only if user has attendance access
   const { data: attendanceData } = useQuery({
     queryKey: ['attendance', 'student', student.id],
     queryFn: () => apiService.getAttendanceByStudent(student.id),
-    enabled: isOpen && !!student.id,
+    enabled: isOpen && !!student.id && planStatus?.hasAttendance,
   });
 
   const getAttendancePercentage = (enrollmentId: string) => {
@@ -421,31 +430,33 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
         <div className="flex-1 overflow-hidden">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
             <div className="px-6 pt-4 shadow-sm">
-              <TabsList className="grid w-full grid-cols-4 bg-surface-secondary p-1 rounded-lg h-12 shadow-sm">
-                <TabsTrigger 
-                  value="info" 
+              <TabsList className={`grid w-full ${planStatus?.hasAttendance ? 'grid-cols-4' : 'grid-cols-3'} bg-surface-secondary p-1 rounded-lg h-12 shadow-sm`}>
+                <TabsTrigger
+                  value="info"
                   className="flex items-center justify-center rounded-sm data-[state=active]:bg-interactive data-[state=active]:text-white data-[state=inactive]:text-text-muted hover:text-text-primary transition-all duration-200"
                 >
                   <User className="w-5 h-5" />
                 </TabsTrigger>
-                <TabsTrigger 
-                  value="subjects" 
+                <TabsTrigger
+                  value="subjects"
                   className="flex items-center justify-center rounded-sm data-[state=active]:bg-interactive data-[state=active]:text-white data-[state=inactive]:text-text-muted hover:text-text-primary transition-all duration-200"
                 >
                   <BookOpen className="w-5 h-5" />
                 </TabsTrigger>
-                <TabsTrigger 
-                  value="payments" 
+                <TabsTrigger
+                  value="payments"
                   className="flex items-center justify-center rounded-sm data-[state=active]:bg-interactive data-[state=active]:text-white data-[state=inactive]:text-text-muted hover:text-text-primary transition-all duration-200"
                 >
                   <CreditCard className="w-5 h-5" />
                 </TabsTrigger>
-                <TabsTrigger 
-                  value="reports" 
-                  className="flex items-center justify-center rounded-sm data-[state=active]:bg-interactive data-[state=active]:text-white data-[state=inactive]:text-text-muted hover:text-text-primary transition-all duration-200"
-                >
-                  <BarChart3 className="w-5 h-5" />
-                </TabsTrigger>
+                {planStatus?.hasAttendance && (
+                  <TabsTrigger
+                    value="reports"
+                    className="flex items-center justify-center rounded-sm data-[state=active]:bg-interactive data-[state=active]:text-white data-[state=inactive]:text-text-muted hover:text-text-primary transition-all duration-200"
+                  >
+                    <BarChart3 className="w-5 h-5" />
+                  </TabsTrigger>
+                )}
               </TabsList>
             </div>
 
@@ -619,22 +630,24 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
                             </div>
                           </div>
 
-                          {/* Attendance Progress */}
-                          <div className="mb-4">
-                            <div className="flex items-center justify-between mb-2">
-                              <span className="text-sm text-text-secondary">Attendance Rate</span>
-                              <span className="text-sm font-medium text-text-primary">{attendanceRate}%</span>
+                          {/* Attendance Progress - Only show for users with attendance access */}
+                          {planStatus?.hasAttendance && (
+                            <div className="mb-4">
+                              <div className="flex items-center justify-between mb-2">
+                                <span className="text-sm text-text-secondary">Attendance Rate</span>
+                                <span className="text-sm font-medium text-text-primary">{attendanceRate}%</span>
+                              </div>
+                              <div className="w-full bg-surface-secondary rounded-full h-2">
+                                <div
+                                  className={`h-2 rounded-full transition-all duration-300 ${
+                                    attendanceRate >= 80 ? 'bg-green-500' :
+                                    attendanceRate >= 60 ? 'bg-yellow-500' : 'bg-red-500'
+                                  }`}
+                                  style={{ width: `${attendanceRate}%` }}
+                                ></div>
+                              </div>
                             </div>
-                            <div className="w-full bg-surface-secondary rounded-full h-2">
-                              <div 
-                                className={`h-2 rounded-full transition-all duration-300 ${
-                                  attendanceRate >= 80 ? 'bg-green-500' : 
-                                  attendanceRate >= 60 ? 'bg-yellow-500' : 'bg-red-500'
-                                }`}
-                                style={{ width: `${attendanceRate}%` }}
-                              ></div>
-                            </div>
-                          </div>
+                          )}
 
                           {/* Action Buttons */}
                           <div className="flex items-center justify-end gap-2">

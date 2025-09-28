@@ -1,6 +1,8 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { useQuery } from '@tanstack/react-query';
+import { apiService } from '@/services/api';
 import {
   LayoutDashboard,
   Users,
@@ -36,7 +38,27 @@ const navigation = [
 ];
 
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, isDark, onThemeToggle }) => {
-  const { user, logout } = useAuth();
+  const { user, logout, isAuthenticated, isLoading: authLoading } = useAuth();
+
+  // Plan status query
+  const { data: planStatus } = useQuery({
+    queryKey: ['plan-status'],
+    queryFn: () => apiService.getPlanStatus(),
+    enabled: isAuthenticated && !authLoading,
+  });
+
+  // Filter navigation based on plan permissions
+  const filteredNavigation = navigation.filter(item => {
+    if (!planStatus) return true; // Show all if plan status not loaded yet
+
+    // Hide Schedule & Attendance for Basic plan
+    if (item.href === '/schedule' && !planStatus.hasAttendance) return false;
+
+    // Hide Events for Basic plan
+    if (item.href === '/events' && !planStatus.hasEvents) return false;
+
+    return true;
+  });
   return (
     <>
       {/* Mobile overlay */}
@@ -70,7 +92,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, isDark, onThe
         <nav className="flex-1 px-6 py-8">
           <p className="text-xs font-semibold sidebar-text-secondary uppercase tracking-wider mb-6">Main Menu</p>
           <div className="space-y-2">
-            {navigation.map((item) => (
+            {filteredNavigation.map((item) => (
               <NavLink
                 key={item.name}
                 to={item.href}
