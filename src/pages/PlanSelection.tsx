@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import { useQueryClient } from '@tanstack/react-query';
+import { useQueryClient, useQuery } from '@tanstack/react-query';
+import { usePlanStatus } from '@/hooks/usePlanStatus';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -19,6 +20,11 @@ const PlanSelection: React.FC = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState('');
   const [isPaymentProcessing, setIsPaymentProcessing] = useState(false);
+
+  // Get current plan status (with manual refetch capability)
+  const { data: planStatus, refetch: refetchPlanStatus } = usePlanStatus({
+    refetchOnWindowFocus: true // Refetch when window gets focus to check for payment completion
+  });
 
   // Initialize Paddle on component mount
   React.useEffect(() => {
@@ -134,14 +140,20 @@ const PlanSelection: React.FC = () => {
     setIsProcessing(true);
 
     try {
-      // If Basic plan, update center directly and redirect to dashboard
+      // If Basic plan, update center directly and redirect
       if (planId === 'basic') {
         await apiService.updateCenterPlan(planId);
-        // Invalidate plan status cache to ensure fresh data
+        // Manual refetch to get updated plan status immediately
+        await refetchPlanStatus();
+        // Invalidate other caches to ensure fresh data
         await queryClient.invalidateQueries({ queryKey: ['planStatus'] });
         // Small delay to ensure cache invalidation completes
         setTimeout(() => {
-          navigate('/');
+          // If user already had a plan, this is a downgrade - redirect to settings
+          // If user didn't have a plan, this is initial selection - redirect to dashboard
+          const isPlanChange = planStatus?.plan && planStatus.plan !== 'basic';
+          const redirectPath = isPlanChange ? '/settings' : '/';
+          navigate(redirectPath);
         }, 100);
         return;
       }
@@ -276,8 +288,14 @@ const PlanSelection: React.FC = () => {
         <div className="container mx-auto px-4">
           <div className="text-center">
             <h1 className="text-4xl md:text-5xl font-bold mb-4 text-black">
-              Choose Your Plan
+              {planStatus?.plan ? 'Change Your Plan' : 'Choose Your Plan'}
             </h1>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              {planStatus?.plan
+                ? 'Upgrade or modify your current subscription to better fit your needs.'
+                : 'Select the perfect plan for your educational institution.'
+              }
+            </p>
           </div>
         </div>
       </section>
@@ -288,16 +306,23 @@ const PlanSelection: React.FC = () => {
           <div className="flex justify-center">
             <div className="grid md:grid-cols-4 gap-6 max-w-7xl">
             {plans.map((plan, index) => (
-              <div 
-                key={plan.name} 
+              <div
+                key={plan.name}
                 className="hover-lift border-0 shadow-lg relative rounded-lg"
                 style={{
-                  background: plan.popular 
-                    ? 'linear-gradient(135deg, hsl(258 90% 66%), hsl(258 90% 80%))' 
+                  background: plan.popular
+                    ? 'linear-gradient(135deg, hsl(258 90% 66%), hsl(258 90% 80%))'
                     : 'linear-gradient(145deg, hsl(307 100% 99%), hsl(258 30% 98%))'
                 }}
               >
-                {plan.popular && (
+                {planStatus?.plan === plan.planId && (
+                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                    <Badge className="bg-green-500 text-white px-4 py-1 text-sm font-semibold">
+                      Current Plan
+                    </Badge>
+                  </div>
+                )}
+                {plan.popular && planStatus?.plan !== plan.planId && (
                   <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
                     <Badge className="bg-yellow-500 text-black px-4 py-1 text-sm font-semibold">
                       Most Popular
@@ -339,16 +364,25 @@ const PlanSelection: React.FC = () => {
                   <Button
                     className={`w-full mt-6 ${plan.popular ? 'bg-white hover:bg-white/90' : 'hover:bg-primary/90'}`}
                     style={{
-                      backgroundColor: plan.popular ? 'white' : 'hsl(258 90% 66%)',
-                      color: plan.popular ? 'hsl(258 90% 66%)' : 'white'
+                      backgroundColor: planStatus?.plan === plan.planId
+                        ? 'hsl(142 76% 36%)'
+                        : plan.popular ? 'white' : 'hsl(258 90% 66%)',
+                      color: planStatus?.plan === plan.planId
+                        ? 'white'
+                        : plan.popular ? 'hsl(258 90% 66%)' : 'white'
                     }}
                     onClick={() => handlePlanSelect(plan.planId)}
-                    disabled={isProcessing}
+                    disabled={isProcessing || planStatus?.plan === plan.planId}
                   >
                     {isProcessing && selectedPlan === plan.planId ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                         Processing...
+                      </>
+                    ) : planStatus?.plan === plan.planId ? (
+                      <>
+                        Current Plan
+                        <CheckCircle className="ml-2 h-4 w-4" />
                       </>
                     ) : (
                       <>

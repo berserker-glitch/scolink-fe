@@ -36,7 +36,8 @@ import {
   GraduationCap,
   ChevronRight,
   Users,
-  AlertCircle
+  AlertCircle,
+  UserPlus
 } from 'lucide-react';
 import { Student } from '@/services/api';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -117,6 +118,41 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
     },
   });
 
+  // Activate student account mutation
+  const activateAccountMutation = useMutation({
+    mutationFn: async () => {
+      // Generate password format: FirstName + First3LettersOfLastNameInCaps + Last4DigitsOfPhone
+      // Example: Ahmed Benali with phone 0612345678 → AhmedBEN5678
+      const lastNamePrefix = student!.lastName.substring(0, 3).toUpperCase();
+      const phoneLast4 = student!.phone.slice(-4);
+      const password = `${student!.firstName}${lastNamePrefix}${phoneLast4}`;
+      
+      return apiService.activateStudentAccount({
+        studentId: student!.id,
+        phoneNumber: student!.phone,
+        password: password
+      });
+    },
+    onSuccess: (data) => {
+      // Use password from response
+      const password = data.password;
+      
+      toast({
+        title: "Account Activated ✓",
+        description: `Student account created successfully!\n\n📱 Username: ${student?.phone}\n🔑 Password: ${password}\n\nPlease share these credentials with the student.`,
+        duration: 15000,
+      });
+      queryClient.invalidateQueries({ queryKey: ['students'] });
+    },
+    onError: (error: any) => {
+      toast({
+        variant: "destructive",
+        title: "Activation Failed",
+        description: error.message || "Failed to activate student account. Please try again."
+      });
+    },
+  });
+
   const handleDeleteStudent = () => {
     setIsDeleteDialogOpen(true);
   };
@@ -125,6 +161,11 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
     if (!student) return;
     deleteStudentMutation.mutate();
     setIsDeleteDialogOpen(false);
+  };
+
+  const handleActivateAccount = () => {
+    if (!student) return;
+    activateAccountMutation.mutate();
   };
 
   if (!student) return null;
@@ -398,6 +439,20 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
               <Badge variant="outline" className="text-xs">
                 Student ID: {student.id?.slice(-6)?.toUpperCase()}
               </Badge>
+              <ModernButton
+                variant="ghost"
+                size="sm"
+                onClick={handleActivateAccount}
+                disabled={activateAccountMutation.isPending || student.hasAccount}
+                className="p-2 hover:bg-green-50 rounded-md text-green-600 hover:text-green-700 disabled:opacity-50"
+                title={student.hasAccount ? "Account already activated" : "Activate student account"}
+              >
+                {activateAccountMutation.isPending ? (
+                  <div className="w-4 h-4 border-2 border-green-600 border-t-transparent rounded-full animate-spin"></div>
+                ) : (
+                  <UserPlus className="w-4 h-4" />
+                )}
+              </ModernButton>
               <ModernButton
                 variant="ghost"
                 size="sm"

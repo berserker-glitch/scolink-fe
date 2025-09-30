@@ -15,12 +15,39 @@ const PlanStatusChecker: React.FC<PlanStatusCheckerProps> = ({ children }) => {
   const { user, isAuthenticated, isLoading: authLoading } = useAuth();
   const previousPlanStatus = useRef<boolean | null>(null);
   const hasShownSuccessMessage = useRef(false);
-  
+  const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+
   // Only fetch plan status if user is authenticated and not on auth pages
-  const shouldCheckPlan = isAuthenticated && user && user.role !== 'super_admin' && 
+  const shouldCheckPlan = isAuthenticated && user && user.role !== 'super_admin' &&
                           !['/login', '/signup'].includes(location.pathname);
-  
-  const { data: planStatus, isLoading, error } = usePlanStatus();
+
+  const { data: planStatus, isLoading, error, refetch } = usePlanStatus({
+    refetchOnWindowFocus: location.pathname === '/plan-selection' // Only refetch on focus when on plan selection page
+  });
+
+  // Manual polling only when on plan selection page (to detect payment completion)
+  useEffect(() => {
+    if (location.pathname === '/plan-selection' && shouldCheckPlan) {
+      // Start polling every 3 seconds when on plan selection page
+      pollingIntervalRef.current = setInterval(() => {
+        console.log('Polling plan status for payment completion...');
+        refetch();
+      }, 3000);
+
+      return () => {
+        if (pollingIntervalRef.current) {
+          clearInterval(pollingIntervalRef.current);
+          pollingIntervalRef.current = null;
+        }
+      };
+    } else {
+      // Clear polling when not on plan selection page
+      if (pollingIntervalRef.current) {
+        clearInterval(pollingIntervalRef.current);
+        pollingIntervalRef.current = null;
+      }
+    }
+  }, [location.pathname, shouldCheckPlan, refetch]);
 
   useEffect(() => {
     // Only check plan status if conditions are met
@@ -64,7 +91,7 @@ const PlanStatusChecker: React.FC<PlanStatusCheckerProps> = ({ children }) => {
         
         console.log('🎉 Payment completed successfully! Plan activated:', planStatus.plan);
         
-        // Reset any payment processing state and redirect to dashboard
+        // Reset any payment processing state and redirect
         setTimeout(() => {
           // Try to reset payment processing state if we can access it
           const planSelectionElement = document.querySelector('[data-plan-selection]');
@@ -72,8 +99,20 @@ const PlanStatusChecker: React.FC<PlanStatusCheckerProps> = ({ children }) => {
             // Dispatch custom event to reset processing state
             window.dispatchEvent(new CustomEvent('paymentCompleted'));
           }
-          
-          navigate('/', { replace: true });
+
+          // If this is a plan upgrade (user already had a plan), redirect to settings
+          // If this is initial plan selection, redirect to dashboard
+          const isPlanUpgrade = previousPlanStatus.current === false && currentNeedsPlan === false;
+          const redirectPath = isPlanUpgrade ? '/settings' : '/';
+
+          console.log('Redirecting after payment completion:', {
+            isPlanUpgrade,
+            previousNeedsPlan: previousPlanStatus.current,
+            currentNeedsPlan,
+            redirectPath
+          });
+
+          navigate(redirectPath, { replace: true });
         }, 2000);
       }
       
@@ -101,6 +140,15 @@ const PlanStatusChecker: React.FC<PlanStatusCheckerProps> = ({ children }) => {
       return;
     }
   }, [shouldCheckPlan, planStatus, isLoading, authLoading, error, location.pathname, navigate]);
+
+  // Cleanup polling interval on unmount
+  useEffect(() => {
+    return () => {
+      if (pollingIntervalRef.current) {
+        clearInterval(pollingIntervalRef.current);
+      }
+    };
+  }, []);
 
   // Show loading state while checking plan status (only for authenticated users and only for auth loading)
   if (shouldCheckPlan && location.pathname !== '/plan-selection' && authLoading) {

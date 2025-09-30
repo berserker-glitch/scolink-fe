@@ -39,13 +39,13 @@ const Login: React.FC = () => {
     setError('');
 
     if (!email || !password) {
-      setError('Please enter both email and password');
+      setError('Please enter both email/phone and password');
       return;
     }
 
     const success = await login(email, password);
     if (!success) {
-      setError('Invalid email or password');
+      setError('Invalid credentials. Please check your email/phone and password');
     }
     // Redirect will be handled by the useEffect above
   };
@@ -104,7 +104,7 @@ const Login: React.FC = () => {
               <div className="mb-8 text-center lg:text-left">
                 <h2 className="text-2xl font-semibold text-text-primary">Sign in</h2>
                 <p className="mt-2 text-sm text-text-secondary">
-                  Enter your credentials to access your center workspace.
+                  Enter your email/phone and password to access your account.
                 </p>
               </div>
 
@@ -121,8 +121,8 @@ const Login: React.FC = () => {
                     </Alert>
                   )}
                   <AppInput
-                    placeholder="Work email"
-                    type="email"
+                    placeholder="Email or Phone Number"
+                    type="text"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     disabled={isLoading}

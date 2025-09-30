@@ -22,6 +22,7 @@ import Signup from "@/pages/Signup";
 import PlanSelection from "@/pages/PlanSelection";
 import NotFound from "./pages/NotFound";
 import TeacherDashboard from "@/pages/TeacherDashboard";
+import StudentDashboard from "@/pages/StudentDashboard";
 
 const queryClient = new QueryClient();
 
@@ -73,6 +74,19 @@ const AppRoutes = () => {
         <Route path="/signup" element={<Navigate to="/teacher-dashboard" replace />} />
         <Route path="/" element={<Navigate to="/teacher-dashboard" replace />} />
         <Route path="/teacher-dashboard" element={<TeacherDashboard />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    );
+  }
+
+  // Show student interface for student users
+  if (user?.role === 'student') {
+    return (
+      <Routes>
+        <Route path="/login" element={<Navigate to="/student-dashboard" replace />} />
+        <Route path="/signup" element={<Navigate to="/student-dashboard" replace />} />
+        <Route path="/" element={<Navigate to="/student-dashboard" replace />} />
+        <Route path="/student-dashboard" element={<StudentDashboard />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     );

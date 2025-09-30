@@ -5,7 +5,7 @@ interface User {
   id: string;
   email: string;
   fullName: string;
-  role: 'super_admin' | 'center_admin' | 'staff' | 'teacher' | 'user';
+  role: 'super_admin' | 'center_admin' | 'staff' | 'teacher' | 'student' | 'user';
   centerId?: string;
 }
 

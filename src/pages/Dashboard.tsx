@@ -1,49 +1,63 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { 
   Users, 
-  UserPlus, 
-  CreditCard, 
-  Calendar, 
-  TrendingUp, 
+  GraduationCap, 
+  BookOpen, 
   Clock,
-  Plus,
-  FileText,
-  CalendarDays,
-  CheckCircle2,
-  UserCheck
+  School
 } from 'lucide-react';
-import {
-  StatCard,
-  PerformanceChart,
-  KnowledgeCard,
-  EventCalendar,
-  FinanceCard,
-  UpcomingEvents,
-  ModernButton
-} from '@/components/ui';
+import { useQuery } from '@tanstack/react-query';
+import { apiService } from '@/services/api';
+import { Card, CardContent } from '@/components/ui/Card';
 
 export const Dashboard: React.FC = () => {
-  const navigate = useNavigate();
-  // TODO: Implement API call for analytics
-  const analytics = {
-    studentsCount: 0,
-    teachersCount: 0,
-    subjectsCount: 0,
-    totalRevenue: 0,
-    activitiesThisWeek: [],
-    totalStudents: 0,
-    newStudentsThisMonth: 0,
-    monthlyRevenue: 0,
-    groupsToday: 0,
-    attendanceRate: 0
-  };
-  const currentDate = new Date();
-  const timeString = currentDate.toLocaleTimeString('en-US', { 
-    hour12: false, 
-    hour: '2-digit', 
-    minute: '2-digit' 
+
+  // Fetch data
+  const { data: studentsData } = useQuery({
+    queryKey: ['students'],
+    queryFn: () => apiService.getStudents(1, 1000),
   });
+
+  const { data: teachersData } = useQuery({
+    queryKey: ['teachers'],
+    queryFn: () => apiService.getTeachers(1, 1000),
+  });
+
+  const { data: groupsData } = useQuery({
+    queryKey: ['groups'],
+    queryFn: () => apiService.getGroups(1, 1000),
+  });
+
+  const { data: subjectsData } = useQuery({
+    queryKey: ['subjects'],
+    queryFn: () => apiService.getSubjects(1, 1000),
+  });
+
+  const totalStudents = studentsData?.pagination?.total || 0;
+  const totalTeachers = teachersData?.pagination?.total || 0;
+  const totalGroups = groupsData?.pagination?.total || 0;
+  const totalSubjects = subjectsData?.pagination?.total || 0;
+
+  // Get today's data
+  const today = new Date();
+  const todayDayName = today.toLocaleDateString('en-US', { weekday: 'long' });
+  
+  // Filter today's groups
+  const todayGroups = groupsData?.groups?.filter(group => 
+    group.schedules?.some(schedule => schedule.day === todayDayName)
+  ) || [];
+
+  // Get unique subjects for today
+  const subjects = subjectsData?.subjects || [];
+  const todaySubjectIds = new Set(todayGroups.map(g => g.subjectId).filter(Boolean));
+  const todaySubjects = subjects.filter(s => todaySubjectIds.has(s.id)).map(s => s.name);
+
+  // Get unique teachers for today
+  const teachers = teachersData?.teachers || [];
+  const todayTeacherIds = new Set(todayGroups.map(g => g.teacherId).filter(Boolean));
+  const todayTeachers = teachers.filter(t => todayTeacherIds.has(t.id)).map(t => t.name);
+
+  const currentDate = new Date();
   const dateString = currentDate.toLocaleDateString('en-US', { 
     weekday: 'long', 
     year: 'numeric', 
@@ -51,178 +65,191 @@ export const Dashboard: React.FC = () => {
     day: 'numeric' 
   });
 
-  const analyticsCards = [
-    {
-      title: 'Total Students',
-      value: analytics.totalStudents,
-      icon: Users,
-      description: 'Currently enrolled'
-    },
-    {
-      title: 'New This Month',
-      value: analytics.newStudentsThisMonth,
-      icon: UserPlus,
-      description: 'Student registrations'
-    },
-    {
-      title: 'Monthly Revenue',
-      value: `${analytics.monthlyRevenue.toLocaleString()} DH`,
-      icon: CreditCard,
-      description: 'Payments received'
-    },
-    {
-      title: 'Today\'s Groups',
-      value: analytics.groupsToday,
-      icon: Calendar,
-      description: 'Scheduled sessions'
-    },
-    {
-      title: 'Attendance Rate',
-      value: `${analytics.attendanceRate}%`,
-      icon: TrendingUp,
-      description: 'Today\'s attendance'
-    }
-  ];
-
-  const quickActions = [
-    {
-      label: 'Add Student',
-      icon: Plus,
-      variant: 'primary' as const,
-      onClick: () => navigate('/students')
-    },
-    {
-      label: 'View Schedule',
-      icon: CalendarDays,
-      variant: 'outline' as const,
-      onClick: () => navigate('/schedule')
-    },
-    {
-      label: 'Attendance List',
-      icon: CheckCircle2,
-      variant: 'outline' as const,
-      onClick: () => navigate('/schedule')
-    },
-    {
-      label: 'Generate Report',
-      icon: FileText,
-      variant: 'outline' as const,
-      onClick: () => navigate('/payments')
-    }
-  ];
-
-  const recentActivities = [
-    'New student Ahmed Benali registered for Mathematics',
-    'Payment received from Fatima Alaoui - 650 DH',
-    'Attendance marked for Physics Lab A - 18/20 present',
-    'New teacher Sara Berrada added to French Department',
-    'Science Fair 2024 event created - 50 students enrolled',
-    'Monthly report generated for February 2024',
-    'Group capacity increased for Advanced Math A'
-  ];
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50/30 p-6 lg:p-8">
+    <div className="min-h-screen bg-gray-50 p-4 lg:p-6">
       {/* Header */}
-      <div className="mb-8">
-        <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-8">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">Dashboard</h1>
-            <p className="text-sm text-gray-600">
-              Hi, Habib! Welcome to Scolink Dashboard
-            </p>
-          </div>
-          
-          {/* Action Buttons */}
-          <div className="flex items-center space-x-3 mt-4 lg:mt-0">
-            <select className="px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500">
-              <option>Change Periode</option>
-              <option>This Week</option>
-              <option>This Month</option>
-              <option>This Year</option>
-            </select>
-            <ModernButton 
-              variant="solid" 
-              icon={Plus}
-              iconPosition="left"
-              onClick={() => navigate('/students')}
-            >
-              New Admission
-            </ModernButton>
-          </div>
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-gray-900 mb-1">Dashboard</h1>
+        <p className="text-sm text-gray-600">{dateString}</p>
+      </div>
+
+      {/* Grid Layout - 3 Columns */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Column 1: Students */}
+        <div className="space-y-4">
+          {/* Total Students Card */}
+          <Card className="bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-lg">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div className="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm">
+                  <Users className="w-7 h-7 text-white" />
+                </div>
+                <div className="text-right">
+                  <p className="text-4xl font-bold">{totalStudents}</p>
+                  <p className="text-sm text-blue-100 mt-1">Total Students</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Today's Students List */}
+          <Card className="bg-white shadow-sm">
+            <CardContent className="p-5">
+              <div className="flex items-center gap-2 mb-4">
+                <Clock className="w-5 h-5 text-blue-600" />
+                <h3 className="text-base font-bold text-gray-900">Students Today</h3>
+              </div>
+              {todayGroups.length > 0 ? (
+                <div className="space-y-2">
+                  {todayGroups.slice(0, 5).map((group, index) => (
+                    <div key={index} className="flex items-center justify-between p-3 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
+                      <div className="flex items-center gap-3">
+                        <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                        <div>
+                          <p className="text-sm font-semibold text-gray-900">{group.name}</p>
+                          <p className="text-xs text-gray-500">{group.studentCount || 0} students</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  {todayGroups.length > 5 && (
+                    <p className="text-xs text-gray-500 text-center pt-2">
+                      +{todayGroups.length - 5} more groups
+                    </p>
+                  )}
+                </div>
+              ) : (
+                <div className="text-center py-8">
+                  <Users className="w-12 h-12 text-gray-300 mx-auto mb-2" />
+                  <p className="text-sm text-gray-500">No students scheduled today</p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
         </div>
-      </div>
 
-      {/* Analytics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <StatCard
-          title="Total Students"
-          value={analytics.totalStudents}
-          change="+8% than last month"
-          changeType="positive"
-          icon={Users}
-          iconBgColor="bg-blue-100"
-          iconColor="text-blue-600"
-        />
+        {/* Column 2: Teachers */}
+        <div className="space-y-4">
+          {/* Total Teachers Card */}
+          <Card className="bg-gradient-to-br from-green-500 to-green-600 text-white shadow-lg">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div className="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm">
+                  <GraduationCap className="w-7 h-7 text-white" />
+                </div>
+                <div className="text-right">
+                  <p className="text-4xl font-bold">{totalTeachers}</p>
+                  <p className="text-sm text-green-100 mt-1">Total Teachers</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
 
-        <StatCard
-          title="Total Teachers"
-          value={Math.floor(analytics.totalStudents / 12)}
-          change="+3% than last month"
-          changeType="positive"
-          icon={UserCheck}
-          iconBgColor="bg-green-100"
-          iconColor="text-green-600"
-        />
+          {/* Today's Teachers List */}
+          <Card className="bg-white shadow-sm">
+            <CardContent className="p-5">
+              <div className="flex items-center gap-2 mb-4">
+                <Clock className="w-5 h-5 text-green-600" />
+                <h3 className="text-base font-bold text-gray-900">Teachers Today</h3>
+              </div>
+              {todayTeachers.length > 0 ? (
+                <div className="space-y-2">
+                  {todayTeachers.slice(0, 8).map((teacher, index) => (
+                    <div key={index} className="flex items-center gap-3 p-3 bg-green-50 rounded-lg hover:bg-green-100 transition-colors">
+                      <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                        <span className="text-white text-xs font-bold">{teacher.charAt(0)}</span>
+                      </div>
+                      <p className="text-sm font-medium text-gray-900 truncate">{teacher}</p>
+                    </div>
+                  ))}
+                  {todayTeachers.length > 8 && (
+                    <p className="text-xs text-gray-500 text-center pt-2">
+                      +{todayTeachers.length - 8} more teachers
+                    </p>
+                  )}
+                </div>
+              ) : (
+                <div className="text-center py-8">
+                  <GraduationCap className="w-12 h-12 text-gray-300 mx-auto mb-2" />
+                  <p className="text-sm text-gray-500">No teachers scheduled today</p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
 
-        <StatCard
-          title="Events"
-          value={Math.floor(analytics.groupsToday * 49)}
-          change="+5% than last month"
-          changeType="positive"
-          icon={CalendarDays}
-          iconBgColor="bg-purple-100"
-          iconColor="text-purple-600"
-        />
+        {/* Column 3: Groups & Subjects */}
+        <div className="space-y-4">
+          {/* Total Groups & Subjects Card */}
+          <Card className="bg-gradient-to-br from-purple-500 to-purple-600 text-white shadow-lg">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div className="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm">
+                  <School className="w-7 h-7 text-white" />
+                </div>
+                <div className="text-right">
+                  <p className="text-4xl font-bold">{totalGroups}</p>
+                  <p className="text-sm text-purple-100 mt-1">{totalSubjects} Subjects</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
 
-        <StatCard
-          title="Invoice Status"
-          value={Math.floor(analytics.totalStudents * 1.8)}
-          change="+12% than last month"
-          changeType="positive"
-          icon={FileText}
-          iconBgColor="bg-orange-100"
-          iconColor="text-orange-600"
-        />
-      </div>
+          {/* Today's Classes & Subjects List */}
+          <Card className="bg-white shadow-sm">
+            <CardContent className="p-5">
+              <div className="flex items-center gap-2 mb-4">
+                <Clock className="w-5 h-5 text-purple-600" />
+                <h3 className="text-base font-bold text-gray-900">Today's Classes</h3>
+              </div>
+              
+              {todayGroups.length > 0 ? (
+                <div className="space-y-3">
+                  {/* Classes */}
+                  <div>
+                    <p className="text-xs font-semibold text-gray-500 uppercase mb-2">Scheduled Classes</p>
+                    <div className="space-y-2">
+                      {todayGroups.slice(0, 5).map((group, index) => (
+                        <div key={index} className="flex items-center justify-between p-2 bg-purple-50 rounded-lg">
+                          <div className="flex items-center gap-2">
+                            <School className="w-4 h-4 text-purple-600" />
+                            <p className="text-sm font-medium text-gray-900">{group.name}</p>
+                          </div>
+                          <span className="text-xs text-gray-500">{group.studentCount || 0}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
 
-      {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-        <PerformanceChart
-          studentsValue={analytics.attendanceRate}
-          teachersValue={2}
-          currentPeriod="January 2024"
-        />
-
-        <KnowledgeCard 
-          onButtonClick={() => navigate('/events')}
-        />
-      </div>
-
-      {/* Bottom Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
-        <EventCalendar />
-
-        <FinanceCard 
-          data={{
-            income: analytics.monthlyRevenue,
-            expense: Math.floor(analytics.monthlyRevenue * 0.6)
-          }}
-        />
-
-        <UpcomingEvents 
-          onNewEvent={() => navigate('/events')}
-        />
+                  {/* Subjects */}
+                  {todaySubjects.length > 0 && (
+                    <div>
+                      <p className="text-xs font-semibold text-gray-500 uppercase mb-2">Subjects</p>
+                      <div className="flex flex-wrap gap-2">
+                        {todaySubjects.slice(0, 6).map((subject, index) => (
+                          <span key={index} className="inline-flex items-center gap-1 px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-medium">
+                            <BookOpen className="w-3 h-3" />
+                            {subject}
+                          </span>
+                        ))}
+                        {todaySubjects.length > 6 && (
+                          <span className="inline-flex items-center px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium">
+                            +{todaySubjects.length - 6} more
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="text-center py-8">
+                  <School className="w-12 h-12 text-gray-300 mx-auto mb-2" />
+                  <p className="text-sm text-gray-500">No classes scheduled today</p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   );

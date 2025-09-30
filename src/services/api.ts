@@ -1,6 +1,6 @@
 //const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/api/v1';
-const API_BASE_URL ='https://api.scolink.ink/api/v1';
-//const API_BASE_URL = 'http://localhost:3001/api/v1';
+//const API_BASE_URL ='https://api.scolink.ink/api/v1';
+const API_BASE_URL = 'http://localhost:3001/api/v1';
 // Debug: Log the API base URL being used
 //console.log('🌐 Frontend is using API_BASE_URL:', API_BASE_URL);
 console.log('🌐 Environment mode:', import.meta.env.MODE);
@@ -249,6 +249,7 @@ interface Student {
   cni?: string;
   centerId: string;
   isActive: boolean;
+  hasAccount?: boolean;
   createdAt: string;
   updatedAt: string;
   yearName?: string;
@@ -1270,6 +1271,22 @@ class ApiService {
     await this.request(`/students/${id}`, {
       method: 'DELETE',
     });
+  }
+
+  async getCurrentStudent(): Promise<Student> {
+    const response = await this.request<Student>('/students/me');
+    return response.data!;
+  }
+
+  async activateStudentAccount(data: { studentId: string; phoneNumber: string; password: string }): Promise<{ message: string; password: string }> {
+    const response = await this.request<{ message: string; password: string }>(`/students/${data.studentId}/activate`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ phoneNumber: data.phoneNumber, password: data.password }),
+    });
+    return response.data!;
   }
 
   // Student Enrollment methods

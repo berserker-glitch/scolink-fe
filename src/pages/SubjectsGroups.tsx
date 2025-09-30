@@ -644,10 +644,13 @@ export const SubjectsGroups: React.FC = () => {
                 onChange={(e) => {
                   setSubjectForm(prev => ({ ...prev, yearId: e.target.value, fieldId: '' }));
                 }}
-                options={years.filter(y => y.isActive).map(year => ({
-                  value: year.id,
-                  label: year.name
-                }))}
+                options={[
+                  { value: '', label: 'Select a year' },
+                  ...years.filter(y => y.isActive).map(year => ({
+                    value: year.id,
+                    label: year.name
+                  }))
+                ]}
               />
             </FormField>
             

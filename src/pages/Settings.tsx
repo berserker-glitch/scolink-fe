@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { ModernButton } from '@/components/ui';
 import { Modal } from '@/components/ui/Modal';
@@ -29,6 +30,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 
 export const Settings: React.FC = () => {
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const { user, isAuthenticated, isLoading: authLoading } = useAuth();
@@ -496,8 +498,17 @@ export const Settings: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="pt-4 border-t border-border">
-                  <ModernButton 
+                <div className="pt-4 border-t border-border space-y-3">
+                  <ModernButton
+                    variant="outline"
+                    icon={Crown}
+                    iconPosition="left"
+                    onClick={() => navigate('/plan-selection')}
+                    className="w-full"
+                  >
+                    Change Plan
+                  </ModernButton>
+                  <ModernButton
                     variant="outline"
                     icon={Key}
                     iconPosition="left"

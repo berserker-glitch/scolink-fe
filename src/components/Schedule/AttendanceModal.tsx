@@ -434,10 +434,63 @@ export const AttendanceModal: React.FC<AttendanceModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2">
-      <div className="bg-white rounded-xl w-[98vw] h-[96vh] overflow-hidden flex flex-col">
-        {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b flex-shrink-0">
+    <div 
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 sm:p-2 p-0"
+      onClick={onClose}
+    >
+      <div 
+        className="bg-white sm:rounded-xl rounded-none w-full sm:w-[98vw] h-full sm:h-[96vh] overflow-hidden flex flex-col"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Mobile Header - Compact */}
+        <div className="sm:hidden flex items-center justify-between p-4 border-b bg-purple-600 text-white flex-shrink-0">
+          <div className="flex-1 min-w-0">
+            <h2 className="text-lg font-bold truncate">Take Attendance</h2>
+            <p className="text-xs opacity-90 truncate">{groupName} - {subject}</p>
+          </div>
+          <button
+            onClick={onClose}
+            className="p-2 hover:bg-purple-700 rounded-lg transition-colors ml-3 flex-shrink-0"
+          >
+            <X className="w-6 h-6" />
+          </button>
+        </div>
+
+        {/* Mobile Controls */}
+        <div className="sm:hidden flex items-center gap-2 p-3 border-b bg-gray-50">
+          <div className="flex items-center gap-2 flex-1">
+            <Calendar className="w-4 h-4 text-gray-500 flex-shrink-0" />
+            <select
+              value={`${selectedMonth.getFullYear()}-${selectedMonth.getMonth() + 1}`}
+              onChange={(e) => {
+                const [year, month] = e.target.value.split('-');
+                setSelectedMonth(new Date(parseInt(year), parseInt(month) - 1, 1));
+              }}
+              className="border border-gray-300 rounded-lg px-2 py-1.5 text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 flex-1"
+            >
+              {Array.from({ length: 6 }, (_, i) => {
+                const date = new Date();
+                date.setMonth(date.getMonth() - 2 + i);
+                const value = `${date.getFullYear()}-${date.getMonth() + 1}`;
+                const label = date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+                return (
+                  <option key={value} value={value}>{label}</option>
+                );
+              })}
+            </select>
+          </div>
+          
+          <button
+            onClick={downloadPDF}
+            className="flex items-center gap-2 px-3 py-1.5 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex-shrink-0"
+          >
+            <Download className="w-4 h-4" />
+            <span className="text-sm font-medium">PDF</span>
+          </button>
+        </div>
+
+        {/* Desktop Header - Full */}
+        <div className="hidden sm:flex items-center justify-between p-6 border-b flex-shrink-0">
           <div className="flex items-center gap-3">
             <Users className="w-6 h-6 text-purple-600" />
             <div>
@@ -487,7 +540,7 @@ export const AttendanceModal: React.FC<AttendanceModalProps> = ({
         </div>
 
         {/* Content */}
-        <div className="flex-1 p-6 overflow-auto min-h-0">
+        <div className="flex-1 sm:p-6 p-3 overflow-auto min-h-0">
           {loading ? (
             <div className="flex items-center justify-center py-12">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
@@ -600,8 +653,40 @@ export const AttendanceModal: React.FC<AttendanceModalProps> = ({
           )}
         </div>
 
-        {/* Footer */}
-        <div className="flex items-center justify-between p-6 border-t bg-gray-50 flex-shrink-0">
+        {/* Footer - Mobile */}
+        <div className="sm:hidden border-t bg-white flex-shrink-0 p-3 space-y-3">
+          <div className="flex items-center gap-2">
+            <button
+              onClick={onClose}
+              className="flex-1 px-4 py-3 text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors font-medium"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={saveAttendance}
+              disabled={saving}
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-purple-600 text-white rounded-xl hover:bg-purple-700 disabled:opacity-50 transition-colors font-medium"
+            >
+              {saving ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                  <span>Saving...</span>
+                </>
+              ) : (
+                <>
+                  <Check className="w-5 h-5" />
+                  <span>Save</span>
+                </>
+              )}
+            </button>
+          </div>
+          <p className="text-xs text-gray-500 text-center">
+            📝 You can edit attendance for current and next week only
+          </p>
+        </div>
+
+        {/* Footer - Desktop */}
+        <div className="hidden sm:flex items-center justify-between p-6 border-t bg-gray-50 flex-shrink-0">
           <div className="text-sm text-gray-600 max-w-2xl">
             <span className="font-medium">📝 Note:</span> You can only edit attendance for the current week and next week.
             Past records are shown as read-only. Use the month selector to view different months.
