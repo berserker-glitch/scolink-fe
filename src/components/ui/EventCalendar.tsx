@@ -27,7 +27,7 @@ export const EventCalendar: React.FC<EventCalendarProps> = ({
 }) => {
   const getEventClass = (dayNumber: number) => {
     const event = events.find(e => e.date === dayNumber);
-    if (!event) return 'text-gray-700';
+    if (!event) return 'text-text-primary';
     
     const typeClasses = {
       green: 'bg-green-100 text-green-600 font-semibold',
@@ -44,7 +44,7 @@ export const EventCalendar: React.FC<EventCalendarProps> = ({
         <div className="flex items-center justify-between">
           <ModernCardTitle>{title}</ModernCardTitle>
           <div className="flex items-center space-x-2">
-            <select className="text-sm border border-gray-200 rounded-lg px-3 py-1">
+            <select className="text-sm border border-border rounded-lg px-3 py-1">
               <option>{currentMonth}</option>
               <option>February</option>
               <option>March</option>
@@ -58,7 +58,7 @@ export const EventCalendar: React.FC<EventCalendarProps> = ({
               <option>November</option>
               <option>December</option>
             </select>
-            <select className="text-sm border border-gray-200 rounded-lg px-3 py-1">
+            <select className="text-sm border border-border rounded-lg px-3 py-1">
               <option>{currentYear}</option>
               <option>2025</option>
               <option>2023</option>
@@ -70,10 +70,10 @@ export const EventCalendar: React.FC<EventCalendarProps> = ({
       {/* Mini Calendar */}
       <div className="grid grid-cols-7 gap-1 text-center text-sm">
         {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(day => (
-          <div key={day} className="p-2 font-medium text-gray-600">{day}</div>
+          <div key={day} className="p-2 font-medium text-text-secondary">{day}</div>
         ))}
         {Array.from({length: daysInMonth}, (_, i) => (
-          <div key={i} className={`p-2 rounded-lg hover:bg-gray-100 cursor-pointer ${getEventClass(i + 1)}`}>
+          <div key={i} className={`p-2 rounded-lg hover:bg-surface-hover cursor-pointer ${getEventClass(i + 1)}`}>
             {i + 1}
           </div>
         ))}

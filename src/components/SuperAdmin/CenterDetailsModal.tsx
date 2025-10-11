@@ -60,29 +60,29 @@ export const CenterDetailsModal: React.FC<CenterDetailsModalProps> = ({
             <CardContent className="p-6">
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
-                  <MapPin className="w-5 h-5 text-gray-500 mt-0.5" />
+                  <MapPin className="w-5 h-5 text-text-muted mt-0.5" />
                   <div>
-                    <p className="font-medium text-gray-900">Location</p>
-                    <p className="text-gray-600">{center.location}</p>
+                    <p className="font-medium text-text-primary">Location</p>
+                    <p className="text-text-secondary">{center.location}</p>
                   </div>
                 </div>
 
                 {center.email && (
                   <div className="flex items-start gap-3">
-                    <Mail className="w-5 h-5 text-gray-500 mt-0.5" />
+                    <Mail className="w-5 h-5 text-text-muted mt-0.5" />
                     <div>
-                      <p className="font-medium text-gray-900">Email</p>
-                      <p className="text-gray-600">{center.email}</p>
+                      <p className="font-medium text-text-primary">Email</p>
+                      <p className="text-text-secondary">{center.email}</p>
                     </div>
                   </div>
                 )}
 
                 {center.phoneNumber && (
                   <div className="flex items-start gap-3">
-                    <Phone className="w-5 h-5 text-gray-500 mt-0.5" />
+                    <Phone className="w-5 h-5 text-text-muted mt-0.5" />
                     <div>
-                      <p className="font-medium text-gray-900">Phone</p>
-                      <p className="text-gray-600">{center.phoneNumber}</p>
+                      <p className="font-medium text-text-primary">Phone</p>
+                      <p className="text-text-secondary">{center.phoneNumber}</p>
                     </div>
                   </div>
                 )}
@@ -102,7 +102,7 @@ export const CenterDetailsModal: React.FC<CenterDetailsModalProps> = ({
           {/* Admins Section */}
           <div className="space-y-4">
             <div className="flex justify-between items-center">
-              <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+              <h3 className="text-lg font-semibold text-text-primary flex items-center gap-2">
                 <Users className="w-5 h-5" />
                 Center Admins
               </h3>
@@ -120,7 +120,7 @@ export const CenterDetailsModal: React.FC<CenterDetailsModalProps> = ({
               <div className="space-y-3">
                 {[...Array(3)].map((_, i) => (
                   <div key={i} className="animate-pulse">
-                    <div className="h-16 bg-gray-200 rounded-lg"></div>
+                    <div className="h-16 bg-surface-secondary rounded-lg"></div>
                   </div>
                 ))}
               </div>
@@ -131,10 +131,10 @@ export const CenterDetailsModal: React.FC<CenterDetailsModalProps> = ({
                     <CardContent className="p-4">
                       <div className="flex items-center justify-between">
                         <div>
-                          <h4 className="font-medium text-gray-900">{admin.fullName}</h4>
-                          <p className="text-sm text-gray-600">{admin.email}</p>
+                          <h4 className="font-medium text-text-primary">{admin.fullName}</h4>
+                          <p className="text-sm text-text-secondary">{admin.email}</p>
                           {admin.phoneNumber && (
-                            <p className="text-sm text-gray-500">{admin.phoneNumber}</p>
+                            <p className="text-sm text-text-muted">{admin.phoneNumber}</p>
                           )}
                         </div>
                         <div className="flex items-center gap-2">
@@ -150,8 +150,8 @@ export const CenterDetailsModal: React.FC<CenterDetailsModalProps> = ({
             ) : (
               <Card>
                 <CardContent className="p-6 text-center">
-                  <Users className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-                  <p className="text-gray-500">No admins assigned to this center yet</p>
+                  <Users className="w-12 h-12 text-text-muted mx-auto mb-3" />
+                  <p className="text-text-muted">No admins assigned to this center yet</p>
                   <Button
                     onClick={onAddAdmin}
                     size="sm"

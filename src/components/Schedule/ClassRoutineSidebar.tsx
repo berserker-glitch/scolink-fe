@@ -90,24 +90,24 @@ export const ClassRoutineSidebar: React.FC<ClassRoutineSidebarProps> = ({
       }
     }
     
-    return 'text-gray-600';
+    return 'text-text-secondary';
   }
 
   return (
-    <div className="w-80 bg-surface border-r border-gray-200 h-full overflow-y-auto">
+    <div className="w-80 bg-surface border-r border-border h-full overflow-y-auto">
       <div className="p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-6">Class Routine</h2>
+        <h2 className="text-lg font-semibold text-text-primary mb-6">Class Routine</h2>
         
         <div className="space-y-6">
           {Object.entries(groupedSubjects).map(([category, categoryGroups]: [string, any]) => (
             <div key={category}>
-              <h3 className="text-sm font-medium text-gray-500 mb-3 uppercase tracking-wide">
+              <h3 className="text-sm font-medium text-text-muted mb-3 uppercase tracking-wide">
                 {category}
               </h3>
               
               <div className="space-y-3">
                 {categoryGroups.map((group: any) => (
-                  <div key={group.id} className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                  <div key={group.id} className="flex items-center gap-3 p-3 rounded-lg hover:bg-surface-hover transition-colors">
                     {/* Subject indicator */}
                     <div className="flex-shrink-0">
                       <div className={`w-2 h-2 rounded-full ${
@@ -122,15 +122,15 @@ export const ClassRoutineSidebar: React.FC<ClassRoutineSidebarProps> = ({
                     
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between mb-1">
-                        <h4 className="text-sm font-medium text-gray-900 truncate">
+                        <h4 className="text-sm font-medium text-text-primary truncate">
                           {group.subjectName}
                         </h4>
-                        <span className="text-xs text-gray-500">
+                        <span className="text-xs text-text-muted">
                           {formatDate(new Date())}
                         </span>
                       </div>
                       
-                      <p className="text-xs text-gray-500 mb-2">{group.name}</p>
+                      <p className="text-xs text-text-muted mb-2">{group.name}</p>
                       
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
@@ -139,14 +139,14 @@ export const ClassRoutineSidebar: React.FC<ClassRoutineSidebarProps> = ({
                             {getTeacherAvatar(group.teacherId)}
                           </div>
                           
-                          <div className="flex items-center gap-1 text-xs text-gray-500">
+                          <div className="flex items-center gap-1 text-xs text-text-muted">
                             <Users className="w-3 h-3" />
                             <span>{group.studentCount || 0}</span>
                           </div>
                         </div>
                         
                         {group.schedules?.[0] && (
-                          <div className="flex items-center gap-1 text-xs text-gray-500">
+                          <div className="flex items-center gap-1 text-xs text-text-muted">
                             <Clock className="w-3 h-3" />
                             <span>{group.schedules[0].startTime}</span>
                           </div>

@@ -56,12 +56,12 @@ export const FinanceCard: React.FC<FinanceCardProps> = ({
               <TrendingUp className="w-5 h-5 text-green-600" />
             </div>
             <div>
-              <div className="font-semibold text-gray-900">Income</div>
-              <div className="text-sm text-gray-500">100.00%</div>
+              <div className="font-semibold text-text-primary">Income</div>
+              <div className="text-sm text-text-muted">100.00%</div>
             </div>
           </div>
           <div className="text-right">
-            <div className="text-xl font-bold text-gray-900">$ {data.income.toLocaleString()}</div>
+            <div className="text-xl font-bold text-text-primary">$ {data.income.toLocaleString()}</div>
           </div>
         </div>
         
@@ -71,12 +71,12 @@ export const FinanceCard: React.FC<FinanceCardProps> = ({
               <CreditCard className="w-5 h-5 text-orange-600" />
             </div>
             <div>
-              <div className="font-semibold text-gray-900">Expense</div>
-              <div className="text-sm text-gray-500">{expensePercentage}%</div>
+              <div className="font-semibold text-text-primary">Expense</div>
+              <div className="text-sm text-text-muted">{expensePercentage}%</div>
             </div>
           </div>
           <div className="text-right">
-            <div className="text-xl font-bold text-gray-900">$ {data.expense.toLocaleString()}</div>
+            <div className="text-xl font-bold text-text-primary">$ {data.expense.toLocaleString()}</div>
           </div>
         </div>
       </div>

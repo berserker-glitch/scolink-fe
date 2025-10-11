@@ -325,7 +325,7 @@ const TeacherDashboard: React.FC = () => {
 
             {/* Statistics Cards - Beautiful Design */}
             <div className="grid grid-cols-2 gap-4 p-6">
-              <div className="bg-surface rounded-2xl p-4 shadow-sm border border-gray-100">
+              <div className="bg-surface rounded-2xl p-4 shadow-sm border border-border">
                 <div className="w-10 h-10 bg-blue-500 rounded-xl flex items-center justify-center mb-3">
                   <BookOpen className="w-5 h-5 text-white" />
                 </div>
@@ -335,7 +335,7 @@ const TeacherDashboard: React.FC = () => {
                 <p className="text-xs text-text-muted font-medium">Classes</p>
               </div>
 
-              <div className="bg-surface rounded-2xl p-4 shadow-sm border border-gray-100">
+              <div className="bg-surface rounded-2xl p-4 shadow-sm border border-border">
                 <div className="w-10 h-10 bg-green-500 rounded-xl flex items-center justify-center mb-3">
                   <Users className="w-5 h-5 text-white" />
                 </div>
@@ -345,7 +345,7 @@ const TeacherDashboard: React.FC = () => {
                 <p className="text-xs text-text-muted font-medium">Students</p>
               </div>
 
-              <div className="bg-surface rounded-2xl p-4 shadow-sm border border-gray-100">
+              <div className="bg-surface rounded-2xl p-4 shadow-sm border border-border">
                 <div className="w-10 h-10 bg-purple-500 rounded-xl flex items-center justify-center mb-3">
                   <GraduationCap className="w-5 h-5 text-white" />
                 </div>
@@ -355,7 +355,7 @@ const TeacherDashboard: React.FC = () => {
                 <p className="text-xs text-text-muted font-medium">Subjects</p>
               </div>
 
-              <div className="bg-surface rounded-2xl p-4 shadow-sm border border-gray-100">
+              <div className="bg-surface rounded-2xl p-4 shadow-sm border border-border">
                 <div className="w-10 h-10 bg-orange-500 rounded-xl flex items-center justify-center mb-3">
                   <CalendarIcon className="w-5 h-5 text-white" />
                 </div>
@@ -381,7 +381,7 @@ const TeacherDashboard: React.FC = () => {
                   <Loader2 className="w-8 h-8 animate-spin text-purple-600" />
                 </div>
               ) : todayClasses.length === 0 ? (
-                <div className="bg-surface rounded-2xl p-8 text-center shadow-sm border border-gray-100">
+                <div className="bg-surface rounded-2xl p-8 text-center shadow-sm border border-border">
                   <div className="w-16 h-16 bg-surface-secondary rounded-full flex items-center justify-center mx-auto mb-4">
                     <Clock className="w-8 h-8 text-text-muted" />
                   </div>
@@ -395,7 +395,7 @@ const TeacherDashboard: React.FC = () => {
                     const attendanceTaken = group ? attendanceTakenToday[group.id] : false;
                     
                     return (
-                      <div key={classItem.id} className="bg-surface rounded-2xl p-4 shadow-sm border border-gray-100">
+                      <div key={classItem.id} className="bg-surface rounded-2xl p-4 shadow-sm border border-border">
                         <div className="flex items-start justify-between mb-3">
                           <div className="flex-1 min-w-0">
                             <h3 className="font-bold text-text-primary truncate">{classItem.subject}</h3>
@@ -471,7 +471,7 @@ const TeacherDashboard: React.FC = () => {
                   <Loader2 className="w-8 h-8 animate-spin text-purple-600" />
                 </div>
               ) : todayClasses.length === 0 ? (
-                <div className="bg-surface rounded-2xl p-8 text-center shadow-sm border border-gray-100">
+                <div className="bg-surface rounded-2xl p-8 text-center shadow-sm border border-border">
                   <div className="w-16 h-16 bg-surface-secondary rounded-full flex items-center justify-center mx-auto mb-4">
                     <Clock className="w-8 h-8 text-text-muted" />
                   </div>
@@ -485,7 +485,7 @@ const TeacherDashboard: React.FC = () => {
                     const attendanceTaken = group ? attendanceTakenToday[group.id] : false;
                     
                     return (
-                      <div key={classItem.id} className="bg-surface rounded-2xl p-5 shadow-sm border border-gray-100">
+                      <div key={classItem.id} className="bg-surface rounded-2xl p-5 shadow-sm border border-border">
                         <div className="flex items-start justify-between mb-4">
                           <div className="flex-1 min-w-0">
                             <h3 className="text-lg font-bold text-text-primary truncate">{classItem.subject}</h3>
@@ -561,7 +561,7 @@ const TeacherDashboard: React.FC = () => {
                   <Loader2 className="w-8 h-8 animate-spin text-purple-600" />
                 </div>
               ) : upcomingEvents.length === 0 ? (
-                <div className="bg-surface rounded-2xl p-8 text-center shadow-sm border border-gray-100">
+                <div className="bg-surface rounded-2xl p-8 text-center shadow-sm border border-border">
                   <div className="w-16 h-16 bg-surface-secondary rounded-full flex items-center justify-center mx-auto mb-4">
                     <CalendarIcon className="w-8 h-8 text-text-muted" />
                   </div>
@@ -571,7 +571,7 @@ const TeacherDashboard: React.FC = () => {
               ) : (
                 <div className="space-y-4">
                   {upcomingEvents.map((event) => (
-                    <div key={event.id} className="bg-surface rounded-2xl p-5 shadow-sm border border-gray-100">
+                    <div key={event.id} className="bg-surface rounded-2xl p-5 shadow-sm border border-border">
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex-1 min-w-0">
                           <h3 className="text-lg font-bold text-text-primary truncate">{event.title}</h3>
@@ -613,7 +613,7 @@ const TeacherDashboard: React.FC = () => {
           <div className="flex-1 overflow-hidden">
             <div className="p-6 pb-24">
               {/* Profile Header */}
-              <div className="bg-surface rounded-2xl p-6 mb-6 text-center shadow-sm border border-gray-100">
+              <div className="bg-surface rounded-2xl p-6 mb-6 text-center shadow-sm border border-border">
                 <div className="w-20 h-20 mx-auto mb-4 bg-purple-500 rounded-full flex items-center justify-center">
                   <GraduationCap className="w-10 h-10 text-white" />
                 </div>
@@ -627,7 +627,7 @@ const TeacherDashboard: React.FC = () => {
 
               {/* Stats Grid */}
               <div className="grid grid-cols-3 gap-3 mb-6">
-                <div className="bg-surface rounded-2xl p-4 text-center shadow-sm border border-gray-100">
+                <div className="bg-surface rounded-2xl p-4 text-center shadow-sm border border-border">
                   <div className="w-10 h-10 bg-blue-500 rounded-xl flex items-center justify-center mx-auto mb-2">
                     <BookOpen className="w-5 h-5 text-white" />
                   </div>
@@ -635,7 +635,7 @@ const TeacherDashboard: React.FC = () => {
                   <p className="text-xs text-text-muted mt-1 font-medium">Classes</p>
                 </div>
 
-                <div className="bg-surface rounded-2xl p-4 text-center shadow-sm border border-gray-100">
+                <div className="bg-surface rounded-2xl p-4 text-center shadow-sm border border-border">
                   <div className="w-10 h-10 bg-green-500 rounded-xl flex items-center justify-center mx-auto mb-2">
                     <Users className="w-5 h-5 text-white" />
                   </div>
@@ -643,7 +643,7 @@ const TeacherDashboard: React.FC = () => {
                   <p className="text-xs text-text-muted mt-1 font-medium">Students</p>
                 </div>
 
-                <div className="bg-surface rounded-2xl p-4 text-center shadow-sm border border-gray-100">
+                <div className="bg-surface rounded-2xl p-4 text-center shadow-sm border border-border">
                   <div className="w-10 h-10 bg-purple-500 rounded-xl flex items-center justify-center mx-auto mb-2">
                     <GraduationCap className="w-5 h-5 text-white" />
                   </div>
@@ -660,7 +660,7 @@ const TeacherDashboard: React.FC = () => {
 
                 <button
                   onClick={() => setIsChangePasswordOpen(true)}
-                  className="w-full bg-surface rounded-2xl p-4 shadow-sm border border-gray-100 hover:border-purple-200 hover:bg-purple-50 transition-all flex items-center gap-4 group"
+                  className="w-full bg-surface rounded-2xl p-4 shadow-sm border border-border hover:border-purple-200 hover:bg-purple-50 transition-all flex items-center gap-4 group"
                 >
                   <div className="w-12 h-12 bg-purple-500 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
                     <Key className="w-5 h-5 text-white" />
@@ -673,7 +673,7 @@ const TeacherDashboard: React.FC = () => {
 
                 <button
                   onClick={handleLogout}
-                  className="w-full bg-surface rounded-2xl p-4 shadow-sm border border-gray-100 hover:border-red-200 hover:bg-red-50 transition-all flex items-center gap-4 group"
+                  className="w-full bg-surface rounded-2xl p-4 shadow-sm border border-border hover:border-red-200 hover:bg-red-50 transition-all flex items-center gap-4 group"
                 >
                   <div className="w-12 h-12 bg-red-500 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
                     <LogOut className="w-5 h-5 text-white" />
@@ -976,7 +976,7 @@ const TeacherDashboard: React.FC = () => {
             {/* Form */}
             <div className="p-6 space-y-4 max-h-[calc(90vh-120px)] overflow-y-auto">
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">
+                <label className="text-sm font-medium text-text-primary">
                   Current Password *
                 </label>
                 <Input
@@ -989,7 +989,7 @@ const TeacherDashboard: React.FC = () => {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">
+                <label className="text-sm font-medium text-text-primary">
                   New Password *
                 </label>
                 <Input
@@ -1002,7 +1002,7 @@ const TeacherDashboard: React.FC = () => {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">
+                <label className="text-sm font-medium text-text-primary">
                   Confirm New Password *
                 </label>
                 <Input
@@ -1044,7 +1044,7 @@ const TeacherDashboard: React.FC = () => {
   return isMobile ? (
     <div className="min-h-screen bg-background flex flex-col">
       {/* Mobile Header */}
-      <div className="bg-surface px-6 pt-6 pb-4 sticky top-0 z-20 border-b border-gray-100">
+      <div className="bg-surface px-6 pt-6 pb-4 sticky top-0 z-20 border-b border-border">
         <div className="flex items-center justify-between mb-3">
           <div>
             <p className="text-xs text-text-muted font-medium uppercase tracking-wide">Welcome back</p>
@@ -1060,7 +1060,7 @@ const TeacherDashboard: React.FC = () => {
         {/* View Indicator */}
         <div className="flex items-center gap-2 mt-4">
           <div className="w-1 h-6 bg-purple-600 rounded-full"></div>
-          <span className="text-sm font-semibold text-gray-700">
+          <span className="text-sm font-semibold text-text-primary">
             {currentView === 'overview' ? 'Dashboard Overview' : 
              currentView === 'classes' ? 'Today\'s Schedule' : 
              currentView === 'events' ? 'Upcoming Events' : 
@@ -1073,7 +1073,7 @@ const TeacherDashboard: React.FC = () => {
       {renderContent()}
 
       {/* Bottom Navigation - Beautiful Design */}
-      <div className="fixed bottom-0 left-0 right-0 bg-surface border-t border-gray-100">
+      <div className="fixed bottom-0 left-0 right-0 bg-surface border-t border-border">
         <div className="flex safe-area-inset-bottom px-2 py-2">
           <button
             onClick={() => setCurrentView('overview')}
@@ -1151,7 +1151,7 @@ const TeacherDashboard: React.FC = () => {
             {/* Form */}
             <div className="p-6 space-y-4 max-h-[calc(90vh-120px)] overflow-y-auto">
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">
+                <label className="text-sm font-medium text-text-primary">
                   Current Password *
                 </label>
                 <Input
@@ -1164,7 +1164,7 @@ const TeacherDashboard: React.FC = () => {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">
+                <label className="text-sm font-medium text-text-primary">
                   New Password *
                 </label>
                 <Input
@@ -1177,7 +1177,7 @@ const TeacherDashboard: React.FC = () => {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">
+                <label className="text-sm font-medium text-text-primary">
                   Confirm New Password *
                 </label>
                 <Input

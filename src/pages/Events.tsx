@@ -438,17 +438,17 @@ export const Events: React.FC = () => {
 
       {/* Search */}
       <div className="mb-6">
-        <div className="bg-surface rounded-lg border border-gray-200 p-4">
+        <div className="bg-surface rounded-lg border border-border p-4">
           <div className="flex items-center space-x-4">
             {/* Search */}
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-text-muted" />
               <input
                 type="text"
                 placeholder="Search events by name..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full pl-10 pr-4 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
             </div>
 
@@ -457,7 +457,7 @@ export const Events: React.FC = () => {
               <select
                 value={typeFilter}
                 onChange={(e) => setTypeFilter(e.target.value)}
-                className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 min-w-48"
+                className="px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 min-w-48"
               >
                 <option value="">All Types</option>
                 <option value="Normal">Normal Events</option>
@@ -550,7 +550,7 @@ export const Events: React.FC = () => {
                       isActive
                         ? 'bg-green-100 text-green-800'
                         : isExpired
-                        ? 'bg-gray-100 text-gray-800'
+                        ? 'bg-surface-secondary text-text-primary'
                         : 'bg-blue-100 text-blue-800'
                     }`}>
                       {isActive ? 'Active' : isExpired ? 'Expired' : 'Upcoming'}

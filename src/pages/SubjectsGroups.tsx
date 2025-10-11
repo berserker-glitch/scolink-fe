@@ -398,7 +398,7 @@ export const SubjectsGroups: React.FC = () => {
 
             {/* Search & Filters */}
             <div className="mb-6">
-              <div className="bg-surface rounded-lg border border-gray-200 p-4">
+              <div className="bg-surface rounded-lg border border-border p-4">
                 <div className="flex items-center space-x-4">
                   {/* Search */}
                   <div className="flex-1 relative">
@@ -408,7 +408,7 @@ export const SubjectsGroups: React.FC = () => {
                       placeholder="Search subjects by name, year, or field..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      className="w-full pl-10 pr-4 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
                     />
                   </div>
                   
@@ -423,7 +423,7 @@ export const SubjectsGroups: React.FC = () => {
                         { value: 'with-groups', label: 'With Groups' },
                         { value: 'without-groups', label: 'Without Groups' }
                       ]}
-                      className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 min-w-40"
+                      className="px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 min-w-40"
                     />
                   </div>
                 </div>

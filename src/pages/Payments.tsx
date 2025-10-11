@@ -82,7 +82,7 @@ export const Payments: React.FC = () => {
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8">
           <div>
             <h1 className="text-2xl font-bold text-text-primary mb-2">Payments Database</h1>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-text-secondary">
               {pagination?.total || 0} results • Welcome to Scolink Dashboard
             </p>
           </div>
@@ -103,17 +103,17 @@ export const Payments: React.FC = () => {
 
         {/* Search and Filters */}
         <div className="mb-6">
-          <div className="bg-surface rounded-lg border border-gray-200 p-4">
+          <div className="bg-surface rounded-lg border border-border p-4">
             <div className="flex items-center space-x-4">
               {/* Search */}
               <div className="flex-1 relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-text-muted" />
                 <input
                   type="text"
                   placeholder="Search by student name..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full pl-10 pr-4 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
                 />
               </div>
 
@@ -121,7 +121,7 @@ export const Payments: React.FC = () => {
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
               >
                 <option value="">All Status</option>
                 <option value="paid">Paid</option>
@@ -133,30 +133,30 @@ export const Payments: React.FC = () => {
                 type="month"
                 value={monthFilter}
                 onChange={(e) => setMonthFilter(e.target.value)}
-                className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
             </div>
           </div>
         </div>
 
         {/* Payments Table */}
-        <div className="bg-surface rounded-lg border border-gray-200 overflow-hidden">
+        <div className="bg-surface rounded-lg border border-border overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="bg-background">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Month</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subjects</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Payment Date</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Student</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Month</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Subjects</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Amount</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Status</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Payment Date</th>
                 </tr>
               </thead>
               <tbody className="bg-surface divide-y divide-gray-200">
                 {isLoading ? (
                   <tr>
-                    <td colSpan={6} className="px-4 py-8 text-center text-gray-500">
+                    <td colSpan={6} className="px-4 py-8 text-center text-text-muted">
                       Loading payments...
                     </td>
                   </tr>
@@ -168,7 +168,7 @@ export const Payments: React.FC = () => {
                   </tr>
                 ) : payments.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="px-4 py-8 text-center text-gray-500">
+                    <td colSpan={6} className="px-4 py-8 text-center text-text-muted">
                       No payments found.
                     </td>
                   </tr>
@@ -177,8 +177,8 @@ export const Payments: React.FC = () => {
                     <tr key={payment.id} className="hover:bg-background transition-colors">
                       <td className="px-4 py-4 whitespace-nowrap">
                         <div className="flex items-center">
-                          <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center mr-3">
-                            <span className="text-sm font-medium text-gray-600">
+                          <div className="w-8 h-8 bg-surface-secondary rounded-full flex items-center justify-center mr-3">
+                            <span className="text-sm font-medium text-text-secondary">
                               {payment.student?.firstName?.charAt(0) || 'S'}{payment.student?.lastName?.charAt(0) || 'T'}
                             </span>
                           </div>
@@ -238,8 +238,8 @@ export const Payments: React.FC = () => {
 
           {/* Pagination */}
           {pagination && pagination.totalPages > 1 && (
-            <div className="px-4 py-3 bg-background border-t border-gray-200 flex items-center justify-between">
-              <div className="text-sm text-gray-700">
+            <div className="px-4 py-3 bg-background border-t border-border flex items-center justify-between">
+              <div className="text-sm text-text-primary">
                 Showing {((currentPage - 1) * paymentsPerPage) + 1} to {Math.min(currentPage * paymentsPerPage, pagination.total)} of {pagination.total} results
               </div>
               <div className="flex items-center space-x-2">

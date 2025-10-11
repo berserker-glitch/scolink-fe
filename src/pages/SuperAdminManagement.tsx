@@ -33,7 +33,7 @@ export const SuperAdminManagement: React.FC = () => {
   const getPlanBadgeColor = (plan: string) => {
     switch (plan) {
       case 'basic':
-        return 'bg-gray-100 text-gray-800 border-gray-200';
+        return 'bg-surface-secondary text-text-primary border-border';
       case 'pro':
         return 'bg-blue-100 text-blue-800 border-blue-200';
       case 'premium':
@@ -41,7 +41,7 @@ export const SuperAdminManagement: React.FC = () => {
       case 'lifetime':
         return 'bg-green-100 text-green-800 border-green-200';
       default:
-        return 'bg-gray-100 text-gray-800 border-gray-200';
+        return 'bg-surface-secondary text-text-primary border-border';
     }
   };
 
@@ -212,9 +212,9 @@ export const SuperAdminManagement: React.FC = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       {/* Header Section */}
-      <div className="bg-surface border-b border-gray-200">
+      <div className="bg-surface border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
             <div className="text-center lg:text-left mb-6 lg:mb-0">
@@ -237,11 +237,11 @@ export const SuperAdminManagement: React.FC = () => {
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Search and Filter Bar */}
-        <div className="bg-surface rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+        <div className="bg-surface rounded-lg shadow-sm border border-border p-6 mb-6">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0 lg:space-x-4">
             {/* Search */}
             <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-text-muted h-4 w-4" />
               <Input
                 placeholder="Search centers and users..."
                 value={searchTerm}
@@ -267,9 +267,9 @@ export const SuperAdminManagement: React.FC = () => {
                 {[...Array(6)].map((_, i) => (
                   <Card key={i} className="animate-pulse">
                     <CardContent className="p-6">
-                      <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-                      <div className="h-3 bg-gray-200 rounded w-1/2 mb-4"></div>
-                      <div className="h-3 bg-gray-200 rounded w-full"></div>
+                      <div className="h-4 bg-surface-secondary rounded w-3/4 mb-2"></div>
+                      <div className="h-3 bg-surface-secondary rounded w-1/2 mb-4"></div>
+                      <div className="h-3 bg-surface-secondary rounded w-full"></div>
                     </CardContent>
                   </Card>
                 ))}
@@ -353,7 +353,7 @@ export const SuperAdminManagement: React.FC = () => {
 
                       {/* Plan Information */}
                       {center.plan && (
-                        <div className="mb-4 p-3 bg-gray-50 rounded-lg">
+                        <div className="mb-4 p-3 bg-background rounded-lg">
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
                               <div className={`p-1.5 rounded-full ${getPlanBadgeColor(center.plan)}`}>
@@ -378,7 +378,7 @@ export const SuperAdminManagement: React.FC = () => {
                             )}
                           </div>
                           {center.planUpgradedAt && (
-                            <p className="text-xs text-gray-500 mt-1">
+                            <p className="text-xs text-text-muted mt-1">
                               Upgraded: {new Date(center.planUpgradedAt).toLocaleDateString()}
                             </p>
                           )}
@@ -402,9 +402,9 @@ export const SuperAdminManagement: React.FC = () => {
               </div>
             ) : (
               <div className="text-center py-16">
-                <Building2 className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                <Building2 className="w-16 h-16 text-text-muted mx-auto mb-4" />
                 <h3 className="text-xl font-medium text-text-primary mb-2">No Centers Found</h3>
-                <p className="text-gray-500 mb-6">
+                <p className="text-text-muted mb-6">
                   {searchTerm ? 'No centers match your search criteria' : 'Create your first center to get started'}
                 </p>
                 <ModernButton 
@@ -434,10 +434,10 @@ export const SuperAdminManagement: React.FC = () => {
                 <div className="space-y-3">
                   {[...Array(5)].map((_, i) => (
                     <div key={i} className="animate-pulse flex items-center space-x-4 p-3">
-                      <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
+                      <div className="w-10 h-10 bg-surface-secondary rounded-full"></div>
                       <div className="flex-1">
-                        <div className="h-4 bg-gray-200 rounded w-1/4 mb-2"></div>
-                        <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+                        <div className="h-4 bg-surface-secondary rounded w-1/4 mb-2"></div>
+                        <div className="h-3 bg-surface-secondary rounded w-1/2"></div>
                       </div>
                     </div>
                   ))}
@@ -445,28 +445,28 @@ export const SuperAdminManagement: React.FC = () => {
               ) : filteredUsers.length > 0 ? (
                 <div className="overflow-x-auto">
                   <table className="w-full">
-                    <thead className="bg-gray-50">
+                    <thead className="bg-background">
                       <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
                           User
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
                           Role
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
                           Center
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
                           Status
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
                           Actions
                         </th>
                       </tr>
                     </thead>
                     <tbody className="bg-surface divide-y divide-gray-200">
                       {filteredUsers.map((user) => (
-                        <tr key={user.id} className="hover:bg-gray-50">
+                        <tr key={user.id} className="hover:bg-background">
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div className="flex items-center">
                               <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
@@ -476,7 +476,7 @@ export const SuperAdminManagement: React.FC = () => {
                               </div>
                               <div className="ml-4">
                                 <div className="text-sm font-medium text-text-primary">{user.fullName}</div>
-                                <div className="text-sm text-gray-500">{user.email}</div>
+                                <div className="text-sm text-text-muted">{user.email}</div>
                               </div>
                             </div>
                           </td>
@@ -485,7 +485,7 @@ export const SuperAdminManagement: React.FC = () => {
                               {user.role?.replace('_', ' ')}
                             </Badge>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-text-muted">
                             {user.centerId ? 
                               centers.find(c => c.id === user.centerId)?.name || 'Unknown' : 
                               'N/A'
@@ -496,7 +496,7 @@ export const SuperAdminManagement: React.FC = () => {
                               {user.isActive ? 'Active' : 'Inactive'}
                             </Badge>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-text-muted">
                             <DropdownMenu>
                               <DropdownMenuTrigger asChild>
                                 <ModernButton variant="ghost" size="sm">
@@ -548,9 +548,9 @@ export const SuperAdminManagement: React.FC = () => {
                 </div>
               ) : (
                 <div className="text-center py-16">
-                  <Users className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                  <Users className="w-16 h-16 text-text-muted mx-auto mb-4" />
                   <h3 className="text-xl font-medium text-text-primary mb-2">No Users Found</h3>
-                  <p className="text-gray-500">
+                  <p className="text-text-muted">
                     {searchTerm ? 'No users match your search criteria' : 'No users in the system yet'}
                   </p>
                 </div>
@@ -584,33 +584,33 @@ export const SuperAdminManagement: React.FC = () => {
                 // Center details
                 <div className="space-y-3">
                   <div>
-                    <label className="text-sm font-medium text-gray-500">Name</label>
+                    <label className="text-sm font-medium text-text-muted">Name</label>
                     <p className="text-lg text-text-primary">{selectedItem.name}</p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-500">Location</label>
+                    <label className="text-sm font-medium text-text-muted">Location</label>
                     <p className="text-text-primary">{selectedItem.location}</p>
                   </div>
                   {selectedItem.phoneNumber && (
                     <div>
-                      <label className="text-sm font-medium text-gray-500">Phone</label>
+                      <label className="text-sm font-medium text-text-muted">Phone</label>
                       <p className="text-text-primary">{selectedItem.phoneNumber}</p>
                     </div>
                   )}
                   {selectedItem.email && (
                     <div>
-                      <label className="text-sm font-medium text-gray-500">Email</label>
+                      <label className="text-sm font-medium text-text-muted">Email</label>
                       <p className="text-text-primary">{selectedItem.email}</p>
                     </div>
                   )}
                   <div>
-                    <label className="text-sm font-medium text-gray-500">Status</label>
+                    <label className="text-sm font-medium text-text-muted">Status</label>
                     <Badge variant={selectedItem.isActive ? "default" : "secondary"}>
                       {selectedItem.isActive ? 'Active' : 'Suspended'}
                     </Badge>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-500">Created</label>
+                    <label className="text-sm font-medium text-text-muted">Created</label>
                     <p className="text-text-primary">{new Date(selectedItem.createdAt).toLocaleString()}</p>
                   </div>
                 </div>
@@ -618,33 +618,33 @@ export const SuperAdminManagement: React.FC = () => {
                 // User details
                 <div className="space-y-3">
                   <div>
-                    <label className="text-sm font-medium text-gray-500">Full Name</label>
+                    <label className="text-sm font-medium text-text-muted">Full Name</label>
                     <p className="text-lg text-text-primary">{selectedItem.fullName}</p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-500">Email</label>
+                    <label className="text-sm font-medium text-text-muted">Email</label>
                     <p className="text-text-primary">{selectedItem.email}</p>
                   </div>
                   {selectedItem.phoneNumber && (
                     <div>
-                      <label className="text-sm font-medium text-gray-500">Phone</label>
+                      <label className="text-sm font-medium text-text-muted">Phone</label>
                       <p className="text-text-primary">{selectedItem.phoneNumber}</p>
                     </div>
                   )}
                   <div>
-                    <label className="text-sm font-medium text-gray-500">Role</label>
+                    <label className="text-sm font-medium text-text-muted">Role</label>
                     <Badge variant={selectedItem.role === 'super_admin' ? "destructive" : "default"}>
                       {selectedItem.role.replace('_', ' ').toUpperCase()}
                     </Badge>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-500">Status</label>
+                    <label className="text-sm font-medium text-text-muted">Status</label>
                     <Badge variant={selectedItem.isActive ? "default" : "secondary"}>
                       {selectedItem.isActive ? 'Active' : 'Suspended'}
                     </Badge>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-500">Created</label>
+                    <label className="text-sm font-medium text-text-muted">Created</label>
                     <p className="text-text-primary">{new Date(selectedItem.createdAt).toLocaleString()}</p>
                   </div>
                 </div>

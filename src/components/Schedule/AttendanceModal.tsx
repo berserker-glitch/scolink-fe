@@ -427,7 +427,7 @@ export const AttendanceModal: React.FC<AttendanceModalProps> = ({
       case 'present': return <Check className="w-4 h-4 text-purple-600" />;
       case 'absent': return <XCircle className="w-4 h-4 text-red-600" />;
       case 'late': return <Clock className="w-4 h-4 text-yellow-600" />;
-      default: return <div className="w-4 h-4 border border-gray-300 rounded"></div>;
+      default: return <div className="w-4 h-4 border border-border rounded"></div>;
     }
   };
 
@@ -457,16 +457,16 @@ export const AttendanceModal: React.FC<AttendanceModalProps> = ({
         </div>
 
         {/* Mobile Controls */}
-        <div className="sm:hidden flex items-center gap-2 p-3 border-b bg-gray-50">
+        <div className="sm:hidden flex items-center gap-2 p-3 border-b bg-background">
           <div className="flex items-center gap-2 flex-1">
-            <Calendar className="w-4 h-4 text-gray-500 flex-shrink-0" />
+            <Calendar className="w-4 h-4 text-text-muted flex-shrink-0" />
             <select
               value={`${selectedMonth.getFullYear()}-${selectedMonth.getMonth() + 1}`}
               onChange={(e) => {
                 const [year, month] = e.target.value.split('-');
                 setSelectedMonth(new Date(parseInt(year), parseInt(month) - 1, 1));
               }}
-              className="border border-gray-300 rounded-lg px-2 py-1.5 text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 flex-1"
+              className="border border-border rounded-lg px-2 py-1.5 text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 flex-1"
             >
               {Array.from({ length: 6 }, (_, i) => {
                 const date = new Date();
@@ -495,20 +495,20 @@ export const AttendanceModal: React.FC<AttendanceModalProps> = ({
             <Users className="w-6 h-6 text-purple-600" />
             <div>
               <h2 className="text-xl font-bold text-text-primary">Take Attendance</h2>
-              <p className="text-sm text-gray-600">{groupName} - {subject}</p>
+              <p className="text-sm text-text-secondary">{groupName} - {subject}</p>
             </div>
           </div>
           
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
-              <Calendar className="w-4 h-4 text-gray-500" />
+              <Calendar className="w-4 h-4 text-text-muted" />
               <select
                 value={`${selectedMonth.getFullYear()}-${selectedMonth.getMonth() + 1}`}
                 onChange={(e) => {
                   const [year, month] = e.target.value.split('-');
                   setSelectedMonth(new Date(parseInt(year), parseInt(month) - 1, 1));
                 }}
-                className="border border-gray-300 rounded-lg px-3 py-1 text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                className="border border-border rounded-lg px-3 py-1 text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
               >
                 {Array.from({ length: 6 }, (_, i) => {
                   const date = new Date();
@@ -532,7 +532,7 @@ export const AttendanceModal: React.FC<AttendanceModalProps> = ({
             
             <button
               onClick={onClose}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              className="p-2 hover:bg-surface-hover rounded-lg transition-colors"
             >
               <X className="w-6 h-6" />
             </button>
@@ -551,23 +551,23 @@ export const AttendanceModal: React.FC<AttendanceModalProps> = ({
               <div className="text-center mb-6 print-only">
                 <h1 className="text-2xl font-bold mb-2">Monthly Attendance Sheet</h1>
                 <div className="text-lg font-medium mb-1">{groupName} - {subject}</div>
-                <div className="text-gray-600">Teacher: {teacher} | Month: {monthName}</div>
+                <div className="text-text-secondary">Teacher: {teacher} | Month: {monthName}</div>
               </div>
 
               {/* Attendance Table */}
               <div className="overflow-x-auto overflow-y-visible">
-                <table className="w-full border-collapse border border-gray-300 text-sm min-w-max">
+                <table className="w-full border-collapse border border-border text-sm min-w-max">
                   <thead>
-                    <tr className="bg-gray-50">
-                      <th className="border border-gray-300 p-3 text-left font-medium w-16">
+                    <tr className="bg-background">
+                      <th className="border border-border p-3 text-left font-medium w-16">
                         NO.
                       </th>
-                      <th className="border border-gray-300 p-3 text-left font-medium min-w-[250px] w-64">
+                      <th className="border border-border p-3 text-left font-medium min-w-[250px] w-64">
                         STUDENT NAME
                       </th>
                       {classDatesList.map(date => (
-                        <th key={date.toISOString()} className="border border-gray-300 p-2 text-center font-medium w-20 min-w-[60px]">
-                          <div className="text-xs text-gray-600">
+                        <th key={date.toISOString()} className="border border-border p-2 text-center font-medium w-20 min-w-[60px]">
+                          <div className="text-xs text-text-secondary">
                             {date.toLocaleDateString('en-US', { weekday: 'short' })}
                           </div>
                           <div className="font-bold">
@@ -580,10 +580,10 @@ export const AttendanceModal: React.FC<AttendanceModalProps> = ({
                   <tbody>
                     {students.map((student, index) => (
                       <tr key={student.id} className={index % 2 === 1 ? 'bg-gray-25' : ''}>
-                        <td className="border border-gray-300 p-3 text-center font-medium align-middle">
+                        <td className="border border-border p-3 text-center font-medium align-middle">
                           {index + 1}
                         </td>
-                        <td className="border border-gray-300 p-3 font-medium align-middle">
+                        <td className="border border-border p-3 font-medium align-middle">
                           <div className="truncate">{student.firstName} {student.lastName}</div>
                         </td>
                         {classDatesList.map(date => {
@@ -592,7 +592,7 @@ export const AttendanceModal: React.FC<AttendanceModalProps> = ({
                           const editable = isDateEditable(date);
                           
                           return (
-                            <td key={dateStr} className="border border-gray-300 p-2 text-center align-middle">
+                            <td key={dateStr} className="border border-border p-2 text-center align-middle">
                               {editable ? (
                                 <div className="flex items-center justify-center">
                                   <select
@@ -602,7 +602,7 @@ export const AttendanceModal: React.FC<AttendanceModalProps> = ({
                                       dateStr, 
                                       e.target.value as 'present' | 'absent' | 'late'
                                     )}
-                                    className="border border-gray-200 rounded px-2 py-1 text-sm min-w-[50px] focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-surface"
+                                    className="border border-border rounded px-2 py-1 text-sm min-w-[50px] focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-surface"
                                   >
                                     <option value="">-</option>
                                     <option value="present">P</option>
@@ -621,7 +621,7 @@ export const AttendanceModal: React.FC<AttendanceModalProps> = ({
                                       {status === 'present' ? 'P' : status === 'absent' ? 'A' : 'L'}
                                     </span>
                                   ) : (
-                                    <span className="text-gray-400">-</span>
+                                    <span className="text-text-muted">-</span>
                                   )}
                                 </div>
                               )}
@@ -658,7 +658,7 @@ export const AttendanceModal: React.FC<AttendanceModalProps> = ({
           <div className="flex items-center gap-2">
             <button
               onClick={onClose}
-              className="flex-1 px-4 py-3 text-gray-700 bg-surface border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors font-medium"
+              className="flex-1 px-4 py-3 text-text-primary bg-surface border border-border rounded-xl hover:bg-background transition-colors font-medium"
             >
               Cancel
             </button>
@@ -680,14 +680,14 @@ export const AttendanceModal: React.FC<AttendanceModalProps> = ({
               )}
             </button>
           </div>
-          <p className="text-xs text-gray-500 text-center">
+          <p className="text-xs text-text-muted text-center">
             📝 You can edit attendance for current and next week only
           </p>
         </div>
 
         {/* Footer - Desktop */}
-        <div className="hidden sm:flex items-center justify-between p-6 border-t bg-gray-50 flex-shrink-0">
-          <div className="text-sm text-gray-600 max-w-2xl">
+        <div className="hidden sm:flex items-center justify-between p-6 border-t bg-background flex-shrink-0">
+          <div className="text-sm text-text-secondary max-w-2xl">
             <span className="font-medium">📝 Note:</span> You can only edit attendance for the current week and next week.
             Past records are shown as read-only. Use the month selector to view different months.
           </div>
@@ -695,7 +695,7 @@ export const AttendanceModal: React.FC<AttendanceModalProps> = ({
           <div className="flex items-center gap-3">
             <button
               onClick={onClose}
-              className="px-4 py-2 text-gray-700 bg-surface border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+              className="px-4 py-2 text-text-primary bg-surface border border-border rounded-lg hover:bg-background transition-colors"
             >
               Cancel
             </button>

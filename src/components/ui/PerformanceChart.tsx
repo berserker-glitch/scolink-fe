@@ -23,13 +23,13 @@ export const PerformanceChart: React.FC<PerformanceChartProps> = ({
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2">
                 <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
-                <span className="text-sm text-gray-600">Students</span>
+                <span className="text-sm text-text-secondary">Students</span>
               </div>
               <div className="flex items-center space-x-2">
                 <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                <span className="text-sm text-gray-600">Teachers</span>
+                <span className="text-sm text-text-secondary">Teachers</span>
               </div>
-              <select className="text-sm border border-gray-200 rounded-lg px-3 py-1">
+              <select className="text-sm border border-border rounded-lg px-3 py-1">
                 <option>This Month</option>
                 <option>Last Month</option>
                 <option>This Year</option>
@@ -57,13 +57,13 @@ export const PerformanceChart: React.FC<PerformanceChartProps> = ({
         <div className="flex items-center justify-between mt-4">
           <div className="text-center">
             <div className="text-2xl font-bold text-purple-600">{studentsValue}</div>
-            <div className="text-sm text-gray-500">Students</div>
+            <div className="text-sm text-text-muted">Students</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-green-600">{teachersValue}</div>
-            <div className="text-sm text-gray-500">Teachers</div>
+            <div className="text-sm text-text-muted">Teachers</div>
           </div>
-          <div className="text-sm text-gray-500">
+          <div className="text-sm text-text-muted">
             {currentPeriod}
           </div>
         </div>

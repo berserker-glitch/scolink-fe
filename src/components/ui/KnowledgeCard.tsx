@@ -26,7 +26,7 @@ export const KnowledgeCard: React.FC<KnowledgeCardProps> = ({
       <ModernButton 
         variant="solid"
         onClick={onButtonClick}
-        className="bg-white text-purple-600 hover:bg-gray-100 focus:ring-white"
+        className="bg-surface text-purple-600 hover:bg-surface-hover focus:ring-purple-500"
       >
         {buttonText}
       </ModernButton>

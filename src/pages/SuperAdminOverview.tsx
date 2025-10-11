@@ -97,7 +97,7 @@ export const SuperAdminOverview: React.FC = () => {
           <div>
             <p className="text-sm font-medium text-text-secondary mb-1">{title}</p>
             <p className="text-3xl font-bold text-text-primary mb-1">{value}</p>
-            <p className="text-sm text-gray-500">{description}</p>
+            <p className="text-sm text-text-muted">{description}</p>
           </div>
           <div className={`p-3 rounded-full ${color}`}>
             <Icon className="w-6 h-6 text-white" />
@@ -110,7 +110,7 @@ export const SuperAdminOverview: React.FC = () => {
   const getPlanBadgeColor = (plan: string) => {
     switch (plan) {
       case 'basic':
-        return 'bg-gray-100 text-gray-800 border-gray-200';
+        return 'bg-surface-secondary text-text-primary border-border';
       case 'pro':
         return 'bg-blue-100 text-blue-800 border-blue-200';
       case 'premium':
@@ -118,7 +118,7 @@ export const SuperAdminOverview: React.FC = () => {
       case 'lifetime':
         return 'bg-green-100 text-green-800 border-green-200';
       default:
-        return 'bg-gray-100 text-gray-800 border-gray-200';
+        return 'bg-surface-secondary text-text-primary border-border';
     }
   };
 
@@ -140,7 +140,7 @@ export const SuperAdminOverview: React.FC = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <div className="bg-surface border-b border-gray-200">
+      <div className="bg-surface border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center">
             <h1 className="text-4xl font-bold text-text-primary mb-4">
@@ -250,8 +250,8 @@ export const SuperAdminOverview: React.FC = () => {
                 <div className="space-y-3">
                   {[...Array(3)].map((_, i) => (
                     <div key={i} className="animate-pulse">
-                      <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-                      <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+                      <div className="h-4 bg-surface-secondary rounded w-3/4 mb-2"></div>
+                      <div className="h-3 bg-surface-secondary rounded w-1/2"></div>
                     </div>
                   ))}
                 </div>
@@ -264,7 +264,7 @@ export const SuperAdminOverview: React.FC = () => {
                       </div>
                       <div className="flex-1 min-w-0">
                         <h4 className="font-medium text-text-primary truncate">{center.name}</h4>
-                        <p className="text-sm text-gray-500 truncate">{center.location}</p>
+                        <p className="text-sm text-text-muted truncate">{center.location}</p>
                         <div className="flex items-center gap-2 mt-1">
                           <Badge variant="outline" className="text-xs">
                             {center.adminCount || 0} admins
@@ -275,7 +275,7 @@ export const SuperAdminOverview: React.FC = () => {
                             </span>
                           )}
                           {center.plan !== 'basic' && center.plan !== 'lifetime' && (
-                            <span className="text-xs text-gray-500">
+                            <span className="text-xs text-text-muted">
                               {isPlanExpired(center.plan, center.planExpiresAt) ? (
                                 <span className="text-red-600 font-medium">Expired</span>
                               ) : center.planExpiresAt ? (
@@ -292,9 +292,9 @@ export const SuperAdminOverview: React.FC = () => {
                 </div>
               ) : (
                 <div className="text-center py-8">
-                  <Building2 className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+                  <Building2 className="w-12 h-12 text-text-muted mx-auto mb-4" />
                   <h3 className="text-lg font-medium text-text-primary mb-2">No Centers Yet</h3>
-                  <p className="text-gray-500 mb-4">Create your first center to get started</p>
+                  <p className="text-text-muted mb-4">Create your first center to get started</p>
                   <ModernButton 
                     onClick={() => navigate('/super-admin/management')}
                     variant="solid"
@@ -325,7 +325,7 @@ export const SuperAdminOverview: React.FC = () => {
                     </div>
                     <div>
                       <div className="font-medium">Manage Centers</div>
-                      <div className="text-sm text-gray-500">View and edit all centers</div>
+                      <div className="text-sm text-text-muted">View and edit all centers</div>
                     </div>
                   </div>
                 </ModernButton>
@@ -341,7 +341,7 @@ export const SuperAdminOverview: React.FC = () => {
                     </div>
                     <div>
                       <div className="font-medium">Manage Users</div>
-                      <div className="text-sm text-gray-500">View and manage all users</div>
+                      <div className="text-sm text-text-muted">View and manage all users</div>
                     </div>
                   </div>
                 </ModernButton>
@@ -357,7 +357,7 @@ export const SuperAdminOverview: React.FC = () => {
                     </div>
                     <div>
                       <div className="font-medium">Create Center & Admin</div>
-                      <div className="text-sm text-gray-500">Set up new center with admin</div>
+                      <div className="text-sm text-text-muted">Set up new center with admin</div>
                     </div>
                   </div>
                 </ModernButton>
@@ -372,7 +372,7 @@ export const SuperAdminOverview: React.FC = () => {
                     </div>
                     <div>
                       <div className="font-medium">System Reports</div>
-                      <div className="text-sm text-gray-500">View activity and analytics</div>
+                      <div className="text-sm text-text-muted">View activity and analytics</div>
                     </div>
                   </div>
                 </ModernButton>
@@ -395,19 +395,19 @@ export const SuperAdminOverview: React.FC = () => {
                 <div className="space-y-3">
                   {[...Array(3)].map((_, i) => (
                     <div key={i} className="animate-pulse flex space-x-3">
-                      <div className="w-8 h-8 bg-gray-200 rounded-full"></div>
+                      <div className="w-8 h-8 bg-surface-secondary rounded-full"></div>
                       <div className="flex-1">
-                        <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-                        <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+                        <div className="h-4 bg-surface-secondary rounded w-3/4 mb-2"></div>
+                        <div className="h-3 bg-surface-secondary rounded w-1/2"></div>
                       </div>
                     </div>
                   ))}
                 </div>
               ) : (
                 <div className="text-center py-8">
-                  <Activity className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+                  <Activity className="w-12 h-12 text-text-muted mx-auto mb-4" />
                   <h3 className="text-lg font-medium text-text-primary mb-2">No Recent Activity</h3>
-                  <p className="text-gray-500">System activity will appear here once centers are created</p>
+                  <p className="text-text-muted">System activity will appear here once centers are created</p>
                 </div>
               )}
             </div>

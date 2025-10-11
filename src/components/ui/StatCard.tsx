@@ -24,15 +24,15 @@ export const StatCard: React.FC<StatCardProps> = ({
   const changeColorClass = {
     positive: 'text-green-600',
     negative: 'text-red-600',
-    neutral: 'text-gray-600'
+    neutral: 'text-text-secondary'
   }[changeType];
 
   return (
     <ModernCard padding="md" hover={true}>
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-sm text-gray-500 mb-1">{title}</p>
-          <p className="text-3xl font-bold text-gray-900 mb-1">
+          <p className="text-sm text-text-muted mb-1">{title}</p>
+          <p className="text-3xl font-bold text-text-primary mb-1">
             {typeof value === 'number' ? value.toLocaleString() : value}
           </p>
           <p className={`text-sm font-medium ${changeColorClass}`}>{change}</p>

@@ -399,10 +399,10 @@ export const DayView: React.FC<DayViewProps> = ({
       {/* Header */}
       <div className="flex items-center justify-center p-4 flex-shrink-0">
         <div className="text-center">
-          <h2 className="text-xl font-semibold text-gray-900">
+          <h2 className="text-xl font-semibold text-text-primary">
             {formatDate(selectedDate)}
           </h2>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-text-muted">
             {dayGroups.length} classes • {events.length} events
           </p>
         </div>
@@ -423,14 +423,14 @@ export const DayView: React.FC<DayViewProps> = ({
       >
         {/* Time labels - Absolutely positioned and always visible */}
         <div
-          className="absolute left-0 top-0 w-20 bg-surface z-30 border-r border-gray-200"
+          className="absolute left-0 top-0 w-20 bg-surface z-30 border-r border-border"
           style={{
             height: `${Math.max(600, timeSlots.length * 80)}px` // Match the content area height
           }}
         >
           {timeSlots.map((slot, index) => (
             <div key={slot.value} className="h-20 flex items-start justify-end pr-4 pt-2">
-              <span className="text-sm font-medium text-gray-500">
+              <span className="text-sm font-medium text-text-muted">
                 {slot.display}
                 </span>
             </div>
@@ -446,7 +446,7 @@ export const DayView: React.FC<DayViewProps> = ({
           }}
         >
           <div
-            className="relative border-l border-gray-200"
+            className="relative border-l border-border"
             style={{
               minWidth: `${scheduleWidth}px`,
               height: '100%'
@@ -454,9 +454,9 @@ export const DayView: React.FC<DayViewProps> = ({
           >
             {/* Hour grid lines */}
             {timeSlots.map((slot, index) => (
-              <div key={index} className="h-20 border-b border-gray-100 relative">
+              <div key={index} className="h-20 border-b border-border relative">
                 {/* 30-minute mark */}
-                <div className="absolute top-10 left-0 right-0 h-px bg-gray-50"></div>
+                <div className="absolute top-10 left-0 right-0 h-px bg-background"></div>
               </div>
             ))}
           </div>
@@ -556,7 +556,7 @@ export const DayView: React.FC<DayViewProps> = ({
                           </div>
                           
                           {/* Compact details */}
-                          <div className="space-y-1 text-xs text-gray-600">
+                          <div className="space-y-1 text-xs text-text-secondary">
                             <div className="flex items-center gap-1">
                               <User className="w-3 h-3 flex-shrink-0" />
                               <span className="truncate text-xs">{getTeacherName(group.teacherId)}</span>
@@ -598,10 +598,10 @@ export const DayView: React.FC<DayViewProps> = ({
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="text-center py-8">
                       <div className="text-4xl mb-4">📅</div>
-                      <div className="text-lg font-medium text-gray-900 mb-2">
+                      <div className="text-lg font-medium text-text-primary mb-2">
                         Free day ahead!
                       </div>
-                      <div className="text-gray-500">
+                      <div className="text-text-muted">
                         No classes or events scheduled for {dayName.toLowerCase()}.
                       </div>
                     </div>

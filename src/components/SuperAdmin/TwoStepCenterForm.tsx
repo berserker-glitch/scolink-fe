@@ -189,28 +189,28 @@ export const TwoStepCenterForm: React.FC<TwoStepCenterFormProps> = ({
         {/* Step 1 */}
         <div className="flex items-center">
           <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-            currentStep >= 1 ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-500'
+            currentStep >= 1 ? 'bg-blue-600 text-white' : 'bg-surface-secondary text-text-muted'
           }`}>
             {currentStep > 1 ? <Check className="w-4 h-4" /> : '1'}
           </div>
           <span className={`ml-2 text-sm ${
-            currentStep >= 1 ? 'text-blue-600 font-medium' : 'text-gray-500'
+            currentStep >= 1 ? 'text-blue-600 font-medium' : 'text-text-muted'
           }`}>
             Create Center
           </span>
         </div>
         
-        <ArrowRight className="w-4 h-4 text-gray-400" />
+        <ArrowRight className="w-4 h-4 text-text-muted" />
         
         {/* Step 2 */}
         <div className="flex items-center">
           <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-            currentStep >= 2 ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-500'
+            currentStep >= 2 ? 'bg-blue-600 text-white' : 'bg-surface-secondary text-text-muted'
           }`}>
             {currentStep > 2 ? <Check className="w-4 h-4" /> : '2'}
           </div>
           <span className={`ml-2 text-sm ${
-            currentStep >= 2 ? 'text-blue-600 font-medium' : 'text-gray-500'
+            currentStep >= 2 ? 'text-blue-600 font-medium' : 'text-text-muted'
           }`}>
             Create Admin
           </span>
@@ -223,8 +223,8 @@ export const TwoStepCenterForm: React.FC<TwoStepCenterFormProps> = ({
     <div className="space-y-4">
       <div className="text-center mb-4">
         <Building2 className="w-12 h-12 text-blue-600 mx-auto mb-2" />
-        <h3 className="text-lg font-semibold text-gray-900">Create New Center</h3>
-        <p className="text-sm text-gray-600">Enter the basic information for the new center</p>
+        <h3 className="text-lg font-semibold text-text-primary">Create New Center</h3>
+        <p className="text-sm text-text-secondary">Enter the basic information for the new center</p>
       </div>
 
       <div className="space-y-2">
@@ -306,8 +306,8 @@ export const TwoStepCenterForm: React.FC<TwoStepCenterFormProps> = ({
     <form onSubmit={handleSubmitAdmin} className="space-y-4">
       <div className="text-center mb-4">
         <Users className="w-12 h-12 text-green-600 mx-auto mb-2" />
-        <h3 className="text-lg font-semibold text-gray-900">Create Admin User</h3>
-        <p className="text-sm text-gray-600">
+        <h3 className="text-lg font-semibold text-text-primary">Create Admin User</h3>
+        <p className="text-sm text-text-secondary">
           Create an admin account for <span className="font-medium">{createdCenter?.name}</span>
         </p>
       </div>

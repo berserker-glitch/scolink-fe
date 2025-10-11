@@ -15,7 +15,7 @@ export const ModernCard: React.FC<ModernCardProps> = ({
   shadow = 'sm',
   hover = true
 }) => {
-  const baseClasses = 'bg-white rounded-2xl border border-gray-100 transition-all duration-200';
+  const baseClasses = 'bg-surface rounded-2xl border border-border transition-all duration-200';
   
   const paddingClasses = {
     none: '',
@@ -69,7 +69,7 @@ export const ModernCardTitle: React.FC<ModernCardTitleProps> = ({
   className = ''
 }) => {
   return (
-    <h3 className={`text-lg font-semibold text-gray-900 ${className}`}>
+    <h3 className={`text-lg font-semibold text-text-primary ${className}`}>
       {children}
     </h3>
   );

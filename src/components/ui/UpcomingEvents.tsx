@@ -50,14 +50,14 @@ export const UpcomingEvents: React.FC<UpcomingEventsProps> = ({
         {events.map((event, index) => (
           <div key={index} className="flex items-start space-x-3">
             <div className="text-center min-w-0">
-              <div className="text-lg font-bold text-gray-900">{event.date}</div>
-              <div className="text-xs text-gray-500">{event.day}</div>
+              <div className="text-lg font-bold text-text-primary">{event.date}</div>
+              <div className="text-xs text-text-muted">{event.day}</div>
             </div>
             <div className="flex-1">
-              <div className="font-medium text-gray-900">{event.title}</div>
-              <div className="text-sm text-gray-500">{event.subtitle}</div>
+              <div className="font-medium text-text-primary">{event.title}</div>
+              <div className="text-sm text-text-muted">{event.subtitle}</div>
               {event.additionalInfo && (
-                <div className="text-xs text-gray-400 mt-1">{event.additionalInfo}</div>
+                <div className="text-xs text-text-muted mt-1">{event.additionalInfo}</div>
               )}
               {event.moreText && (
                 <div className="text-xs text-blue-600 mt-1">{event.moreText}</div>
