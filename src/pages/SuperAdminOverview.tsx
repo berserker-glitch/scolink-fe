@@ -95,8 +95,8 @@ export const SuperAdminOverview: React.FC = () => {
       <CardContent className="p-6">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm font-medium text-gray-600 mb-1">{title}</p>
-            <p className="text-3xl font-bold text-gray-900 mb-1">{value}</p>
+            <p className="text-sm font-medium text-text-secondary mb-1">{title}</p>
+            <p className="text-3xl font-bold text-text-primary mb-1">{value}</p>
             <p className="text-sm text-gray-500">{description}</p>
           </div>
           <div className={`p-3 rounded-full ${color}`}>
@@ -138,15 +138,15 @@ export const SuperAdminOverview: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <div className="bg-white border-b border-gray-200">
+      <div className="bg-surface border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            <h1 className="text-4xl font-bold text-text-primary mb-4">
               Super Admin Dashboard
             </h1>
-            <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+            <p className="text-xl text-text-secondary mb-8 max-w-2xl mx-auto">
               Manage and oversee all centers, users, and system operations from this central hub.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
@@ -217,10 +217,10 @@ export const SuperAdminOverview: React.FC = () => {
               <Card key={plan} className="p-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600 mb-1">
+                    <p className="text-sm font-medium text-text-secondary mb-1">
                       {formatPlanName(plan)} Plan
                     </p>
-                    <p className="text-2xl font-bold text-gray-900">{count}</p>
+                    <p className="text-2xl font-bold text-text-primary">{count}</p>
                   </div>
                   <div className={`px-3 py-1 rounded-full text-xs font-medium ${getPlanBadgeColor(plan)}`}>
                     {formatPlanName(plan)}
@@ -258,12 +258,12 @@ export const SuperAdminOverview: React.FC = () => {
               ) : recentCenters.length > 0 ? (
                 <div className="space-y-4">
                   {recentCenters.map((center) => (
-                    <div key={center.id} className="flex items-start space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                    <div key={center.id} className="flex items-start space-x-3 p-3 rounded-lg hover:bg-background transition-colors">
                       <div className="p-2 bg-blue-100 rounded-lg">
                         <Building2 className="w-4 h-4 text-blue-600" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h4 className="font-medium text-gray-900 truncate">{center.name}</h4>
+                        <h4 className="font-medium text-text-primary truncate">{center.name}</h4>
                         <p className="text-sm text-gray-500 truncate">{center.location}</p>
                         <div className="flex items-center gap-2 mt-1">
                           <Badge variant="outline" className="text-xs">
@@ -293,7 +293,7 @@ export const SuperAdminOverview: React.FC = () => {
               ) : (
                 <div className="text-center py-8">
                   <Building2 className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">No Centers Yet</h3>
+                  <h3 className="text-lg font-medium text-text-primary mb-2">No Centers Yet</h3>
                   <p className="text-gray-500 mb-4">Create your first center to get started</p>
                   <ModernButton 
                     onClick={() => navigate('/super-admin/management')}
@@ -406,7 +406,7 @@ export const SuperAdminOverview: React.FC = () => {
               ) : (
                 <div className="text-center py-8">
                   <Activity className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">No Recent Activity</h3>
+                  <h3 className="text-lg font-medium text-text-primary mb-2">No Recent Activity</h3>
                   <p className="text-gray-500">System activity will appear here once centers are created</p>
                 </div>
               )}

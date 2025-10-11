@@ -78,7 +78,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
 
   return (
     <div className="h-full w-full flex flex-col overflow-hidden">
-      <div className="bg-white rounded-xl h-full w-full flex flex-col overflow-hidden">
+      <div className="bg-surface rounded-xl h-full w-full flex flex-col overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between p-3 flex-shrink-0">
           <h2 className="text-base font-semibold text-gray-900">{monthName}</h2>

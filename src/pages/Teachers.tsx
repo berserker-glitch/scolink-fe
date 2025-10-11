@@ -39,10 +39,10 @@ const TeacherDrawerWithQuery: React.FC<{
 
   if (isLoading) {
     return (
-      <div className="w-full h-full bg-white flex items-center justify-center">
+      <div className="w-full h-full bg-surface flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600 mx-auto mb-2"></div>
-          <p className="text-sm text-gray-600">Loading teacher...</p>
+          <p className="text-sm text-text-secondary">Loading teacher...</p>
         </div>
       </div>
     );
@@ -240,7 +240,7 @@ export const Teachers: React.FC = () => {
 
       {/* Search */}
       <div className="mb-6">
-        <div className="bg-white rounded-lg border border-gray-200 p-4">
+        <div className="bg-surface rounded-lg border border-gray-200 p-4">
           <div className="flex items-center space-x-4">
             {/* Search */}
             <div className="flex-1 relative">

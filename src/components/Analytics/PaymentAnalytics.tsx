@@ -247,25 +247,25 @@ export const PaymentAnalytics: React.FC<PaymentAnalyticsProps> = ({
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
-              <div className="text-center p-4 bg-green-50 rounded-lg">
-                <div className="text-2xl font-bold text-green-700">{summary.paidCount}</div>
-                <div className="text-sm text-green-600">Paid</div>
+              <div className="text-center p-4 bg-green-50 dark:bg-green-950/20 rounded-lg">
+                <div className="text-2xl font-bold text-green-700 dark:text-green-400">{summary.paidCount}</div>
+                <div className="text-sm text-green-600 dark:text-green-500">Paid</div>
                 <div className="text-xs text-text-muted">
                   {summary.paymentCount > 0 ? Math.round((summary.paidCount / summary.paymentCount) * 100) : 0}%
                 </div>
               </div>
               
-              <div className="text-center p-4 bg-yellow-50 rounded-lg">
-                <div className="text-2xl font-bold text-yellow-700">{summary.pendingCount}</div>
-                <div className="text-sm text-yellow-600">Pending</div>
+              <div className="text-center p-4 bg-yellow-50 dark:bg-yellow-950/20 rounded-lg">
+                <div className="text-2xl font-bold text-yellow-700 dark:text-yellow-400">{summary.pendingCount}</div>
+                <div className="text-sm text-yellow-600 dark:text-yellow-500">Pending</div>
                 <div className="text-xs text-text-muted">
                   {summary.paymentCount > 0 ? Math.round((summary.pendingCount / summary.paymentCount) * 100) : 0}%
                 </div>
               </div>
               
-              <div className="text-center p-4 bg-red-50 rounded-lg">
-                <div className="text-2xl font-bold text-red-700">{summary.overdueCount}</div>
-                <div className="text-sm text-red-600">Overdue</div>
+              <div className="text-center p-4 bg-red-50 dark:bg-red-950/20 rounded-lg">
+                <div className="text-2xl font-bold text-red-700 dark:text-red-400">{summary.overdueCount}</div>
+                <div className="text-sm text-red-600 dark:text-red-500">Overdue</div>
                 <div className="text-xs text-text-muted">
                   {summary.paymentCount > 0 ? Math.round((summary.overdueCount / summary.paymentCount) * 100) : 0}%
                 </div>
@@ -298,23 +298,23 @@ export const PaymentAnalytics: React.FC<PaymentAnalyticsProps> = ({
                 </span>
               </div>
               
-              <div className="flex justify-between items-center p-3 bg-green-50 rounded-lg">
-                <span className="text-green-700">Collected</span>
-                <span className="font-medium text-green-800">
+              <div className="flex justify-between items-center p-3 bg-green-50 dark:bg-green-950/20 rounded-lg">
+                <span className="text-green-700 dark:text-green-400">Collected</span>
+                <span className="font-medium text-green-800 dark:text-green-300">
                   {summary.paidAmount.toLocaleString()} DH
                 </span>
               </div>
               
-              <div className="flex justify-between items-center p-3 bg-yellow-50 rounded-lg">
-                <span className="text-yellow-700">Pending</span>
-                <span className="font-medium text-yellow-800">
+              <div className="flex justify-between items-center p-3 bg-yellow-50 dark:bg-yellow-950/20 rounded-lg">
+                <span className="text-yellow-700 dark:text-yellow-400">Pending</span>
+                <span className="font-medium text-yellow-800 dark:text-yellow-300">
                   {summary.pendingAmount.toLocaleString()} DH
                 </span>
               </div>
               
-              <div className="flex justify-between items-center p-3 bg-red-50 rounded-lg">
-                <span className="text-red-700">Overdue</span>
-                <span className="font-medium text-red-800">
+              <div className="flex justify-between items-center p-3 bg-red-50 dark:bg-red-950/20 rounded-lg">
+                <span className="text-red-700 dark:text-red-400">Overdue</span>
+                <span className="font-medium text-red-800 dark:text-red-300">
                   {summary.overdueAmount.toLocaleString()} DH
                 </span>
               </div>

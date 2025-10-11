@@ -438,7 +438,7 @@ export const Events: React.FC = () => {
 
       {/* Search */}
       <div className="mb-6">
-        <div className="bg-white rounded-lg border border-gray-200 p-4">
+        <div className="bg-surface rounded-lg border border-gray-200 p-4">
           <div className="flex items-center space-x-4">
             {/* Search */}
             <div className="flex-1 relative">

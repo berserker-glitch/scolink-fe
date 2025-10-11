@@ -96,7 +96,7 @@ export const TeacherDetailDrawer: React.FC<TeacherDetailDrawerProps> = ({
   }
 
   return (
-    <div className="w-full bg-white h-full overflow-hidden flex flex-col shadow-lg">
+    <div className="w-full bg-surface h-full overflow-hidden flex flex-col shadow-lg">
       <div className="p-4 shrink-0 shadow-sm">
         <div className="flex items-center justify-between">
           <div>

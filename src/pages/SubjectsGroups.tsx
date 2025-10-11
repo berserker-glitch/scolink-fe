@@ -398,11 +398,11 @@ export const SubjectsGroups: React.FC = () => {
 
             {/* Search & Filters */}
             <div className="mb-6">
-              <div className="bg-white rounded-lg border border-gray-200 p-4">
+              <div className="bg-surface rounded-lg border border-gray-200 p-4">
                 <div className="flex items-center space-x-4">
                   {/* Search */}
                   <div className="flex-1 relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-text-muted" />
                     <input
                       type="text"
                       placeholder="Search subjects by name, year, or field..."
@@ -414,7 +414,7 @@ export const SubjectsGroups: React.FC = () => {
                   
                   {/* Filters */}
                   <div className="flex items-center space-x-2">
-                    <Filter className="w-4 h-4 text-gray-400" />
+                    <Filter className="w-4 h-4 text-text-muted" />
                     <Select
                       value={subjectFilter}
                       onChange={(e) => setSubjectFilter(e.target.value)}

@@ -45,18 +45,18 @@ export const SuperAdminLayout: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       <div className="flex h-screen">
         {/* Sidebar */}
-        <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 transform ${
+        <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-surface border-r border-border transform ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         } transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0`}>
         <div className="flex flex-col h-full">
           {/* Header */}
-          <div className="flex items-center justify-between h-16 px-6 border-b border-gray-200">
+          <div className="flex items-center justify-between h-16 px-6 border-b border-border">
             <div className="flex items-center space-x-2">
               <Building2 className="w-8 h-8 text-blue-600" />
-              <h1 className="text-xl font-bold text-gray-900">Scolink Admin</h1>
+              <h1 className="text-xl font-bold text-text-primary">Scolink Admin</h1>
             </div>
             <button
               onClick={closeSidebar}
@@ -69,7 +69,7 @@ export const SuperAdminLayout: React.FC = () => {
           {/* Navigation */}
           <nav className="flex-1 px-4 py-6 space-y-2">
             <div className="space-y-1">
-              <div className="px-3 py-2 text-sm font-medium text-gray-500 uppercase tracking-wider">
+              <div className="px-3 py-2 text-sm font-medium text-text-muted uppercase tracking-wider">
                 Navigation
               </div>
               
@@ -100,7 +100,7 @@ export const SuperAdminLayout: React.FC = () => {
           </nav>
 
           {/* User Info & Actions */}
-          <div className="p-4 border-t border-gray-200">
+          <div className="p-4 border-t border-border">
             <div className="flex items-center space-x-3 mb-4">
               <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
                 <span className="text-sm font-medium text-white">
@@ -108,10 +108,10 @@ export const SuperAdminLayout: React.FC = () => {
                 </span>
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-gray-900 truncate">
+                <p className="text-sm font-medium text-text-primary truncate">
                   {user?.fullName || 'Super Admin'}
                 </p>
-                <p className="text-xs text-gray-500 truncate">
+                <p className="text-xs text-text-muted truncate">
                   {user?.email || 'admin@admin.com'}
                 </p>
               </div>
@@ -153,23 +153,23 @@ export const SuperAdminLayout: React.FC = () => {
         {/* Main Content */}
         <div className="flex-1 flex flex-col min-h-screen lg:ml-0">
         {/* Window Controls - Only show on desktop */}
-        <div className="hidden lg:flex fixed top-0 right-0 z-50 bg-white border-b border-l border-gray-200">
+        <div className="hidden lg:flex fixed top-0 right-0 z-50 bg-surface border-b border-l border-border">
         </div>
         
         {/* Mobile Header */}
-        <header className="lg:hidden h-16 bg-white border-b border-gray-200 flex items-center justify-between px-4">
+        <header className="lg:hidden h-16 bg-surface border-b border-border flex items-center justify-between px-4">
           <button
             onClick={() => setSidebarOpen(true)}
             className="p-2 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <Menu className="w-6 h-6" />
           </button>
-          <h1 className="text-xl font-bold text-gray-900">Scolink Admin</h1>
+          <h1 className="text-xl font-bold text-text-primary">Scolink Admin</h1>
           <div className="w-10" /> {/* Spacer for balance */}
         </header>
         
         {/* Page Content */}
-        <main className="flex-1 overflow-auto bg-gray-50">
+        <main className="flex-1 overflow-auto bg-background">
           <Outlet />
         </main>
         </div>

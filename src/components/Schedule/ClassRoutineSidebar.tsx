@@ -94,7 +94,7 @@ export const ClassRoutineSidebar: React.FC<ClassRoutineSidebarProps> = ({
   }
 
   return (
-    <div className="w-80 bg-white border-r border-gray-200 h-full overflow-y-auto">
+    <div className="w-80 bg-surface border-r border-gray-200 h-full overflow-y-auto">
       <div className="p-6">
         <h2 className="text-lg font-semibold text-gray-900 mb-6">Class Routine</h2>
         

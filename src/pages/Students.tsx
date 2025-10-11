@@ -33,10 +33,10 @@ const StudentDrawerWithQuery: React.FC<{
 
   if (isLoading) {
     return (
-      <div className="w-full h-full bg-white flex items-center justify-center">
+      <div className="w-full h-full bg-surface flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600 mx-auto mb-2"></div>
-          <p className="text-sm text-gray-600">Loading student...</p>
+          <p className="text-sm text-text-secondary">Loading student...</p>
         </div>
       </div>
     );
@@ -257,8 +257,8 @@ export const Students: React.FC = () => {
               {/* Header */}
               <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8">
                 <div>
-                  <h1 className="text-2xl font-bold text-gray-900 mb-2">Students Database</h1>
-                  <p className="text-sm text-gray-600">
+                  <h1 className="text-2xl font-bold text-text-primary mb-2">Students Database</h1>
+                  <p className="text-sm text-text-secondary">
                     {pagination?.total || 0} results • Welcome to Scolink Dashboard
                   </p>
                 </div>
@@ -283,7 +283,7 @@ export const Students: React.FC = () => {
 
               {/* Search and Filters */}
               <div className="mb-6">
-                <div className="bg-white rounded-lg border border-gray-200 p-4">
+                <div className="bg-surface rounded-lg border border-gray-200 p-4">
                   <div className="flex items-center space-x-4">
                     {/* Search */}
                     <div className="flex-1 relative">
@@ -324,21 +324,21 @@ export const Students: React.FC = () => {
               </div>
 
               {/* Students Table */}
-              <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+              <div className="bg-surface rounded-lg border border-gray-200 overflow-hidden">
                 <div className="overflow-x-auto">
                   <table className="w-full">
-                    <thead className="bg-gray-50">
+                    <thead className="bg-background">
                       <tr>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Full Name</th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact</th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Year</th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Field</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Full Name</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Contact</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Year</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Field</th>
                       </tr>
                     </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
+                    <tbody className="bg-surface divide-y divide-gray-200">
                       {studentsLoading ? (
                         <tr>
-                          <td colSpan={4} className="px-4 py-8 text-center text-gray-500">
+                          <td colSpan={4} className="px-4 py-8 text-center text-text-muted">
                             Loading students...
                           </td>
                         </tr>
@@ -350,7 +350,7 @@ export const Students: React.FC = () => {
                         </tr>
                       ) : students.length === 0 ? (
                         <tr>
-                          <td colSpan={4} className="px-4 py-8 text-center text-gray-500">
+                          <td colSpan={4} className="px-4 py-8 text-center text-text-muted">
                             No students found.
                           </td>
                         </tr>
@@ -358,7 +358,7 @@ export const Students: React.FC = () => {
                         students.map((student) => (
                           <tr 
                             key={student.id} 
-                            className={`hover:bg-gray-50 cursor-pointer transition-colors ${
+                            className={`hover:bg-background cursor-pointer transition-colors ${
                               selectedStudentId === student.id ? 'bg-purple-50' : ''
                             }`}
                             onClick={() => handleStudentClick(student)}
@@ -367,12 +367,12 @@ export const Students: React.FC = () => {
                             <td className="px-4 py-4 whitespace-nowrap">
                               <div className="flex items-center">
                                 <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center mr-3">
-                                  <span className="text-sm font-medium text-gray-600">
+                                  <span className="text-sm font-medium text-text-secondary">
                                     {student.firstName.charAt(0)}{student.lastName.charAt(0)}
                                   </span>
                                 </div>
                                 <div>
-                                  <div className="text-sm font-medium text-gray-900">
+                                  <div className="text-sm font-medium text-text-primary">
                                     {student.firstName} {student.lastName}
                                   </div>
                                 </div>
@@ -380,17 +380,17 @@ export const Students: React.FC = () => {
                             </td>
                             {/* Contact */}
                             <td className="px-4 py-4 whitespace-nowrap">
-                              <div className="text-sm text-gray-900">
+                              <div className="text-sm text-text-primary">
                                 {student.phone || 'No contact info'}
                               </div>
                             </td>
                             {/* Year */}
                             <td className="px-4 py-4 whitespace-nowrap">
-                              <div className="text-sm text-gray-900">{student.yearName || 'N/A'}</div>
+                              <div className="text-sm text-text-primary">{student.yearName || 'N/A'}</div>
                             </td>
                             {/* Field */}
                             <td className="px-4 py-4 whitespace-nowrap">
-                              <div className="text-sm text-gray-900">{student.fieldName || 'N/A'}</div>
+                              <div className="text-sm text-text-primary">{student.fieldName || 'N/A'}</div>
                             </td>
                           </tr>
                         ))
@@ -401,7 +401,7 @@ export const Students: React.FC = () => {
 
                 {/* Pagination */}
                 {pagination && pagination.totalPages > 1 && (
-                  <div className="px-4 py-3 bg-gray-50 border-t border-gray-200 flex items-center justify-between">
+                  <div className="px-4 py-3 bg-background border-t border-gray-200 flex items-center justify-between">
                     <div className="text-sm text-gray-700">
                       Showing {((currentPage - 1) * studentsPerPage) + 1} to {Math.min(currentPage * studentsPerPage, pagination.total)} of {pagination.total} results
                     </div>

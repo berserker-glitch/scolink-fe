@@ -325,51 +325,51 @@ const TeacherDashboard: React.FC = () => {
 
             {/* Statistics Cards - Beautiful Design */}
             <div className="grid grid-cols-2 gap-4 p-6">
-              <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+              <div className="bg-surface rounded-2xl p-4 shadow-sm border border-gray-100">
                 <div className="w-10 h-10 bg-blue-500 rounded-xl flex items-center justify-center mb-3">
                   <BookOpen className="w-5 h-5 text-white" />
                 </div>
-                <p className="text-2xl font-bold text-gray-900 mb-1">
+                <p className="text-2xl font-bold text-text-primary mb-1">
                   {teacherLoading ? '...' : totalClasses}
                 </p>
-                <p className="text-xs text-gray-500 font-medium">Classes</p>
+                <p className="text-xs text-text-muted font-medium">Classes</p>
               </div>
 
-              <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+              <div className="bg-surface rounded-2xl p-4 shadow-sm border border-gray-100">
                 <div className="w-10 h-10 bg-green-500 rounded-xl flex items-center justify-center mb-3">
                   <Users className="w-5 h-5 text-white" />
                 </div>
-                <p className="text-2xl font-bold text-gray-900 mb-1">
+                <p className="text-2xl font-bold text-text-primary mb-1">
                   {teacherLoading ? '...' : totalStudents}
                 </p>
-                <p className="text-xs text-gray-500 font-medium">Students</p>
+                <p className="text-xs text-text-muted font-medium">Students</p>
               </div>
 
-              <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+              <div className="bg-surface rounded-2xl p-4 shadow-sm border border-gray-100">
                 <div className="w-10 h-10 bg-purple-500 rounded-xl flex items-center justify-center mb-3">
                   <GraduationCap className="w-5 h-5 text-white" />
                 </div>
-                <p className="text-2xl font-bold text-gray-900 mb-1">
+                <p className="text-2xl font-bold text-text-primary mb-1">
                   {teacherLoading ? '...' : totalSubjects}
                 </p>
-                <p className="text-xs text-gray-500 font-medium">Subjects</p>
+                <p className="text-xs text-text-muted font-medium">Subjects</p>
               </div>
 
-              <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+              <div className="bg-surface rounded-2xl p-4 shadow-sm border border-gray-100">
                 <div className="w-10 h-10 bg-orange-500 rounded-xl flex items-center justify-center mb-3">
                   <CalendarIcon className="w-5 h-5 text-white" />
                 </div>
-                <p className="text-2xl font-bold text-gray-900 mb-1">
+                <p className="text-2xl font-bold text-text-primary mb-1">
                   {teacherLoading ? '...' : `${attendanceStats.presentCount}/${attendanceStats.totalSessions}`}
                 </p>
-                <p className="text-xs text-gray-500 font-medium">This Week</p>
+                <p className="text-xs text-text-muted font-medium">This Week</p>
               </div>
             </div>
 
             {/* Today's Quick Classes Preview */}
             <div className="px-6 pb-24">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-bold text-gray-900">Today's Classes</h2>
+                <h2 className="text-lg font-bold text-text-primary">Today's Classes</h2>
                 {todayClasses.length > 0 && (
                   <span className="text-xs font-semibold text-purple-600 bg-purple-50 px-2 py-1 rounded-full">
                     {todayClasses.length}
@@ -381,12 +381,12 @@ const TeacherDashboard: React.FC = () => {
                   <Loader2 className="w-8 h-8 animate-spin text-purple-600" />
                 </div>
               ) : todayClasses.length === 0 ? (
-                <div className="bg-white rounded-2xl p-8 text-center shadow-sm border border-gray-100">
-                  <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Clock className="w-8 h-8 text-gray-400" />
+                <div className="bg-surface rounded-2xl p-8 text-center shadow-sm border border-gray-100">
+                  <div className="w-16 h-16 bg-surface-secondary rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Clock className="w-8 h-8 text-text-muted" />
                   </div>
-                  <p className="text-gray-600 font-medium mb-1">No classes today</p>
-                  <p className="text-sm text-gray-400">Enjoy your free time!</p>
+                  <p className="text-text-secondary font-medium mb-1">No classes today</p>
+                  <p className="text-sm text-text-muted">Enjoy your free time!</p>
                 </div>
               ) : (
                 <div className="space-y-3">
@@ -395,11 +395,11 @@ const TeacherDashboard: React.FC = () => {
                     const attendanceTaken = group ? attendanceTakenToday[group.id] : false;
                     
                     return (
-                      <div key={classItem.id} className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+                      <div key={classItem.id} className="bg-surface rounded-2xl p-4 shadow-sm border border-gray-100">
                         <div className="flex items-start justify-between mb-3">
                           <div className="flex-1 min-w-0">
-                            <h3 className="font-bold text-gray-900 truncate">{classItem.subject}</h3>
-                            <p className="text-sm text-gray-500 truncate mt-0.5">{classItem.group}</p>
+                            <h3 className="font-bold text-text-primary truncate">{classItem.subject}</h3>
+                            <p className="text-sm text-text-muted truncate mt-0.5">{classItem.group}</p>
                           </div>
                           <div className="ml-3 flex-shrink-0">
                             <div className="bg-purple-50 text-purple-700 text-xs font-semibold px-3 py-1.5 rounded-lg">
@@ -408,13 +408,13 @@ const TeacherDashboard: React.FC = () => {
                           </div>
                         </div>
                         <div className="flex items-center gap-3 text-sm mb-3">
-                          <div className="flex items-center gap-2 text-gray-600">
+                          <div className="flex items-center gap-2 text-text-secondary">
                             <div className="w-6 h-6 bg-blue-100 rounded-lg flex items-center justify-center">
                               <Users className="w-3.5 h-3.5 text-blue-600" />
                             </div>
                             <span className="font-medium">{classItem.students}</span>
                           </div>
-                          <div className="flex items-center gap-2 text-gray-600">
+                          <div className="flex items-center gap-2 text-text-secondary">
                             <div className="w-6 h-6 bg-green-100 rounded-lg flex items-center justify-center">
                               <BookOpen className="w-3.5 h-3.5 text-green-600" />
                             </div>
@@ -459,7 +459,7 @@ const TeacherDashboard: React.FC = () => {
           <div className="flex-1 overflow-hidden">
             <div className="p-6 pb-24">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-lg font-bold text-gray-900">All Classes Today</h2>
+                <h2 className="text-lg font-bold text-text-primary">All Classes Today</h2>
                 {todayClasses.length > 0 && (
                   <span className="text-xs font-semibold text-purple-600 bg-purple-50 px-3 py-1.5 rounded-full">
                     {todayClasses.length} classes
@@ -471,12 +471,12 @@ const TeacherDashboard: React.FC = () => {
                   <Loader2 className="w-8 h-8 animate-spin text-purple-600" />
                 </div>
               ) : todayClasses.length === 0 ? (
-                <div className="bg-white rounded-2xl p-8 text-center shadow-sm border border-gray-100">
-                  <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Clock className="w-8 h-8 text-gray-400" />
+                <div className="bg-surface rounded-2xl p-8 text-center shadow-sm border border-gray-100">
+                  <div className="w-16 h-16 bg-surface-secondary rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Clock className="w-8 h-8 text-text-muted" />
                   </div>
-                  <p className="text-gray-600 font-medium mb-1">No classes today</p>
-                  <p className="text-sm text-gray-400">Enjoy your free time!</p>
+                  <p className="text-text-secondary font-medium mb-1">No classes today</p>
+                  <p className="text-sm text-text-muted">Enjoy your free time!</p>
                 </div>
               ) : (
                 <div className="space-y-4">
@@ -485,11 +485,11 @@ const TeacherDashboard: React.FC = () => {
                     const attendanceTaken = group ? attendanceTakenToday[group.id] : false;
                     
                     return (
-                      <div key={classItem.id} className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+                      <div key={classItem.id} className="bg-surface rounded-2xl p-5 shadow-sm border border-gray-100">
                         <div className="flex items-start justify-between mb-4">
                           <div className="flex-1 min-w-0">
-                            <h3 className="text-lg font-bold text-gray-900 truncate">{classItem.subject}</h3>
-                            <p className="text-sm text-gray-500 truncate mt-1">{classItem.group}</p>
+                            <h3 className="text-lg font-bold text-text-primary truncate">{classItem.subject}</h3>
+                            <p className="text-sm text-text-muted truncate mt-1">{classItem.group}</p>
                           </div>
                           <div className="ml-3 flex-shrink-0">
                             <div className="bg-purple-50 text-purple-700 text-sm font-bold px-3 py-2 rounded-xl">
@@ -504,8 +504,8 @@ const TeacherDashboard: React.FC = () => {
                               <Users className="w-5 h-5 text-white" />
                             </div>
                             <div>
-                              <p className="text-xs text-gray-500 font-medium">Students</p>
-                              <p className="font-bold text-gray-900">{classItem.students}</p>
+                              <p className="text-xs text-text-muted font-medium">Students</p>
+                              <p className="font-bold text-text-primary">{classItem.students}</p>
                             </div>
                           </div>
 
@@ -514,8 +514,8 @@ const TeacherDashboard: React.FC = () => {
                               <BookOpen className="w-5 h-5 text-white" />
                             </div>
                             <div>
-                              <p className="text-xs text-gray-500 font-medium">Room</p>
-                              <p className="font-bold text-gray-900">{classItem.room}</p>
+                              <p className="text-xs text-text-muted font-medium">Room</p>
+                              <p className="font-bold text-text-primary">{classItem.room}</p>
                             </div>
                           </div>
                         </div>
@@ -549,7 +549,7 @@ const TeacherDashboard: React.FC = () => {
           <div className="flex-1 overflow-hidden">
             <div className="p-6 pb-24">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-lg font-bold text-gray-900">Upcoming Events</h2>
+                <h2 className="text-lg font-bold text-text-primary">Upcoming Events</h2>
                 {upcomingEvents.length > 0 && (
                   <span className="text-xs font-semibold text-orange-600 bg-orange-50 px-3 py-1.5 rounded-full">
                     {upcomingEvents.length} events
@@ -561,21 +561,21 @@ const TeacherDashboard: React.FC = () => {
                   <Loader2 className="w-8 h-8 animate-spin text-purple-600" />
                 </div>
               ) : upcomingEvents.length === 0 ? (
-                <div className="bg-white rounded-2xl p-8 text-center shadow-sm border border-gray-100">
-                  <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <CalendarIcon className="w-8 h-8 text-gray-400" />
+                <div className="bg-surface rounded-2xl p-8 text-center shadow-sm border border-gray-100">
+                  <div className="w-16 h-16 bg-surface-secondary rounded-full flex items-center justify-center mx-auto mb-4">
+                    <CalendarIcon className="w-8 h-8 text-text-muted" />
                   </div>
-                  <p className="text-gray-600 font-medium mb-1">No upcoming events</p>
-                  <p className="text-sm text-gray-400">You're all caught up!</p>
+                  <p className="text-text-secondary font-medium mb-1">No upcoming events</p>
+                  <p className="text-sm text-text-muted">You're all caught up!</p>
                 </div>
               ) : (
                 <div className="space-y-4">
                   {upcomingEvents.map((event) => (
-                    <div key={event.id} className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+                    <div key={event.id} className="bg-surface rounded-2xl p-5 shadow-sm border border-gray-100">
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex-1 min-w-0">
-                          <h3 className="text-lg font-bold text-gray-900 truncate">{event.title}</h3>
-                          <p className="text-sm text-gray-500 mt-1">{event.time}</p>
+                          <h3 className="text-lg font-bold text-text-primary truncate">{event.title}</h3>
+                          <p className="text-sm text-text-muted mt-1">{event.time}</p>
                         </div>
                         <div className="ml-3 flex-shrink-0">
                           <div className={`text-xs font-bold px-3 py-1.5 rounded-lg ${
@@ -613,12 +613,12 @@ const TeacherDashboard: React.FC = () => {
           <div className="flex-1 overflow-hidden">
             <div className="p-6 pb-24">
               {/* Profile Header */}
-              <div className="bg-white rounded-2xl p-6 mb-6 text-center shadow-sm border border-gray-100">
+              <div className="bg-surface rounded-2xl p-6 mb-6 text-center shadow-sm border border-gray-100">
                 <div className="w-20 h-20 mx-auto mb-4 bg-purple-500 rounded-full flex items-center justify-center">
                   <GraduationCap className="w-10 h-10 text-white" />
                 </div>
-                <h2 className="text-xl font-bold text-gray-900 mb-1">{user?.fullName}</h2>
-                <p className="text-sm text-gray-500 mb-3">{user?.email}</p>
+                <h2 className="text-xl font-bold text-text-primary mb-1">{user?.fullName}</h2>
+                <p className="text-sm text-text-muted mb-3">{user?.email}</p>
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-purple-50 rounded-full">
                   <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
                   <span className="text-xs font-semibold text-purple-700">Teacher Account</span>
@@ -627,60 +627,60 @@ const TeacherDashboard: React.FC = () => {
 
               {/* Stats Grid */}
               <div className="grid grid-cols-3 gap-3 mb-6">
-                <div className="bg-white rounded-2xl p-4 text-center shadow-sm border border-gray-100">
+                <div className="bg-surface rounded-2xl p-4 text-center shadow-sm border border-gray-100">
                   <div className="w-10 h-10 bg-blue-500 rounded-xl flex items-center justify-center mx-auto mb-2">
                     <BookOpen className="w-5 h-5 text-white" />
                   </div>
-                  <p className="text-2xl font-bold text-gray-900">{totalClasses}</p>
-                  <p className="text-xs text-gray-500 mt-1 font-medium">Classes</p>
+                  <p className="text-2xl font-bold text-text-primary">{totalClasses}</p>
+                  <p className="text-xs text-text-muted mt-1 font-medium">Classes</p>
                 </div>
 
-                <div className="bg-white rounded-2xl p-4 text-center shadow-sm border border-gray-100">
+                <div className="bg-surface rounded-2xl p-4 text-center shadow-sm border border-gray-100">
                   <div className="w-10 h-10 bg-green-500 rounded-xl flex items-center justify-center mx-auto mb-2">
                     <Users className="w-5 h-5 text-white" />
                   </div>
-                  <p className="text-2xl font-bold text-gray-900">{totalStudents}</p>
-                  <p className="text-xs text-gray-500 mt-1 font-medium">Students</p>
+                  <p className="text-2xl font-bold text-text-primary">{totalStudents}</p>
+                  <p className="text-xs text-text-muted mt-1 font-medium">Students</p>
                 </div>
 
-                <div className="bg-white rounded-2xl p-4 text-center shadow-sm border border-gray-100">
+                <div className="bg-surface rounded-2xl p-4 text-center shadow-sm border border-gray-100">
                   <div className="w-10 h-10 bg-purple-500 rounded-xl flex items-center justify-center mx-auto mb-2">
                     <GraduationCap className="w-5 h-5 text-white" />
                   </div>
-                  <p className="text-2xl font-bold text-gray-900">{totalSubjects}</p>
-                  <p className="text-xs text-gray-500 mt-1 font-medium">Subjects</p>
+                  <p className="text-2xl font-bold text-text-primary">{totalSubjects}</p>
+                  <p className="text-xs text-text-muted mt-1 font-medium">Subjects</p>
                 </div>
               </div>
 
               {/* Account Actions */}
               <div className="space-y-3">
-                <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">
+                <h3 className="text-xs font-bold text-text-muted uppercase tracking-wider mb-4">
                   Account Settings
                 </h3>
 
                 <button
                   onClick={() => setIsChangePasswordOpen(true)}
-                  className="w-full bg-white rounded-2xl p-4 shadow-sm border border-gray-100 hover:border-purple-200 hover:bg-purple-50 transition-all flex items-center gap-4 group"
+                  className="w-full bg-surface rounded-2xl p-4 shadow-sm border border-gray-100 hover:border-purple-200 hover:bg-purple-50 transition-all flex items-center gap-4 group"
                 >
                   <div className="w-12 h-12 bg-purple-500 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
                     <Key className="w-5 h-5 text-white" />
                   </div>
                   <div className="flex-1 text-left">
-                    <p className="font-bold text-gray-900">Change Password</p>
-                    <p className="text-xs text-gray-500 mt-0.5">Update your security credentials</p>
+                    <p className="font-bold text-text-primary">Change Password</p>
+                    <p className="text-xs text-text-muted mt-0.5">Update your security credentials</p>
                   </div>
                 </button>
 
                 <button
                   onClick={handleLogout}
-                  className="w-full bg-white rounded-2xl p-4 shadow-sm border border-gray-100 hover:border-red-200 hover:bg-red-50 transition-all flex items-center gap-4 group"
+                  className="w-full bg-surface rounded-2xl p-4 shadow-sm border border-gray-100 hover:border-red-200 hover:bg-red-50 transition-all flex items-center gap-4 group"
                 >
                   <div className="w-12 h-12 bg-red-500 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
                     <LogOut className="w-5 h-5 text-white" />
                   </div>
                   <div className="flex-1 text-left">
                     <p className="font-bold text-red-600">Logout</p>
-                    <p className="text-xs text-gray-500 mt-0.5">Sign out of your account</p>
+                    <p className="text-xs text-text-muted mt-0.5">Sign out of your account</p>
                   </div>
                 </button>
               </div>
@@ -699,10 +699,10 @@ const TeacherDashboard: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">
+          <h1 className="text-2xl font-bold text-text-primary mb-2">
             Welcome back, {user?.fullName?.split(' ')[0]}!
           </h1>
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-text-secondary">
             Here's your teaching schedule for today
           </p>
         </div>
@@ -754,69 +754,69 @@ const TeacherDashboard: React.FC = () => {
 
       {/* Statistics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <Card className="bg-white border border-gray-200 hover:shadow-lg transition-shadow duration-200">
+        <Card className="bg-surface border border-border hover:shadow-lg transition-shadow duration-200">
           <CardContent className="p-6">
             <div className="flex items-center">
               <div className="p-3 bg-blue-100 rounded-xl flex-shrink-0">
                 <BookOpen className="w-6 h-6 text-blue-600" />
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Total Classes</p>
-                <p className="text-2xl font-bold text-gray-900">
+                <p className="text-sm font-medium text-text-secondary">Total Classes</p>
+                <p className="text-2xl font-bold text-text-primary">
                   {teacherLoading ? '...' : totalClasses}
                 </p>
-                <p className="text-xs text-gray-500 mt-1">Active groups</p>
+                <p className="text-xs text-text-muted mt-1">Active groups</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-white border border-gray-200 hover:shadow-lg transition-shadow duration-200">
+        <Card className="bg-surface border border-border hover:shadow-lg transition-shadow duration-200">
           <CardContent className="p-6">
             <div className="flex items-center">
               <div className="p-3 bg-green-100 rounded-xl flex-shrink-0">
                 <Users className="w-6 h-6 text-green-600" />
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Total Students</p>
-                <p className="text-2xl font-bold text-gray-900">
+                <p className="text-sm font-medium text-text-secondary">Total Students</p>
+                <p className="text-2xl font-bold text-text-primary">
                   {teacherLoading ? '...' : totalStudents}
                 </p>
-                <p className="text-xs text-gray-500 mt-1">Across all classes</p>
+                <p className="text-xs text-text-muted mt-1">Across all classes</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-white border border-gray-200 hover:shadow-lg transition-shadow duration-200">
+        <Card className="bg-surface border border-border hover:shadow-lg transition-shadow duration-200">
           <CardContent className="p-6">
             <div className="flex items-center">
               <div className="p-3 bg-purple-100 rounded-xl flex-shrink-0">
                 <GraduationCap className="w-6 h-6 text-purple-600" />
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Subjects</p>
-                <p className="text-2xl font-bold text-gray-900">
+                <p className="text-sm font-medium text-text-secondary">Subjects</p>
+                <p className="text-2xl font-bold text-text-primary">
                   {teacherLoading ? '...' : totalSubjects}
                 </p>
-                <p className="text-xs text-gray-500 mt-1">Different subjects</p>
+                <p className="text-xs text-text-muted mt-1">Different subjects</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-white border border-gray-200 hover:shadow-lg transition-shadow duration-200">
+        <Card className="bg-surface border border-border hover:shadow-lg transition-shadow duration-200">
           <CardContent className="p-6">
             <div className="flex items-center">
               <div className="p-3 bg-orange-100 rounded-xl flex-shrink-0">
                 <CalendarIcon className="w-6 h-6 text-orange-600" />
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">This Week</p>
-                <p className="text-2xl font-bold text-gray-900">
+                <p className="text-sm font-medium text-text-secondary">This Week</p>
+                <p className="text-2xl font-bold text-text-primary">
                   {teacherLoading ? '...' : `${attendanceStats.presentCount}/${attendanceStats.totalSessions}`}
                 </p>
-                <p className="text-xs text-gray-500 mt-1">Attendance rate</p>
+                <p className="text-xs text-text-muted mt-1">Attendance rate</p>
               </div>
             </div>
           </CardContent>
@@ -826,9 +826,9 @@ const TeacherDashboard: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Today's Classes - Full Width Section */}
         <div className="lg:col-span-2 space-y-6">
-          <Card className="bg-white border border-gray-200 hover:shadow-lg transition-shadow duration-200">
-            <CardHeader className="border-b border-gray-200">
-              <CardTitle className="flex items-center space-x-2 text-gray-900">
+          <Card className="bg-surface border border-border hover:shadow-lg transition-shadow duration-200">
+            <CardHeader className="border-b border-border">
+              <CardTitle className="flex items-center space-x-2 text-text-primary">
                 <Clock className="w-5 h-5 text-purple-600" />
                 <span>Today's Classes</span>
               </CardTitle>
@@ -837,10 +837,10 @@ const TeacherDashboard: React.FC = () => {
               {teacherLoading ? (
                 <div className="flex items-center justify-center py-12">
                   <Loader2 className="w-6 h-6 animate-spin text-purple-600" />
-                  <span className="ml-2 text-gray-600">Loading classes...</span>
+                  <span className="ml-2 text-text-secondary">Loading classes...</span>
                 </div>
               ) : todayClasses.length === 0 ? (
-                <div className="text-center py-12 text-gray-500">
+                <div className="text-center py-12 text-text-muted">
                   <Clock className="w-16 h-16 mx-auto mb-4 opacity-50" />
                   <p className="text-lg font-medium mb-1">No classes scheduled for today</p>
                   <p className="text-sm">Enjoy your day off!</p>
@@ -851,10 +851,10 @@ const TeacherDashboard: React.FC = () => {
                     <div key={classItem.id} className="p-5 bg-gradient-to-r from-purple-50 to-blue-50 rounded-xl border border-purple-100 hover:shadow-md transition-all duration-200">
                       <div className="flex justify-between items-start mb-4">
                         <div>
-                          <h3 className="text-lg font-bold text-gray-900 mb-1">{classItem.subject}</h3>
-                          <p className="text-sm text-gray-600">{classItem.group}</p>
+                          <h3 className="text-lg font-bold text-text-primary mb-1">{classItem.subject}</h3>
+                          <p className="text-sm text-text-secondary">{classItem.group}</p>
                         </div>
-                        <Badge variant="outline" className="bg-white border-purple-200 text-purple-700 font-medium">
+                        <Badge variant="outline" className="bg-surface border-purple-200 text-purple-700 font-medium">
                           {classItem.time}
                         </Badge>
                       </div>
@@ -864,8 +864,8 @@ const TeacherDashboard: React.FC = () => {
                             <Users className="w-5 h-5 text-blue-600" />
                           </div>
                           <div>
-                            <p className="text-xs text-gray-500">Students</p>
-                            <p className="font-bold text-gray-900">{classItem.students}</p>
+                            <p className="text-xs text-text-muted">Students</p>
+                            <p className="font-bold text-text-primary">{classItem.students}</p>
                           </div>
                         </div>
                         <div className="flex items-center gap-3">
@@ -873,8 +873,8 @@ const TeacherDashboard: React.FC = () => {
                             <BookOpen className="w-5 h-5 text-green-600" />
                           </div>
                           <div>
-                            <p className="text-xs text-gray-500">Room</p>
-                            <p className="font-bold text-gray-900">{classItem.room}</p>
+                            <p className="text-xs text-text-muted">Room</p>
+                            <p className="font-bold text-text-primary">{classItem.room}</p>
                           </div>
                         </div>
                       </div>
@@ -886,9 +886,9 @@ const TeacherDashboard: React.FC = () => {
           </Card>
 
           {/* Calendar Section */}
-          <Card className="bg-white border border-gray-200 hover:shadow-lg transition-shadow duration-200">
-            <CardHeader className="border-b border-gray-200">
-              <CardTitle className="flex items-center space-x-2 text-gray-900">
+          <Card className="bg-surface border border-border hover:shadow-lg transition-shadow duration-200">
+            <CardHeader className="border-b border-border">
+              <CardTitle className="flex items-center space-x-2 text-text-primary">
                 <CalendarIcon className="w-5 h-5 text-purple-600" />
                 <span>Schedule Calendar</span>
               </CardTitle>
@@ -906,9 +906,9 @@ const TeacherDashboard: React.FC = () => {
 
         {/* Upcoming Events */}
         <div className="space-y-6">
-          <Card className="bg-white border border-gray-200 hover:shadow-lg transition-shadow duration-200">
-            <CardHeader className="border-b border-gray-200">
-              <CardTitle className="flex items-center space-x-2 text-gray-900">
+          <Card className="bg-surface border border-border hover:shadow-lg transition-shadow duration-200">
+            <CardHeader className="border-b border-border">
+              <CardTitle className="flex items-center space-x-2 text-text-primary">
                 <CalendarIcon className="w-5 h-5 text-purple-600" />
                 <span>Upcoming Events</span>
               </CardTitle>
@@ -917,19 +917,19 @@ const TeacherDashboard: React.FC = () => {
               {eventsLoading ? (
                 <div className="flex items-center justify-center py-8">
                   <Loader2 className="w-6 h-6 animate-spin text-purple-600" />
-                  <span className="ml-2 text-gray-600">Loading events...</span>
+                  <span className="ml-2 text-text-secondary">Loading events...</span>
                 </div>
               ) : upcomingEvents.length === 0 ? (
-                <div className="text-center py-8 text-gray-500">
+                <div className="text-center py-8 text-text-muted">
                   <CalendarIcon className="w-12 h-12 mx-auto mb-3 opacity-50" />
                   <p className="font-medium mb-1">No upcoming events</p>
                   <p className="text-sm">You're all caught up!</p>
                 </div>
               ) : (
                 upcomingEvents.map((event) => (
-                  <div key={event.id} className="p-4 bg-gradient-to-br from-gray-50 to-purple-50 rounded-lg border border-gray-200 hover:shadow-sm transition-shadow duration-200">
+                  <div key={event.id} className="p-4 bg-gradient-to-br from-gray-50 to-purple-50 rounded-lg border border-border hover:shadow-sm transition-shadow duration-200">
                     <div className="flex justify-between items-start mb-3">
-                      <h4 className="font-bold text-gray-900">{event.title}</h4>
+                      <h4 className="font-bold text-text-primary">{event.title}</h4>
                       <Badge
                         variant={
                           event.type === 'exam' ? 'destructive' :
@@ -941,11 +941,11 @@ const TeacherDashboard: React.FC = () => {
                       </Badge>
                     </div>
                     <div className="space-y-2 text-sm">
-                      <div className="flex items-center gap-2 text-gray-600">
+                      <div className="flex items-center gap-2 text-text-secondary">
                         <CalendarIcon className="w-4 h-4" />
                         <span>{new Date(event.date).toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}</span>
                       </div>
-                      <div className="flex items-center gap-2 text-gray-600">
+                      <div className="flex items-center gap-2 text-text-secondary">
                         <Clock className="w-4 h-4" />
                         <span>{event.time}</span>
                       </div>
@@ -961,15 +961,15 @@ const TeacherDashboard: React.FC = () => {
       {/* Change Password Modal */}
       {isChangePasswordOpen && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl w-full max-w-md max-h-[90vh] overflow-hidden shadow-xl">
+          <div className="bg-surface rounded-2xl w-full max-w-md max-h-[90vh] overflow-hidden shadow-xl">
             {/* Header */}
-            <div className="flex items-center justify-between p-6 border-b border-gray-200">
-              <h2 className="text-xl font-bold text-gray-900">Change Password</h2>
+            <div className="flex items-center justify-between p-6 border-b border-border">
+              <h2 className="text-xl font-bold text-text-primary">Change Password</h2>
               <button
                 onClick={() => setIsChangePasswordOpen(false)}
-                className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                className="p-2 rounded-lg hover:bg-surface-secondary transition-colors"
               >
-                <X className="w-5 h-5 text-gray-500" />
+                <X className="w-5 h-5 text-text-muted" />
               </button>
             </div>
 
@@ -1015,7 +1015,7 @@ const TeacherDashboard: React.FC = () => {
               </div>
 
               {/* Action Buttons */}
-              <div className="flex gap-3 pt-4 border-t border-gray-200">
+              <div className="flex gap-3 pt-4 border-t border-border">
                 <ModernButton
                   variant="outline"
                   onClick={() => setIsChangePasswordOpen(false)}
@@ -1042,13 +1042,13 @@ const TeacherDashboard: React.FC = () => {
   );
 
   return isMobile ? (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col">
       {/* Mobile Header */}
-      <div className="bg-white px-6 pt-6 pb-4 sticky top-0 z-20 border-b border-gray-100">
+      <div className="bg-surface px-6 pt-6 pb-4 sticky top-0 z-20 border-b border-gray-100">
         <div className="flex items-center justify-between mb-3">
           <div>
-            <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">Welcome back</p>
-            <h1 className="text-2xl font-bold text-gray-900 mt-1">
+            <p className="text-xs text-text-muted font-medium uppercase tracking-wide">Welcome back</p>
+            <h1 className="text-2xl font-bold text-text-primary mt-1">
               {user?.fullName?.split(' ')[0]}
             </h1>
           </div>
@@ -1073,14 +1073,14 @@ const TeacherDashboard: React.FC = () => {
       {renderContent()}
 
       {/* Bottom Navigation - Beautiful Design */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100">
+      <div className="fixed bottom-0 left-0 right-0 bg-surface border-t border-gray-100">
         <div className="flex safe-area-inset-bottom px-2 py-2">
           <button
             onClick={() => setCurrentView('overview')}
             className={`flex-1 py-2 px-3 rounded-xl touch-manipulation transition-all duration-200 ${
               currentView === 'overview'
                 ? 'bg-purple-500 text-white'
-                : 'text-gray-500 hover:bg-gray-50'
+                : 'text-text-muted hover:bg-background'
             }`}
           >
             <BookOpen className={`w-6 h-6 mx-auto mb-1 ${
@@ -1094,7 +1094,7 @@ const TeacherDashboard: React.FC = () => {
             className={`flex-1 py-2 px-3 rounded-xl touch-manipulation transition-all duration-200 ${
               currentView === 'classes'
                 ? 'bg-purple-500 text-white'
-                : 'text-gray-500 hover:bg-gray-50'
+                : 'text-text-muted hover:bg-background'
             }`}
           >
             <Clock className={`w-6 h-6 mx-auto mb-1 ${
@@ -1108,7 +1108,7 @@ const TeacherDashboard: React.FC = () => {
             className={`flex-1 py-2 px-3 rounded-xl touch-manipulation transition-all duration-200 ${
               currentView === 'events'
                 ? 'bg-purple-500 text-white'
-                : 'text-gray-500 hover:bg-gray-50'
+                : 'text-text-muted hover:bg-background'
             }`}
           >
             <CalendarIcon className={`w-6 h-6 mx-auto mb-1 ${
@@ -1122,7 +1122,7 @@ const TeacherDashboard: React.FC = () => {
             className={`flex-1 py-2 px-3 rounded-xl touch-manipulation transition-all duration-200 ${
               currentView === 'profile'
                 ? 'bg-purple-500 text-white'
-                : 'text-gray-500 hover:bg-gray-50'
+                : 'text-text-muted hover:bg-background'
             }`}
           >
             <User className={`w-6 h-6 mx-auto mb-1 ${
@@ -1136,15 +1136,15 @@ const TeacherDashboard: React.FC = () => {
       {/* Change Password Modal - Mobile Version */}
       {isChangePasswordOpen && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-end sm:items-center justify-center p-4">
-          <div className="bg-white rounded-t-2xl sm:rounded-2xl w-full max-w-md max-h-[90vh] overflow-hidden shadow-xl">
+          <div className="bg-surface rounded-t-2xl sm:rounded-2xl w-full max-w-md max-h-[90vh] overflow-hidden shadow-xl">
             {/* Header */}
-            <div className="flex items-center justify-between p-6 border-b border-gray-200">
-              <h2 className="text-xl font-bold text-gray-900">Change Password</h2>
+            <div className="flex items-center justify-between p-6 border-b border-border">
+              <h2 className="text-xl font-bold text-text-primary">Change Password</h2>
               <button
                 onClick={() => setIsChangePasswordOpen(false)}
-                className="p-2 rounded-lg hover:bg-gray-100 touch-manipulation transition-colors"
+                className="p-2 rounded-lg hover:bg-surface-secondary touch-manipulation transition-colors"
               >
-                <X className="w-5 h-5 text-gray-500" />
+                <X className="w-5 h-5 text-text-muted" />
               </button>
             </div>
 
@@ -1190,7 +1190,7 @@ const TeacherDashboard: React.FC = () => {
               </div>
 
               {/* Action Buttons */}
-              <div className="flex gap-3 pt-4 border-t border-gray-200">
+              <div className="flex gap-3 pt-4 border-t border-border">
                 <ModernButton
                   variant="outline"
                   onClick={() => setIsChangePasswordOpen(false)}

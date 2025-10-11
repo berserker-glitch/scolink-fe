@@ -37,7 +37,7 @@ export const CalendarDay: React.FC<CalendarDayProps> = ({
           ? 'bg-purple-100 border-purple-500 shadow-purple-200'
           : isToday
           ? 'bg-purple-50 border-purple-200 shadow-purple-100'
-          : 'bg-white border-transparent hover:bg-gray-50'
+          : 'bg-surface border-transparent hover:bg-gray-50'
       }`}
     >
       <div className="flex flex-col h-full">

@@ -74,7 +74,7 @@ export const Schedule: React.FC = () => {
   };
 
   return (
-    <div className="h-screen bg-gray-50 overflow-hidden p-4">
+    <div className="h-screen bg-background overflow-hidden p-4">
       <div 
         className="h-full w-full"
         style={{

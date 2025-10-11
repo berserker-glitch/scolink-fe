@@ -214,12 +214,12 @@ export const SuperAdminManagement: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header Section */}
-      <div className="bg-white border-b border-gray-200">
+      <div className="bg-surface border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
             <div className="text-center lg:text-left mb-6 lg:mb-0">
-              <h1 className="text-3xl font-bold text-gray-900">System Management</h1>
-              <p className="text-gray-600 mt-2">Manage centers, users, and system administration</p>
+              <h1 className="text-3xl font-bold text-text-primary">System Management</h1>
+              <p className="text-text-secondary mt-2">Manage centers, users, and system administration</p>
             </div>
             <ModernButton
               onClick={() => setShowCreateForm(true)}
@@ -237,7 +237,7 @@ export const SuperAdminManagement: React.FC = () => {
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Search and Filter Bar */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+        <div className="bg-surface rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0 lg:space-x-4">
             {/* Search */}
             <div className="relative flex-1 max-w-md">
@@ -284,7 +284,7 @@ export const SuperAdminManagement: React.FC = () => {
                           <div className="flex items-center justify-between mb-2">
                             <div className="flex items-center space-x-2">
                               <Building2 className="w-5 h-5 text-blue-600" />
-                              <h3 className="font-semibold text-gray-900 truncate">{center.name}</h3>
+                              <h3 className="font-semibold text-text-primary truncate">{center.name}</h3>
                             </div>
                             {center.plan && (
                               <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getPlanBadgeColor(center.plan)}`}>
@@ -292,7 +292,7 @@ export const SuperAdminManagement: React.FC = () => {
                               </span>
                             )}
                           </div>
-                          <p className="text-sm text-gray-600 line-clamp-2">{center.location}</p>
+                          <p className="text-sm text-text-secondary line-clamp-2">{center.location}</p>
                         </div>
                         
                         <DropdownMenu>
@@ -336,7 +336,7 @@ export const SuperAdminManagement: React.FC = () => {
                         </DropdownMenu>
                       </div>
                       
-                      <div className="space-y-2 text-sm text-gray-600 mb-4">
+                      <div className="space-y-2 text-sm text-text-secondary mb-4">
                         {center.email && (
                           <p className="flex items-center">
                             <span className="font-medium w-16">Email:</span>
@@ -359,7 +359,7 @@ export const SuperAdminManagement: React.FC = () => {
                               <div className={`p-1.5 rounded-full ${getPlanBadgeColor(center.plan)}`}>
                                 {React.createElement(getPlanIcon(center.plan), { className: 'w-3 h-3' })}
                               </div>
-                              <span className="font-medium text-gray-900">
+                              <span className="font-medium text-text-primary">
                                 {formatPlanName(center.plan)} Plan
                               </span>
                             </div>
@@ -368,7 +368,7 @@ export const SuperAdminManagement: React.FC = () => {
                                 {isPlanExpired(center.plan, center.planExpiresAt) ? (
                                   <span className="text-red-600 font-medium">Expired</span>
                                 ) : center.planExpiresAt ? (
-                                  <span className="text-gray-600">
+                                  <span className="text-text-secondary">
                                     Exp: {formatExpiryDate(center.planExpiresAt)}
                                   </span>
                                 ) : (
@@ -403,7 +403,7 @@ export const SuperAdminManagement: React.FC = () => {
             ) : (
               <div className="text-center py-16">
                 <Building2 className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                <h3 className="text-xl font-medium text-gray-900 mb-2">No Centers Found</h3>
+                <h3 className="text-xl font-medium text-text-primary mb-2">No Centers Found</h3>
                 <p className="text-gray-500 mb-6">
                   {searchTerm ? 'No centers match your search criteria' : 'Create your first center to get started'}
                 </p>
@@ -464,7 +464,7 @@ export const SuperAdminManagement: React.FC = () => {
                         </th>
                       </tr>
                     </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
+                    <tbody className="bg-surface divide-y divide-gray-200">
                       {filteredUsers.map((user) => (
                         <tr key={user.id} className="hover:bg-gray-50">
                           <td className="px-6 py-4 whitespace-nowrap">
@@ -475,7 +475,7 @@ export const SuperAdminManagement: React.FC = () => {
                                 </span>
                               </div>
                               <div className="ml-4">
-                                <div className="text-sm font-medium text-gray-900">{user.fullName}</div>
+                                <div className="text-sm font-medium text-text-primary">{user.fullName}</div>
                                 <div className="text-sm text-gray-500">{user.email}</div>
                               </div>
                             </div>
@@ -549,7 +549,7 @@ export const SuperAdminManagement: React.FC = () => {
               ) : (
                 <div className="text-center py-16">
                   <Users className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                  <h3 className="text-xl font-medium text-gray-900 mb-2">No Users Found</h3>
+                  <h3 className="text-xl font-medium text-text-primary mb-2">No Users Found</h3>
                   <p className="text-gray-500">
                     {searchTerm ? 'No users match your search criteria' : 'No users in the system yet'}
                   </p>
@@ -585,22 +585,22 @@ export const SuperAdminManagement: React.FC = () => {
                 <div className="space-y-3">
                   <div>
                     <label className="text-sm font-medium text-gray-500">Name</label>
-                    <p className="text-lg text-gray-900">{selectedItem.name}</p>
+                    <p className="text-lg text-text-primary">{selectedItem.name}</p>
                   </div>
                   <div>
                     <label className="text-sm font-medium text-gray-500">Location</label>
-                    <p className="text-gray-900">{selectedItem.location}</p>
+                    <p className="text-text-primary">{selectedItem.location}</p>
                   </div>
                   {selectedItem.phoneNumber && (
                     <div>
                       <label className="text-sm font-medium text-gray-500">Phone</label>
-                      <p className="text-gray-900">{selectedItem.phoneNumber}</p>
+                      <p className="text-text-primary">{selectedItem.phoneNumber}</p>
                     </div>
                   )}
                   {selectedItem.email && (
                     <div>
                       <label className="text-sm font-medium text-gray-500">Email</label>
-                      <p className="text-gray-900">{selectedItem.email}</p>
+                      <p className="text-text-primary">{selectedItem.email}</p>
                     </div>
                   )}
                   <div>
@@ -611,7 +611,7 @@ export const SuperAdminManagement: React.FC = () => {
                   </div>
                   <div>
                     <label className="text-sm font-medium text-gray-500">Created</label>
-                    <p className="text-gray-900">{new Date(selectedItem.createdAt).toLocaleString()}</p>
+                    <p className="text-text-primary">{new Date(selectedItem.createdAt).toLocaleString()}</p>
                   </div>
                 </div>
               ) : (
@@ -619,16 +619,16 @@ export const SuperAdminManagement: React.FC = () => {
                 <div className="space-y-3">
                   <div>
                     <label className="text-sm font-medium text-gray-500">Full Name</label>
-                    <p className="text-lg text-gray-900">{selectedItem.fullName}</p>
+                    <p className="text-lg text-text-primary">{selectedItem.fullName}</p>
                   </div>
                   <div>
                     <label className="text-sm font-medium text-gray-500">Email</label>
-                    <p className="text-gray-900">{selectedItem.email}</p>
+                    <p className="text-text-primary">{selectedItem.email}</p>
                   </div>
                   {selectedItem.phoneNumber && (
                     <div>
                       <label className="text-sm font-medium text-gray-500">Phone</label>
-                      <p className="text-gray-900">{selectedItem.phoneNumber}</p>
+                      <p className="text-text-primary">{selectedItem.phoneNumber}</p>
                     </div>
                   )}
                   <div>
@@ -645,7 +645,7 @@ export const SuperAdminManagement: React.FC = () => {
                   </div>
                   <div>
                     <label className="text-sm font-medium text-gray-500">Created</label>
-                    <p className="text-gray-900">{new Date(selectedItem.createdAt).toLocaleString()}</p>
+                    <p className="text-text-primary">{new Date(selectedItem.createdAt).toLocaleString()}</p>
                   </div>
                 </div>
               )}

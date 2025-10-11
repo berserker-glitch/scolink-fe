@@ -81,7 +81,7 @@ export const Payments: React.FC = () => {
         {/* Header */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">Payments Database</h1>
+            <h1 className="text-2xl font-bold text-text-primary mb-2">Payments Database</h1>
             <p className="text-sm text-gray-600">
               {pagination?.total || 0} results • Welcome to Scolink Dashboard
             </p>
@@ -103,7 +103,7 @@ export const Payments: React.FC = () => {
 
         {/* Search and Filters */}
         <div className="mb-6">
-          <div className="bg-white rounded-lg border border-gray-200 p-4">
+          <div className="bg-surface rounded-lg border border-gray-200 p-4">
             <div className="flex items-center space-x-4">
               {/* Search */}
               <div className="flex-1 relative">
@@ -140,10 +140,10 @@ export const Payments: React.FC = () => {
         </div>
 
         {/* Payments Table */}
-        <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+        <div className="bg-surface rounded-lg border border-gray-200 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gray-50">
+              <thead className="bg-background">
                 <tr>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student</th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Month</th>
@@ -153,7 +153,7 @@ export const Payments: React.FC = () => {
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Payment Date</th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="bg-surface divide-y divide-gray-200">
                 {isLoading ? (
                   <tr>
                     <td colSpan={6} className="px-4 py-8 text-center text-gray-500">
@@ -174,7 +174,7 @@ export const Payments: React.FC = () => {
                   </tr>
                 ) : (
                   payments.map((payment: any) => (
-                    <tr key={payment.id} className="hover:bg-gray-50 transition-colors">
+                    <tr key={payment.id} className="hover:bg-background transition-colors">
                       <td className="px-4 py-4 whitespace-nowrap">
                         <div className="flex items-center">
                           <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center mr-3">
@@ -183,14 +183,14 @@ export const Payments: React.FC = () => {
                             </span>
                           </div>
                           <div>
-                            <div className="text-sm font-medium text-gray-900">
+                            <div className="text-sm font-medium text-text-primary">
                               {payment.student?.firstName} {payment.student?.lastName}
                             </div>
                           </div>
                         </div>
                       </td>
                       <td className="px-4 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">
+                        <div className="text-sm text-text-primary">
                           {new Date(payment.month + '-01').toLocaleDateString('en-US', { 
                             year: 'numeric', 
                             month: 'long' 
@@ -198,12 +198,12 @@ export const Payments: React.FC = () => {
                         </div>
                       </td>
                       <td className="px-4 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900 max-w-48 truncate">
+                        <div className="text-sm text-text-primary max-w-48 truncate">
                           {getSubjectNames(payment.subjects)}
                         </div>
                       </td>
                       <td className="px-4 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">
+                        <div className="text-sm text-text-primary">
                           {Number(payment.amount).toLocaleString()} DH
                         </div>
                       </td>
@@ -222,7 +222,7 @@ export const Payments: React.FC = () => {
                         </Badge>
                       </td>
                       <td className="px-4 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">
+                        <div className="text-sm text-text-primary">
                           {payment.paymentDate ? 
                             new Date(payment.paymentDate).toLocaleDateString() : 
                             'Not paid'
@@ -238,7 +238,7 @@ export const Payments: React.FC = () => {
 
           {/* Pagination */}
           {pagination && pagination.totalPages > 1 && (
-            <div className="px-4 py-3 bg-gray-50 border-t border-gray-200 flex items-center justify-between">
+            <div className="px-4 py-3 bg-background border-t border-gray-200 flex items-center justify-between">
               <div className="text-sm text-gray-700">
                 Showing {((currentPage - 1) * paymentsPerPage) + 1} to {Math.min(currentPage * paymentsPerPage, pagination.total)} of {pagination.total} results
               </div>

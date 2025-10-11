@@ -77,30 +77,30 @@ Inspired by Notion's clean minimalism
   }
 
   .dark {
-    /* Dark mode - purple-themed dark palette */
-    --background: 222 47% 4%;
-    --foreground: 250 100% 98%;
-    --surface: 222 47% 6%;
-    --surface-secondary: 222 47% 8%;
-    --surface-hover: 222 47% 10%;
-    --border: 215 25% 15%;
-    --border-strong: 215 25% 25%;
-    --text-primary: 250 100% 98%;
-    --text-secondary: 215 16% 75%;
-    --text-muted: 215 16% 55%;
+    /* Near-black backgrounds for eye strain reduction */
+    --background: 0 0% 4%;
+    --foreground: 0 0% 98%;
+    --surface: 0 0% 7%;
+    --surface-secondary: 0 0% 9%;
+    --surface-hover: 0 0% 11%;
+    --border: 0 0% 15%;
+    --border-strong: 0 0% 25%;
+    --text-primary: 0 0% 98%;
+    --text-secondary: 0 0% 75%;
+    --text-muted: 0 0% 55%;
     --interactive: 262 83% 68%;
     --interactive-hover: 262 83% 78%;
     
-    /* Dark sidebar colors */
-    --sidebar-bg: 262 83% 25%;
-    --sidebar-bg-secondary: 262 83% 20%;
+    /* Dark sidebar with near-black */
+    --sidebar-bg: 0 0% 8%;
+    --sidebar-bg-secondary: 0 0% 6%;
     --sidebar-text: 0 0% 100%;
-    --sidebar-text-secondary: 262 50% 85%;
+    --sidebar-text-secondary: 0 0% 70%;
     
     /* Legacy shadcn compatibility for dark mode */
-    --card: 0 0% 10%;
+    --card: 0 0% 7%;
     --card-foreground: 0 0% 95%;
-    --popover: 0 0% 10%;
+    --popover: 0 0% 7%;
     --popover-foreground: 0 0% 95%;
     --primary: 0 0% 95%;
     --primary-foreground: 0 0% 10%;
@@ -110,7 +110,7 @@ Inspired by Notion's clean minimalism
     --muted-foreground: 0 0% 65%;
     --accent: 0 0% 15%;
     --accent-foreground: 0 0% 90%;
-    --input: 0 0% 20%;
+    --input: 0 0% 12%;
     --ring: 0 0% 80%;
   }
 }
@@ -270,6 +270,10 @@ Inspired by Notion's clean minimalism
   .glass-effect {
     backdrop-filter: blur(16px);
     background: rgba(255, 255, 255, 0.8);
+  }
+  
+  .dark .glass-effect {
+    background: rgba(10, 10, 10, 0.8);
   }
   
   /* Gradient backgrounds */

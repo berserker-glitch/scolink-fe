@@ -424,14 +424,14 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
   if (!isOpen) return null;
   
   return (
-    <div className="w-full bg-white h-full overflow-hidden flex flex-col shadow-lg">
+    <div className="w-full bg-surface h-full overflow-hidden flex flex-col shadow-lg">
         <div className="p-4 shrink-0 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-xl font-bold text-gray-900">
+              <h2 className="text-xl font-bold text-text-primary">
                 {student.firstName} {student.lastName}
               </h2>
-              <p className="text-sm text-gray-600 mt-1">
+              <p className="text-sm text-text-secondary mt-1">
                 {student.yearName || 'Unknown Year'} • {student.fieldName || 'Unknown Field'}
               </p>
             </div>
@@ -1145,8 +1145,8 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
               </ModernButton>
             </div>
             
-            <div className="text-sm text-gray-600">
-              Monthly Fee: <span className="font-medium text-gray-900">{getMonthlyFee()} DH</span>
+            <div className="text-sm text-text-secondary">
+              Monthly Fee: <span className="font-medium text-text-primary">{getMonthlyFee()} DH</span>
             </div>
           </div>
         </div>
@@ -1199,7 +1199,7 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
                             <div className="flex items-center">
                               {isSelected && (
                                 <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center">
-                                  <div className="w-2 h-2 bg-white rounded-full"></div>
+                                  <div className="w-2 h-2 bg-surface rounded-full"></div>
                                 </div>
                               )}
                             </div>
@@ -1288,7 +1288,7 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
                                 </div>
                                 {selectedGroup === group.id && (
                                   <div className="w-4 h-4 rounded-full bg-primary flex items-center justify-center">
-                                    <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
+                                    <div className="w-1.5 h-1.5 bg-surface rounded-full"></div>
                                   </div>
                                 )}
                               </div>
@@ -1406,16 +1406,16 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
 
         {/* Delete Confirmation Dialog */}
         <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-          <AlertDialogContent className="bg-white border border-gray-200 shadow-xl">
+          <AlertDialogContent className="bg-surface border border-gray-200 shadow-xl">
             <AlertDialogHeader className="space-y-3">
-              <AlertDialogTitle className="text-xl font-semibold text-gray-900 flex items-center gap-2">
+              <AlertDialogTitle className="text-xl font-semibold text-text-primary flex items-center gap-2">
                 <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
                   <Trash2 className="w-5 h-5 text-red-600" />
                 </div>
                 Delete Student
               </AlertDialogTitle>
-              <AlertDialogDescription className="text-gray-600 leading-relaxed">
-                Are you sure you want to delete <span className="font-semibold text-gray-900">{student.firstName} {student.lastName}</span>?
+              <AlertDialogDescription className="text-text-secondary leading-relaxed">
+                Are you sure you want to delete <span className="font-semibold text-text-primary">{student.firstName} {student.lastName}</span>?
                 <br />
                 <span className="text-sm text-gray-500 mt-2 block">
                   This action cannot be undone and will permanently remove the student and all associated data including enrollments, payments, and attendance records.

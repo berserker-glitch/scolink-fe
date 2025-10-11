@@ -362,7 +362,7 @@ const PlanSelection: React.FC = () => {
                   </div>
 
                   <Button
-                    className={`w-full mt-6 ${plan.popular ? 'bg-white hover:bg-white/90' : 'hover:bg-primary/90'}`}
+                    className={`w-full mt-6 ${plan.popular ? 'bg-surface hover:bg-surface/90' : 'hover:bg-primary/90'}`}
                     style={{
                       backgroundColor: planStatus?.plan === plan.planId
                         ? 'hsl(142 76% 36%)'

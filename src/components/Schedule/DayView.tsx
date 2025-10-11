@@ -395,7 +395,7 @@ export const DayView: React.FC<DayViewProps> = ({
 
   return (
     <div className="relative">
-      <div className="h-full w-full bg-white rounded-xl flex flex-col">
+      <div className="h-full w-full bg-surface rounded-xl flex flex-col">
       {/* Header */}
       <div className="flex items-center justify-center p-4 flex-shrink-0">
         <div className="text-center">
@@ -423,7 +423,7 @@ export const DayView: React.FC<DayViewProps> = ({
       >
         {/* Time labels - Absolutely positioned and always visible */}
         <div
-          className="absolute left-0 top-0 w-20 bg-white z-30 border-r border-gray-200"
+          className="absolute left-0 top-0 w-20 bg-surface z-30 border-r border-gray-200"
           style={{
             height: `${Math.max(600, timeSlots.length * 80)}px` // Match the content area height
           }}

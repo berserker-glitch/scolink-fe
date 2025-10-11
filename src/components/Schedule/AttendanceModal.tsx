@@ -439,7 +439,7 @@ export const AttendanceModal: React.FC<AttendanceModalProps> = ({
       onClick={onClose}
     >
       <div 
-        className="bg-white sm:rounded-xl rounded-none w-full sm:w-[98vw] h-full sm:h-[96vh] overflow-hidden flex flex-col"
+        className="bg-surface sm:rounded-xl rounded-none w-full sm:w-[98vw] h-full sm:h-[96vh] overflow-hidden flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Mobile Header - Compact */}
@@ -494,7 +494,7 @@ export const AttendanceModal: React.FC<AttendanceModalProps> = ({
           <div className="flex items-center gap-3">
             <Users className="w-6 h-6 text-purple-600" />
             <div>
-              <h2 className="text-xl font-bold text-gray-900">Take Attendance</h2>
+              <h2 className="text-xl font-bold text-text-primary">Take Attendance</h2>
               <p className="text-sm text-gray-600">{groupName} - {subject}</p>
             </div>
           </div>
@@ -546,7 +546,7 @@ export const AttendanceModal: React.FC<AttendanceModalProps> = ({
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
             </div>
           ) : (
-            <div ref={printRef} className="bg-white">
+            <div ref={printRef} className="bg-surface">
               {/* Print Header */}
               <div className="text-center mb-6 print-only">
                 <h1 className="text-2xl font-bold mb-2">Monthly Attendance Sheet</h1>
@@ -602,7 +602,7 @@ export const AttendanceModal: React.FC<AttendanceModalProps> = ({
                                       dateStr, 
                                       e.target.value as 'present' | 'absent' | 'late'
                                     )}
-                                    className="border border-gray-200 rounded px-2 py-1 text-sm min-w-[50px] focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white"
+                                    className="border border-gray-200 rounded px-2 py-1 text-sm min-w-[50px] focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-surface"
                                   >
                                     <option value="">-</option>
                                     <option value="present">P</option>
@@ -654,11 +654,11 @@ export const AttendanceModal: React.FC<AttendanceModalProps> = ({
         </div>
 
         {/* Footer - Mobile */}
-        <div className="sm:hidden border-t bg-white flex-shrink-0 p-3 space-y-3">
+        <div className="sm:hidden border-t bg-surface flex-shrink-0 p-3 space-y-3">
           <div className="flex items-center gap-2">
             <button
               onClick={onClose}
-              className="flex-1 px-4 py-3 text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors font-medium"
+              className="flex-1 px-4 py-3 text-gray-700 bg-surface border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors font-medium"
             >
               Cancel
             </button>
@@ -695,7 +695,7 @@ export const AttendanceModal: React.FC<AttendanceModalProps> = ({
           <div className="flex items-center gap-3">
             <button
               onClick={onClose}
-              className="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+              className="px-4 py-2 text-gray-700 bg-surface border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
             >
               Cancel
             </button>

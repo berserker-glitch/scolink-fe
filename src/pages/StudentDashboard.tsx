@@ -73,22 +73,22 @@ export const StudentDashboard: React.FC = () => {
   if (studentLoading || !currentStudent) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center p-4">
-        <div className="bg-white rounded-2xl p-6 text-center">
+        <div className="bg-surface rounded-2xl p-6 text-center">
           <div className="w-16 h-16 mx-auto mb-4 border-4 border-purple-600 border-t-transparent rounded-full animate-spin"></div>
-          <h2 className="text-xl font-bold text-gray-900 mb-2">Loading...</h2>
-          <p className="text-gray-600">Please wait while we load your information</p>
+          <h2 className="text-xl font-bold text-text-primary mb-2">Loading...</h2>
+          <p className="text-text-secondary">Please wait while we load your information</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20">
+    <div className="min-h-screen bg-surface-secondary pb-20">
       {/* Header */}
       <div className="bg-gradient-to-br from-purple-600 to-purple-700 text-white px-4 pt-8 pb-6 rounded-b-3xl shadow-lg">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+            <div className="w-12 h-12 bg-surface/20 rounded-full flex items-center justify-center backdrop-blur-sm">
               <User className="w-6 h-6 text-white" />
             </div>
             <div>
@@ -98,7 +98,7 @@ export const StudentDashboard: React.FC = () => {
           </div>
           <button
             onClick={() => setShowMenu(!showMenu)}
-            className="p-2 hover:bg-white/10 rounded-full transition-colors"
+            className="p-2 hover:bg-surface/10 rounded-full transition-colors"
           >
             <Menu className="w-6 h-6" />
           </button>
@@ -106,17 +106,17 @@ export const StudentDashboard: React.FC = () => {
 
         {/* Quick Stats */}
         <div className="grid grid-cols-3 gap-3">
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 text-center">
+          <div className="bg-surface/10 backdrop-blur-sm rounded-xl p-3 text-center">
             <BookOpen className="w-6 h-6 mx-auto mb-1" />
             <p className="text-2xl font-bold">{enrollments.length}</p>
             <p className="text-xs text-purple-100">Subjects</p>
           </div>
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 text-center">
+          <div className="bg-surface/10 backdrop-blur-sm rounded-xl p-3 text-center">
             <Calendar className="w-6 h-6 mx-auto mb-1" />
             <p className="text-2xl font-bold">{todayClasses.length}</p>
             <p className="text-xs text-purple-100">Today</p>
           </div>
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 text-center">
+          <div className="bg-surface/10 backdrop-blur-sm rounded-xl p-3 text-center">
             <Award className="w-6 h-6 mx-auto mb-1" />
             <p className="text-2xl font-bold">
               {enrollments.length > 0 
@@ -132,7 +132,7 @@ export const StudentDashboard: React.FC = () => {
       {showMenu && (
         <div className="fixed inset-0 bg-black/50 z-50" onClick={() => setShowMenu(false)}>
           <div 
-            className="absolute top-0 right-0 w-64 h-full bg-white shadow-xl p-6"
+            className="absolute top-0 right-0 w-64 h-full bg-surface shadow-xl p-6"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center gap-3 mb-6 pb-6 border-b">
@@ -140,8 +140,8 @@ export const StudentDashboard: React.FC = () => {
                 <User className="w-6 h-6 text-purple-600" />
               </div>
               <div>
-                <p className="font-semibold text-gray-900">{currentStudent.firstName}</p>
-                <p className="text-sm text-gray-500">{currentStudent.phone}</p>
+                <p className="font-semibold text-text-primary">{currentStudent.firstName}</p>
+                <p className="text-sm text-text-muted">{currentStudent.phone}</p>
               </div>
             </div>
             
@@ -164,29 +164,29 @@ export const StudentDashboard: React.FC = () => {
         {activeView === 'home' && (
           <>
             {/* Today's Classes */}
-            <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-              <div className="px-4 py-3 bg-purple-50 border-b flex items-center justify-between">
+            <div className="bg-surface rounded-2xl shadow-sm overflow-hidden">
+              <div className="px-4 py-3 bg-purple-50 dark:bg-purple-950/20 border-b flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Clock className="w-5 h-5 text-purple-600" />
-                  <h2 className="font-bold text-gray-900">Today's Classes</h2>
+                  <h2 className="font-bold text-text-primary">Today's Classes</h2>
                 </div>
-                <span className="text-sm text-gray-600">{today}</span>
+                <span className="text-sm text-text-secondary">{today}</span>
               </div>
               
               {todayClasses.length === 0 ? (
                 <div className="p-8 text-center">
-                  <Calendar className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                  <p className="text-gray-500">No classes scheduled for today</p>
-                  <p className="text-sm text-gray-400 mt-1">Enjoy your free day! 🎉</p>
+                  <Calendar className="w-12 h-12 text-text-muted mx-auto mb-3" />
+                  <p className="text-text-muted">No classes scheduled for today</p>
+                  <p className="text-sm text-text-muted mt-1">Enjoy your free day! 🎉</p>
                 </div>
               ) : (
                 <div className="divide-y">
                   {todayClasses.map((cls, index) => (
-                    <div key={index} className="p-4 hover:bg-gray-50 transition-colors">
+                    <div key={index} className="p-4 hover:bg-surface-secondary transition-colors">
                       <div className="flex items-center justify-between">
                         <div className="flex-1">
-                          <h3 className="font-semibold text-gray-900 mb-1">{cls?.subject}</h3>
-                          <div className="flex items-center gap-4 text-sm text-gray-600">
+                          <h3 className="font-semibold text-text-primary mb-1">{cls?.subject}</h3>
+                          <div className="flex items-center gap-4 text-sm text-text-secondary">
                             <span className="flex items-center gap-1">
                               <Clock className="w-4 h-4" />
                               {cls?.time}
@@ -197,7 +197,7 @@ export const StudentDashboard: React.FC = () => {
                             </span>
                           </div>
                         </div>
-                        <ChevronRight className="w-5 h-5 text-gray-400" />
+                        <ChevronRight className="w-5 h-5 text-text-muted" />
                       </div>
                     </div>
                   ))}
@@ -206,10 +206,10 @@ export const StudentDashboard: React.FC = () => {
             </div>
 
             {/* My Subjects */}
-            <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+            <div className="bg-surface rounded-2xl shadow-sm overflow-hidden">
               <div className="px-4 py-3 bg-blue-50 border-b flex items-center gap-2">
                 <BookOpen className="w-5 h-5 text-blue-600" />
-                <h2 className="font-bold text-gray-900">My Subjects</h2>
+                <h2 className="font-bold text-text-primary">My Subjects</h2>
               </div>
               
               <div className="p-3 space-y-2">
@@ -222,7 +222,7 @@ export const StudentDashboard: React.FC = () => {
                       className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-4 border border-blue-100"
                     >
                       <div className="flex items-center justify-between mb-3">
-                        <h3 className="font-semibold text-gray-900">{enrollment.subjectName || 'Unknown'}</h3>
+                        <h3 className="font-semibold text-text-primary">{enrollment.subjectName || 'Unknown'}</h3>
                         <div className={`px-3 py-1 rounded-full text-xs font-medium ${
                           attendanceRate >= 80 ? 'bg-green-100 text-green-700' :
                           attendanceRate >= 60 ? 'bg-yellow-100 text-yellow-700' :
@@ -233,12 +233,12 @@ export const StudentDashboard: React.FC = () => {
                       </div>
                       
                       <div className="flex items-center justify-between text-sm">
-                        <span className="text-gray-600">Group: {enrollment.groupName}</span>
+                        <span className="text-text-secondary">Group: {enrollment.groupName}</span>
                       </div>
                       
                       {/* Attendance Progress Bar */}
                       <div className="mt-3">
-                        <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div className="w-full bg-surface-secondary rounded-full h-2">
                           <div 
                             className={`h-2 rounded-full transition-all ${
                               attendanceRate >= 80 ? 'bg-green-500' :
@@ -256,17 +256,17 @@ export const StudentDashboard: React.FC = () => {
             </div>
 
             {/* Payment Status */}
-            <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-              <div className="px-4 py-3 bg-green-50 border-b flex items-center gap-2">
+            <div className="bg-surface rounded-2xl shadow-sm overflow-hidden">
+              <div className="px-4 py-3 bg-green-50 dark:bg-green-950/20 border-b flex items-center gap-2">
                 <CreditCard className="w-5 h-5 text-green-600" />
-                <h2 className="font-bold text-gray-900">Payment Status</h2>
+                <h2 className="font-bold text-text-primary">Payment Status</h2>
               </div>
               
               <div className="p-4">
                 <div className="flex items-center justify-between mb-4">
                   <div>
-                    <p className="text-sm text-gray-600">Monthly Fee</p>
-                    <p className="text-2xl font-bold text-gray-900">{monthlyFee} DH</p>
+                    <p className="text-sm text-text-secondary">Monthly Fee</p>
+                    <p className="text-2xl font-bold text-text-primary">{monthlyFee} DH</p>
                   </div>
                   <div className={`w-16 h-16 rounded-full flex items-center justify-center ${
                     currentMonthPayment?.status === 'paid' ? 'bg-green-100' : 'bg-red-100'
@@ -303,10 +303,10 @@ export const StudentDashboard: React.FC = () => {
         )}
 
         {activeView === 'profile' && (
-          <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-            <div className="px-4 py-3 bg-purple-50 border-b flex items-center gap-2">
+          <div className="bg-surface rounded-2xl shadow-sm overflow-hidden">
+            <div className="px-4 py-3 bg-purple-50 dark:bg-purple-950/20 border-b flex items-center gap-2">
               <User className="w-5 h-5 text-purple-600" />
-              <h2 className="font-bold text-gray-900">My Profile</h2>
+              <h2 className="font-bold text-text-primary">My Profile</h2>
             </div>
             
             <div className="p-4 space-y-4">
@@ -314,28 +314,28 @@ export const StudentDashboard: React.FC = () => {
                 <div className="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
                   <User className="w-10 h-10 text-purple-600" />
                 </div>
-                <h2 className="text-xl font-bold text-gray-900 mb-1">
+                <h2 className="text-xl font-bold text-text-primary mb-1">
                   {currentStudent.firstName} {currentStudent.lastName}
                 </h2>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-text-secondary">
                   {currentStudent.yearName} • {currentStudent.fieldName}
                 </p>
               </div>
 
               <div className="space-y-3">
-                <div className="bg-gray-50 rounded-xl p-4">
-                  <p className="text-sm text-gray-600 mb-1">Phone Number</p>
-                  <p className="font-medium text-gray-900">{currentStudent.phone}</p>
+                <div className="bg-surface-secondary rounded-xl p-4">
+                  <p className="text-sm text-text-secondary mb-1">Phone Number</p>
+                  <p className="font-medium text-text-primary">{currentStudent.phone}</p>
                 </div>
                 
-                <div className="bg-gray-50 rounded-xl p-4">
-                  <p className="text-sm text-gray-600 mb-1">Parent Phone</p>
-                  <p className="font-medium text-gray-900">{currentStudent.parentPhone}</p>
+                <div className="bg-surface-secondary rounded-xl p-4">
+                  <p className="text-sm text-text-secondary mb-1">Parent Phone</p>
+                  <p className="font-medium text-text-primary">{currentStudent.parentPhone}</p>
                 </div>
                 
-                <div className="bg-gray-50 rounded-xl p-4">
-                  <p className="text-sm text-gray-600 mb-1">Student ID</p>
-                  <p className="font-medium text-gray-900">{currentStudent.id.slice(-8).toUpperCase()}</p>
+                <div className="bg-surface-secondary rounded-xl p-4">
+                  <p className="text-sm text-text-secondary mb-1">Student ID</p>
+                  <p className="font-medium text-text-primary">{currentStudent.id.slice(-8).toUpperCase()}</p>
                 </div>
               </div>
             </div>
@@ -344,14 +344,14 @@ export const StudentDashboard: React.FC = () => {
       </div>
 
       {/* Bottom Navigation */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-3 shadow-lg">
+      <div className="fixed bottom-0 left-0 right-0 bg-surface border-t border-border px-4 py-3 shadow-lg">
         <div className="grid grid-cols-4 gap-2">
           <button
             onClick={() => setActiveView('home')}
             className={`flex flex-col items-center gap-1 py-2 rounded-lg transition-colors ${
               activeView === 'home' 
                 ? 'bg-purple-100 text-purple-600' 
-                : 'text-gray-600 hover:bg-gray-100'
+                : 'text-text-secondary hover:bg-surface-hover'
             }`}
           >
             <BookOpen className="w-5 h-5" />
@@ -363,7 +363,7 @@ export const StudentDashboard: React.FC = () => {
             className={`flex flex-col items-center gap-1 py-2 rounded-lg transition-colors ${
               activeView === 'schedule' 
                 ? 'bg-purple-100 text-purple-600' 
-                : 'text-gray-600 hover:bg-gray-100'
+                : 'text-text-secondary hover:bg-surface-hover'
             }`}
           >
             <Calendar className="w-5 h-5" />
@@ -375,7 +375,7 @@ export const StudentDashboard: React.FC = () => {
             className={`flex flex-col items-center gap-1 py-2 rounded-lg transition-colors ${
               activeView === 'payments' 
                 ? 'bg-purple-100 text-purple-600' 
-                : 'text-gray-600 hover:bg-gray-100'
+                : 'text-text-secondary hover:bg-surface-hover'
             }`}
           >
             <CreditCard className="w-5 h-5" />
@@ -387,7 +387,7 @@ export const StudentDashboard: React.FC = () => {
             className={`flex flex-col items-center gap-1 py-2 rounded-lg transition-colors ${
               activeView === 'profile' 
                 ? 'bg-purple-100 text-purple-600' 
-                : 'text-gray-600 hover:bg-gray-100'
+                : 'text-text-secondary hover:bg-surface-hover'
             }`}
           >
             <User className="w-5 h-5" />
