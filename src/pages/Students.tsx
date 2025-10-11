@@ -249,7 +249,7 @@ export const Students: React.FC = () => {
 
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50">
+    <div className="min-h-screen bg-background">
         <div className="flex h-screen">
           {/* Main Content */}
           <div className={`transition-all duration-300 overflow-hidden ${isDrawerOpen ? 'w-[60%]' : 'w-full'}`}>
@@ -293,7 +293,7 @@ export const Students: React.FC = () => {
                         placeholder="Search by name, phone, ID card, year, field..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full pl-10 pr-4 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        className="w-full pl-10 pr-4 py-2 bg-background text-text-primary border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
                       />
                     </div>
 
@@ -301,7 +301,7 @@ export const Students: React.FC = () => {
                     <select
                       value={selectedYear}
                       onChange={(e) => setSelectedYear(e.target.value)}
-                      className="px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      className="px-3 py-2 bg-background text-text-primary border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
                     >
                       <option value="">All Years</option>
                       {years.map(year => (
@@ -312,7 +312,7 @@ export const Students: React.FC = () => {
                     <select
                       value={selectedField}
                       onChange={(e) => setSelectedField(e.target.value)}
-                      className="px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      className="px-3 py-2 bg-background text-text-primary border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
                     >
                       <option value="">All Fields</option>
                       {fields.map(field => (
