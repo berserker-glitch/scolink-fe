@@ -335,7 +335,7 @@ export const Students: React.FC = () => {
                         <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Field</th>
                       </tr>
                     </thead>
-                    <tbody className="bg-surface divide-y divide-gray-200">
+                    <tbody className="bg-surface divide-y divide-border">
                       {studentsLoading ? (
                         <tr>
                           <td colSpan={4} className="px-4 py-8 text-center text-text-muted">
@@ -359,7 +359,7 @@ export const Students: React.FC = () => {
                           <tr 
                             key={student.id} 
                             className={`hover:bg-background cursor-pointer transition-colors ${
-                              selectedStudentId === student.id ? 'bg-purple-50' : ''
+                              selectedStudentId === student.id ? 'bg-purple-50 dark:bg-purple-950/20' : ''
                             }`}
                             onClick={() => handleStudentClick(student)}
                           >

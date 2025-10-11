@@ -153,7 +153,7 @@ export const Payments: React.FC = () => {
                   <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Payment Date</th>
                 </tr>
               </thead>
-              <tbody className="bg-surface divide-y divide-gray-200">
+              <tbody className="bg-surface divide-y divide-border">
                 {isLoading ? (
                   <tr>
                     <td colSpan={6} className="px-4 py-8 text-center text-text-muted">

@@ -548,10 +548,10 @@ export const Events: React.FC = () => {
                   <div className="text-center">
                     <div className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                       isActive
-                        ? 'bg-green-100 text-green-800'
+                        ? 'bg-green-100 dark:bg-green-950/20 text-green-800 dark:text-green-400'
                         : isExpired
                         ? 'bg-surface-secondary text-text-primary'
-                        : 'bg-blue-100 text-blue-800'
+                        : 'bg-blue-100 dark:bg-blue-950/20 text-blue-800 dark:text-blue-400'
                     }`}>
                       {isActive ? 'Active' : isExpired ? 'Expired' : 'Upcoming'}
                     </div>
