@@ -285,7 +285,7 @@ export const Teachers: React.FC = () => {
           filteredTeachers.map((teacher) => (
             <Card
               key={teacher.id}
-              className={`surface hover:shadow-lg transition-all duration-200 cursor-pointer ${
+              className={`surface hover:shadow-adaptive-lg transition-all duration-200 cursor-pointer ${
                 selectedTeacherId === teacher.id ? 'ring-2 ring-interactive' : ''
               }`}
               onClick={() => handleTeacherClick(teacher)}

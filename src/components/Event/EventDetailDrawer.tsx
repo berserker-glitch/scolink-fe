@@ -230,8 +230,8 @@ export const EventDetailDrawer: React.FC<EventDetailDrawerProps> = ({
   };
 
   return (
-    <div className="w-full bg-surface h-full overflow-hidden flex flex-col shadow-lg">
-      <div className="p-4 shrink-0 shadow-sm">
+    <div className="w-full bg-surface h-full overflow-hidden flex flex-col shadow-adaptive-lg">
+      <div className="p-4 shrink-0 shadow-adaptive-sm">
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
@@ -274,8 +274,8 @@ export const EventDetailDrawer: React.FC<EventDetailDrawerProps> = ({
 
       <div className="flex-1 overflow-hidden">
         <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'details' | 'students')} className="h-full flex flex-col">
-          <div className="px-6 pt-4 shadow-sm">
-            <TabsList className="grid w-full grid-cols-2 bg-surface-secondary p-1 rounded-lg h-12 shadow-sm">
+          <div className="px-6 pt-4 shadow-adaptive-sm">
+            <TabsList className="grid w-full grid-cols-2 bg-surface-secondary p-1 rounded-lg h-12 shadow-adaptive-sm">
               <TabsTrigger
                 value="details"
                 className="flex items-center justify-center rounded-sm data-[state=active]:bg-interactive data-[state=active]:text-white data-[state=inactive]:text-text-muted hover:text-text-primary transition-all duration-200"
@@ -294,8 +294,8 @@ export const EventDetailDrawer: React.FC<EventDetailDrawerProps> = ({
           <div className="flex-1 overflow-y-auto p-6">
             <TabsContent value="details" className="space-y-4">
               {/* Profile Header - Minimal */}
-              <div className="text-center py-6 bg-surface rounded-lg shadow-sm">
-                <div className="w-16 h-16 mx-auto mb-3 bg-interactive rounded-full flex items-center justify-center shadow-md">
+              <div className="text-center py-6 bg-surface rounded-lg shadow-adaptive-sm">
+                <div className="w-16 h-16 mx-auto mb-3 bg-interactive rounded-full flex items-center justify-center shadow-adaptive">
                   <Calendar className="w-8 h-8 text-white" />
                 </div>
                 <h2 className="text-xl font-bold text-text-primary mb-1">
@@ -313,7 +313,7 @@ export const EventDetailDrawer: React.FC<EventDetailDrawerProps> = ({
 
               {/* Information Grid - Minimal */}
               <div className="grid grid-cols-2 gap-4">
-                <div className="p-4 bg-surface rounded-lg shadow-sm">
+                <div className="p-4 bg-surface rounded-lg shadow-adaptive-sm">
                   <div className="flex items-center gap-2 mb-2">
                     <Calendar className="w-4 h-4 text-interactive" />
                     <span className="text-sm font-medium text-text-secondary">Event Type</span>
@@ -321,7 +321,7 @@ export const EventDetailDrawer: React.FC<EventDetailDrawerProps> = ({
                   <p className="text-text-primary font-medium">{event.type}</p>
                 </div>
 
-                <div className="p-4 bg-surface rounded-lg shadow-sm">
+                <div className="p-4 bg-surface rounded-lg shadow-adaptive-sm">
                   <div className="flex items-center gap-2 mb-2">
                     <Users className="w-4 h-4 text-interactive" />
                     <span className="text-sm font-medium text-text-secondary">Enrolled Students</span>
@@ -330,7 +330,7 @@ export const EventDetailDrawer: React.FC<EventDetailDrawerProps> = ({
                 </div>
 
                 {event.fee && event.fee > 0 && (
-                  <div className="p-4 bg-surface rounded-lg shadow-sm">
+                  <div className="p-4 bg-surface rounded-lg shadow-adaptive-sm">
                     <div className="flex items-center gap-2 mb-2">
                       <DollarSign className="w-4 h-4 text-interactive" />
                       <span className="text-sm font-medium text-text-secondary">Fee</span>
@@ -340,7 +340,7 @@ export const EventDetailDrawer: React.FC<EventDetailDrawerProps> = ({
                 )}
 
                 {event.groups && event.groups.length > 0 && (
-                  <div className="p-4 bg-surface rounded-lg shadow-sm">
+                  <div className="p-4 bg-surface rounded-lg shadow-adaptive-sm">
                     <div className="flex items-center gap-2 mb-2">
                       <BookOpen className="w-4 h-4 text-interactive" />
                       <span className="text-sm font-medium text-text-secondary">Target Groups</span>
@@ -352,7 +352,7 @@ export const EventDetailDrawer: React.FC<EventDetailDrawerProps> = ({
 
               {/* Schedules - Only if exists */}
               {event.schedules && event.schedules.length > 0 && (
-                <div className="p-4 bg-surface rounded-lg shadow-sm">
+                <div className="p-4 bg-surface rounded-lg shadow-adaptive-sm">
                   <div className="flex items-center gap-2 mb-2">
                     <Clock className="w-4 h-4 text-interactive" />
                     <span className="text-sm font-medium text-text-secondary">Event Schedules</span>
@@ -374,7 +374,7 @@ export const EventDetailDrawer: React.FC<EventDetailDrawerProps> = ({
 
               {/* Description - Only if exists */}
               {event.description && (
-                <div className="p-4 bg-surface rounded-lg shadow-sm">
+                <div className="p-4 bg-surface rounded-lg shadow-adaptive-sm">
                   <div className="flex items-center gap-2 mb-2">
                     <User className="w-4 h-4 text-text-muted" />
                     <span className="text-sm font-medium text-text-secondary">Description</span>
@@ -407,7 +407,7 @@ export const EventDetailDrawer: React.FC<EventDetailDrawerProps> = ({
               </div>
 
               {eventStudents.length === 0 ? (
-                <div className="bg-surface rounded-lg shadow-sm p-8 text-center">
+                <div className="bg-surface rounded-lg shadow-adaptive-sm p-8 text-center">
                   <Users className="w-12 h-12 mx-auto mb-3 opacity-50 text-text-muted" />
                   <p className="text-text-secondary">No students enrolled in this event yet.</p>
                   <ModernButton
@@ -426,7 +426,7 @@ export const EventDetailDrawer: React.FC<EventDetailDrawerProps> = ({
               ) : (
                 <div className="space-y-3">
                   {eventStudents.map(student => (
-                    <div key={student.id} className="bg-surface rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow">
+                    <div key={student.id} className="bg-surface rounded-lg shadow-adaptive-sm p-4 hover:shadow-adaptive transition-shadow">
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 bg-interactive/10 rounded-lg flex items-center justify-center">

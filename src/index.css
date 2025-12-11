@@ -294,6 +294,68 @@ Inspired by Notion's clean minimalism
     @apply bg-surface border border-border rounded-xl shadow-xl;
   }
 
+  /* Dark mode shadow utilities */
+  .shadow-dark-sm {
+    box-shadow: 0 1px 2px 0 rgba(255, 255, 255, 0.05);
+  }
+  
+  .shadow-dark {
+    box-shadow: 0 4px 6px -1px rgba(255, 255, 255, 0.1), 0 2px 4px -1px rgba(255, 255, 255, 0.06);
+  }
+  
+  .shadow-dark-lg {
+    box-shadow: 0 10px 15px -3px rgba(255, 255, 255, 0.1), 0 4px 6px -2px rgba(255, 255, 255, 0.05);
+  }
+  
+  .shadow-dark-xl {
+    box-shadow: 0 20px 25px -5px rgba(255, 255, 255, 0.1), 0 10px 10px -5px rgba(255, 255, 255, 0.04);
+  }
+  
+  .shadow-dark-2xl {
+    box-shadow: 0 25px 50px -12px rgba(255, 255, 255, 0.25);
+  }
+
+  /* Responsive shadow utilities that work in both light and dark mode */
+  .shadow-adaptive-sm {
+    @apply shadow-sm;
+  }
+  
+  .dark .shadow-adaptive-sm {
+    @apply shadow-dark-sm;
+  }
+  
+  .shadow-adaptive {
+    @apply shadow-md;
+  }
+  
+  .dark .shadow-adaptive {
+    @apply shadow-dark;
+  }
+  
+  .shadow-adaptive-lg {
+    @apply shadow-lg;
+  }
+  
+  .dark .shadow-adaptive-lg {
+    @apply shadow-dark-lg;
+  }
+  
+  .shadow-adaptive-xl {
+    @apply shadow-xl;
+  }
+  
+  .dark .shadow-adaptive-xl {
+    @apply shadow-dark-xl;
+  }
+  
+  .shadow-adaptive-2xl {
+    @apply shadow-2xl;
+  }
+  
+  .dark .shadow-adaptive-2xl {
+    @apply shadow-dark-2xl;
+  }
+
   /* Custom button animations */
   .group\/button:hover .group-hover\/button\:duration-1000 {
     animation-duration: 1000ms;

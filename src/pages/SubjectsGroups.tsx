@@ -487,7 +487,7 @@ export const SubjectsGroups: React.FC = () => {
                     return (
                       <Card 
                         key={subject.id} 
-                        className={`surface hover:shadow-lg transition-all duration-200 cursor-pointer ${
+                        className={`surface hover:shadow-adaptive-lg transition-all duration-200 cursor-pointer ${
                           selectedSubjectForSplit?.id === subject.id ? 'ring-2 ring-interactive' : ''
                         }`}
                         onClick={() => handleSubjectClick(subject)}

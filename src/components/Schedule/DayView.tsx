@@ -531,7 +531,7 @@ export const DayView: React.FC<DayViewProps> = ({
                   return (
                     <div
                       key={group.id}
-                      className="absolute bg-purple-50 border border-purple-200 rounded-lg p-3 shadow-sm hover:shadow-md transition-shadow z-5"
+                      className="absolute bg-purple-50 border border-purple-200 rounded-lg p-3 shadow-adaptive-sm hover:shadow-adaptive transition-shadow z-5"
                       style={{ 
                         top: `${item.position.top}px`,
                         height: `${Math.max(item.position.height - 4, 60)}px`,

@@ -1,6 +1,6 @@
 //const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/api/v1';
-const API_BASE_URL ='https://api.scolink.ink/api/v1';
-//const API_BASE_URL = 'http://localhost:3001/api/v1';
+//const API_BASE_URL ='https://api.scolink.ink/api/v1';
+const API_BASE_URL = 'http://localhost:3001/api/v1';
 // Debug: Log the API base URL being used
 //console.log('🌐 Frontend is using API_BASE_URL:', API_BASE_URL);
 console.log('🌐 Environment mode:', import.meta.env.MODE);

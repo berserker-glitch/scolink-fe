@@ -424,8 +424,8 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
   if (!isOpen) return null;
   
   return (
-    <div className="w-full bg-surface h-full overflow-hidden flex flex-col shadow-lg">
-        <div className="p-4 shrink-0 shadow-sm">
+    <div className="w-full bg-surface h-full overflow-hidden flex flex-col shadow-adaptive-lg">
+        <div className="p-4 shrink-0 shadow-adaptive-sm">
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-xl font-bold text-text-primary">
@@ -484,8 +484,8 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
 
         <div className="flex-1 overflow-hidden">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
-            <div className="px-6 pt-4 shadow-sm">
-              <TabsList className={`grid w-full ${planStatus?.hasAttendance ? 'grid-cols-4' : 'grid-cols-3'} bg-surface-secondary p-1 rounded-lg h-12 shadow-sm`}>
+            <div className="px-6 pt-4 shadow-adaptive-sm">
+              <TabsList className={`grid w-full ${planStatus?.hasAttendance ? 'grid-cols-4' : 'grid-cols-3'} bg-surface-secondary p-1 rounded-lg h-12 shadow-adaptive-sm`}>
                 <TabsTrigger
                   value="info"
                   className="flex items-center justify-center rounded-sm data-[state=active]:bg-interactive data-[state=active]:text-white data-[state=inactive]:text-text-muted hover:text-text-primary transition-all duration-200"
@@ -519,8 +519,8 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
               {/* Info Tab */}
               <TabsContent value="info" className="space-y-4">
                 {/* Profile Header - Minimal */}
-                <div className="text-center py-6 bg-surface rounded-lg shadow-sm">
-                  <div className="w-16 h-16 mx-auto mb-3 bg-interactive rounded-full flex items-center justify-center shadow-md">
+                <div className="text-center py-6 bg-surface rounded-lg shadow-adaptive-sm">
+                  <div className="w-16 h-16 mx-auto mb-3 bg-interactive rounded-full flex items-center justify-center shadow-adaptive">
                     <User className="w-8 h-8 text-white" />
                   </div>
                   <h2 className="text-xl font-bold text-text-primary mb-1">
@@ -533,7 +533,7 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
 
                 {/* Information Grid - Minimal */}
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="p-4 bg-surface rounded-lg shadow-sm">
+                  <div className="p-4 bg-surface rounded-lg shadow-adaptive-sm">
                     <div className="flex items-center gap-2 mb-2">
                       <Phone className="w-4 h-4 text-interactive" />
                       <span className="text-sm font-medium text-text-secondary">Student Phone</span>
@@ -541,7 +541,7 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
                     <p className="text-text-primary font-medium">{student.phone}</p>
                   </div>
                   
-                  <div className="p-4 bg-surface rounded-lg shadow-sm">
+                  <div className="p-4 bg-surface rounded-lg shadow-adaptive-sm">
                     <div className="flex items-center gap-2 mb-2">
                       <Phone className="w-4 h-4 text-interactive" />
                       <span className="text-sm font-medium text-text-secondary">Parent Phone</span>
@@ -549,7 +549,7 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
                     <p className="text-text-primary font-medium">{student.parentPhone}</p>
                   </div>
                   
-                  <div className="p-4 bg-surface rounded-lg shadow-sm">
+                  <div className="p-4 bg-surface rounded-lg shadow-adaptive-sm">
                     <div className="flex items-center gap-2 mb-2">
                       <BookOpen className="w-4 h-4 text-interactive" />
                       <span className="text-sm font-medium text-text-secondary">Academic Year</span>
@@ -557,7 +557,7 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
                     <p className="text-text-primary font-medium">{student.yearName || 'Unknown Year'}</p>
                   </div>
                   
-                  <div className="p-4 bg-surface rounded-lg shadow-sm">
+                  <div className="p-4 bg-surface rounded-lg shadow-adaptive-sm">
                     <div className="flex items-center gap-2 mb-2">
                       <GraduationCap className="w-4 h-4 text-interactive" />
                       <span className="text-sm font-medium text-text-secondary">Field of Study</span>
@@ -568,7 +568,7 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
 
                 {/* Gender Badge - Minimal */}
                 <div className="flex justify-center">
-                  <div className="inline-flex items-center px-3 py-1 bg-surface rounded-full shadow-sm">
+                  <div className="inline-flex items-center px-3 py-1 bg-surface rounded-full shadow-adaptive-sm">
                     <div className={`w-2 h-2 rounded-full mr-2 ${student.sex === 'M' ? 'bg-blue-500' : 'bg-pink-500'}`}></div>
                     <span className="text-sm font-medium text-text-primary">
                       {student.sex === 'M' ? 'Male' : 'Female'}
@@ -578,7 +578,7 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
 
                 {/* Notes - Only if exists */}
                 {student?.notes && (
-                  <div className="p-4 bg-surface rounded-lg shadow-sm">
+                  <div className="p-4 bg-surface rounded-lg shadow-adaptive-sm">
                     <div className="flex items-center gap-2 mb-2">
                       <FileText className="w-4 h-4 text-text-muted" />
                       <span className="text-sm font-medium text-text-secondary">Notes</span>
@@ -610,7 +610,7 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
                 {/* Subjects List */}
                 <div className="space-y-3">
                   {(!student.enrollments || student.enrollments.length === 0) ? (
-                    <div className="text-center py-12 bg-surface rounded-lg shadow-sm">
+                    <div className="text-center py-12 bg-surface rounded-lg shadow-adaptive-sm">
                       <BookOpen className="w-16 h-16 mx-auto mb-4 text-text-muted opacity-50" />
                       <h4 className="text-lg font-medium text-text-primary mb-2">No Subjects Enrolled</h4>
                       <p className="text-text-secondary mb-4">The student is not enrolled in any subjects yet.</p>
@@ -630,7 +630,7 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
                       const attendanceRate = getAttendancePercentage(enrollment.id);
                       
                       return (
-                        <div key={index} className="bg-surface rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow">
+                        <div key={index} className="bg-surface rounded-lg shadow-adaptive-sm p-4 hover:shadow-adaptive transition-shadow">
                           {/* Subject Header */}
                           <div className="flex items-center justify-between mb-3">
                             <div className="flex items-center gap-3">
@@ -756,7 +756,7 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
 
                 {/* Payment Summary */}
                 <div className="grid grid-cols-3 gap-4 mb-4">
-                  <div className="bg-surface rounded-lg shadow-sm p-4 text-center">
+                  <div className="bg-surface rounded-lg shadow-adaptive-sm p-4 text-center">
                     <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-2">
                       <CheckCircle className="w-4 h-4 text-green-600" />
                     </div>
@@ -768,7 +768,7 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
                       }).length}
                     </p>
                   </div>
-                  <div className="bg-surface rounded-lg shadow-sm p-4 text-center">
+                  <div className="bg-surface rounded-lg shadow-adaptive-sm p-4 text-center">
                     <div className="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-2">
                       <ClockIcon className="w-4 h-4 text-yellow-600" />
                     </div>
@@ -780,7 +780,7 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
                       }).length}
                     </p>
                   </div>
-                  <div className="bg-surface rounded-lg shadow-sm p-4 text-center">
+                  <div className="bg-surface rounded-lg shadow-adaptive-sm p-4 text-center">
                     <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-2">
                       <X className="w-4 h-4 text-red-600" />
                     </div>
@@ -804,7 +804,7 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
                     const amount = payment ? payment.amount : getMonthlyFee();
                     
                     return (
-                      <div key={month} className="bg-surface rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow">
+                      <div key={month} className="bg-surface rounded-lg shadow-adaptive-sm p-4 hover:shadow-adaptive transition-shadow">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3">
                             <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
@@ -868,7 +868,7 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
                 </div>
 
                 {/* Status Banner */}
-                <div className="bg-green-50 rounded-lg p-4 shadow-sm">
+                <div className="bg-green-50 rounded-lg p-4 shadow-adaptive-sm">
                   <div className="flex items-start gap-3">
                     <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
                     <div>
@@ -882,7 +882,7 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
 
                 {/* Subject Selection */}
                 {(student.enrollments || []).length === 0 ? (
-                  <div className="text-center py-12 bg-surface rounded-lg shadow-sm">
+                  <div className="text-center py-12 bg-surface rounded-lg shadow-adaptive-sm">
                     <BarChart3 className="w-16 h-16 mx-auto mb-4 text-text-muted opacity-50" />
                     <h4 className="text-lg font-medium text-text-primary mb-2">No Subjects Enrolled</h4>
                     <p className="text-text-secondary">The student is not enrolled in any subjects yet.</p>
@@ -904,7 +904,7 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
                               className={`p-4 rounded-lg cursor-pointer transition-all ${
                                 selectedSubjectForAttendance === enrollment.id
                                   ? 'bg-interactive/10 border-2 border-interactive'
-                                  : 'bg-surface shadow-sm hover:shadow-md hover:bg-surface-hover'
+                                  : 'bg-surface shadow-adaptive-sm hover:shadow-adaptive hover:bg-surface-hover'
                               }`}
                             >
                               <div className="flex items-center justify-between mb-3">
@@ -944,7 +944,7 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
 
                       {/* Selected Subject Attendance Details */}
                       {selectedSubjectForAttendance && (
-                        <div className="bg-surface rounded-lg p-4 shadow-sm">
+                        <div className="bg-surface rounded-lg p-4 shadow-adaptive-sm">
                           <div className="flex items-center justify-between mb-4">
                             <h4 className="font-medium text-text-primary">
                               {student.enrollments?.find(e => e.id === selectedSubjectForAttendance)?.subjectName} - Attendance Calendar
@@ -1095,7 +1095,7 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
                       <div>
                         <h4 className="font-medium text-text-primary mb-3">Teacher Notes</h4>
                         <textarea
-                          className="w-full p-3 rounded-lg bg-background text-text-primary focus-brutalist shadow-sm"
+                          className="w-full p-3 rounded-lg bg-background text-text-primary focus-brutalist shadow-adaptive-sm"
                           rows={4}
                           placeholder="Add teacher notes about the student..."
                         />
@@ -1123,7 +1123,7 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
         
 
         {/* Action Buttons */}
-        <div className="p-4 shrink-0 shadow-sm">
+        <div className="p-4 shrink-0 shadow-adaptive-sm">
           <div className="flex items-center justify-between w-full">
             <div className="flex items-center gap-2">
               <ModernButton 
@@ -1257,7 +1257,7 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
                   const selectedGroup = selectedGroupsForAddition[subjectId];
                   
                   return (
-                    <div key={subjectId} className="p-4 bg-surface rounded-lg shadow-sm">
+                    <div key={subjectId} className="p-4 bg-surface rounded-lg shadow-adaptive-sm">
                       <div className="mb-3">
                         <div className="font-medium text-text-primary">{subject?.name}</div>
                         <div className="text-sm text-text-secondary">Select a group:</div>
@@ -1275,7 +1275,7 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
                               className={`p-3 border rounded-lg cursor-pointer transition-colors ${
                                 selectedGroup === group.id 
                                   ? 'border-primary bg-primary/5 ring-2 ring-primary/20' 
-                                  : 'shadow-sm hover:shadow-md hover:bg-surface-hover'
+                                  : 'shadow-adaptive-sm hover:shadow-adaptive hover:bg-surface-hover'
                               }`}
                               onClick={() => handleGroupSelect(subjectId, group.id)}
                             >
@@ -1406,7 +1406,7 @@ export const StudentDrawer: React.FC<StudentDrawerProps> = ({
 
         {/* Delete Confirmation Dialog */}
         <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-          <AlertDialogContent className="bg-surface border border-gray-200 shadow-xl">
+          <AlertDialogContent className="bg-surface border border-gray-200 shadow-adaptive-xl">
             <AlertDialogHeader className="space-y-3">
               <AlertDialogTitle className="text-xl font-semibold text-text-primary flex items-center gap-2">
                 <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">

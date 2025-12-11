@@ -264,15 +264,15 @@ export const SubjectDetailDrawer: React.FC<SubjectDetailDrawerProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="w-full bg-surface h-full overflow-hidden flex flex-col shadow-lg">
+    <div className="w-full bg-surface h-full overflow-hidden flex flex-col shadow-adaptive-lg">
       {/* Header - Similar to Student Drawer */}
-      <div className="p-4 shrink-0 shadow-sm">
+      <div className="p-4 shrink-0 shadow-adaptive-sm">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-xl font-bold text-gray-900">
+            <h2 className="text-xl font-bold text-text-primary">
               {subject.name}
             </h2>
-            <p className="text-sm text-gray-600 mt-1">
+            <p className="text-sm text-text-secondary mt-1">
               {subject.yearName} • {subject.fieldName} • {subject.monthlyFee} DH/month
             </p>
           </div>
@@ -294,8 +294,8 @@ export const SubjectDetailDrawer: React.FC<SubjectDetailDrawerProps> = ({
       {/* Tab Navigation - Similar to Student Drawer */}
       <div className="flex-1 overflow-hidden">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
-          <div className="px-6 pt-4 shadow-sm">
-            <TabsList className="grid w-full grid-cols-2 bg-surface-secondary p-1 rounded-lg h-12 shadow-sm">
+          <div className="px-6 pt-4 shadow-adaptive-sm">
+            <TabsList className="grid w-full grid-cols-2 bg-surface-secondary p-1 rounded-lg h-12 shadow-adaptive-sm">
               <TabsTrigger 
                 value="info" 
                 className="flex items-center justify-center rounded-sm data-[state=active]:bg-interactive data-[state=active]:text-white data-[state=inactive]:text-text-muted hover:text-text-primary transition-all duration-200"
@@ -315,8 +315,8 @@ export const SubjectDetailDrawer: React.FC<SubjectDetailDrawerProps> = ({
             {/* Subject Info Tab */}
             <TabsContent value="info" className="space-y-4">
               {/* Subject Header */}
-              <div className="text-center py-6 bg-surface rounded-lg shadow-sm">
-                <div className="w-16 h-16 mx-auto mb-3 bg-interactive rounded-full flex items-center justify-center shadow-md">
+              <div className="text-center py-6 bg-surface rounded-lg shadow-adaptive-sm">
+                <div className="w-16 h-16 mx-auto mb-3 bg-interactive rounded-full flex items-center justify-center shadow-adaptive">
                   <BookOpen className="w-8 h-8 text-white" />
                 </div>
                 <h2 className="text-xl font-bold text-text-primary mb-1">
@@ -329,7 +329,7 @@ export const SubjectDetailDrawer: React.FC<SubjectDetailDrawerProps> = ({
 
               {/* Subject Details Grid */}
               <div className="grid grid-cols-2 gap-4">
-                <div className="p-4 bg-surface rounded-lg shadow-sm">
+                <div className="p-4 bg-surface rounded-lg shadow-adaptive-sm">
                   <div className="flex items-center gap-2 mb-2">
                     <BookOpen className="w-4 h-4 text-interactive" />
                     <span className="text-sm font-medium text-text-secondary">Subject Name</span>
@@ -337,7 +337,7 @@ export const SubjectDetailDrawer: React.FC<SubjectDetailDrawerProps> = ({
                   <p className="text-text-primary font-medium">{subject.name}</p>
                 </div>
                 
-                <div className="p-4 bg-surface rounded-lg shadow-sm">
+                <div className="p-4 bg-surface rounded-lg shadow-adaptive-sm">
                   <div className="flex items-center gap-2 mb-2">
                     <BarChart3 className="w-4 h-4 text-interactive" />
                     <span className="text-sm font-medium text-text-secondary">Monthly Fee</span>
@@ -345,7 +345,7 @@ export const SubjectDetailDrawer: React.FC<SubjectDetailDrawerProps> = ({
                   <p className="text-text-primary font-medium">{subject.monthlyFee} DH</p>
                 </div>
                 
-                <div className="p-4 bg-surface rounded-lg shadow-sm">
+                <div className="p-4 bg-surface rounded-lg shadow-adaptive-sm">
                   <div className="flex items-center gap-2 mb-2">
                     <BookOpen className="w-4 h-4 text-interactive" />
                     <span className="text-sm font-medium text-text-secondary">Academic Year</span>
@@ -353,7 +353,7 @@ export const SubjectDetailDrawer: React.FC<SubjectDetailDrawerProps> = ({
                   <p className="text-text-primary font-medium">{subject.yearName}</p>
                 </div>
                 
-                <div className="p-4 bg-surface rounded-lg shadow-sm">
+                <div className="p-4 bg-surface rounded-lg shadow-adaptive-sm">
                   <div className="flex items-center gap-2 mb-2">
                     <BarChart3 className="w-4 h-4 text-interactive" />
                     <span className="text-sm font-medium text-text-secondary">Field of Study</span>
@@ -361,7 +361,7 @@ export const SubjectDetailDrawer: React.FC<SubjectDetailDrawerProps> = ({
                   <p className="text-text-primary font-medium">{subject.fieldName}</p>
                 </div>
 
-                <div className="p-4 bg-surface rounded-lg shadow-sm">
+                <div className="p-4 bg-surface rounded-lg shadow-adaptive-sm">
                   <div className="flex items-center gap-2 mb-2">
                     <Users className="w-4 h-4 text-interactive" />
                     <span className="text-sm font-medium text-text-secondary">Total Groups</span>
@@ -369,7 +369,7 @@ export const SubjectDetailDrawer: React.FC<SubjectDetailDrawerProps> = ({
                   <p className="text-text-primary font-medium">{subjectGroups.length}</p>
                 </div>
                 
-                <div className="p-4 bg-surface rounded-lg shadow-sm">
+                <div className="p-4 bg-surface rounded-lg shadow-adaptive-sm">
                   <div className="flex items-center gap-2 mb-2">
                     <Users className="w-4 h-4 text-interactive" />
                     <span className="text-sm font-medium text-text-secondary">Total Students</span>
@@ -380,7 +380,7 @@ export const SubjectDetailDrawer: React.FC<SubjectDetailDrawerProps> = ({
 
               {/* Subject Status */}
               <div className="flex justify-center">
-                <div className="inline-flex items-center px-3 py-1 bg-surface rounded-full shadow-sm">
+                <div className="inline-flex items-center px-3 py-1 bg-surface rounded-full shadow-adaptive-sm">
                   <div className="w-2 h-2 rounded-full mr-2 bg-green-500"></div>
                   <span className="text-sm font-medium text-text-primary">Active Subject</span>
                 </div>
@@ -409,13 +409,13 @@ export const SubjectDetailDrawer: React.FC<SubjectDetailDrawerProps> = ({
               {/* Groups List */}
               <div className="space-y-3">
                 {groupsLoading ? (
-                  <div className="text-center py-12 bg-surface rounded-lg shadow-sm">
+                  <div className="text-center py-12 bg-surface rounded-lg shadow-adaptive-sm">
                     <Users className="w-16 h-16 mx-auto mb-4 text-text-muted opacity-50" />
                     <h4 className="text-lg font-medium text-text-primary mb-2">Loading Groups...</h4>
                     <p className="text-text-secondary">Please wait while we fetch the groups data.</p>
                   </div>
                 ) : subjectGroups.length === 0 ? (
-                  <div className="text-center py-12 bg-surface rounded-lg shadow-sm">
+                  <div className="text-center py-12 bg-surface rounded-lg shadow-adaptive-sm">
                     <Users className="w-16 h-16 mx-auto mb-4 text-text-muted opacity-50" />
                     <h4 className="text-lg font-medium text-text-primary mb-2">No Groups Yet</h4>
                     <p className="text-text-secondary mb-4">This subject doesn't have any groups created yet.</p>
@@ -433,7 +433,7 @@ export const SubjectDetailDrawer: React.FC<SubjectDetailDrawerProps> = ({
                     const occupancyPercentage = group.capacity > 0 ? ((group.studentCount || 0) / group.capacity) * 100 : 0;
                     
                     return (
-                      <div key={group.id} className="bg-surface rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow">
+                      <div key={group.id} className="bg-surface rounded-lg shadow-adaptive-sm p-4 hover:shadow-adaptive transition-shadow">
                         {/* Group Header */}
                         <div className="flex items-center justify-between mb-3">
                           <div className="flex items-center gap-3">
@@ -515,7 +515,7 @@ export const SubjectDetailDrawer: React.FC<SubjectDetailDrawerProps> = ({
                             variant="ghost" 
                             size="sm"
                             onClick={() => handleDeleteGroup(group.id)}
-                            className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                            className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:text-red-300 dark:hover:bg-red-950/20"
                           >
                             <Trash2 className="w-4 h-4" />
                           </ModernButton>

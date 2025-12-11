@@ -32,7 +32,7 @@ export const CalendarDay: React.FC<CalendarDayProps> = ({
   return (
     <div
       onClick={onClick}
-      className={`w-full h-full min-h-[60px] p-1.5 rounded-lg cursor-pointer transition-all duration-200 shadow-sm hover:shadow-md border-2 ${
+      className={`w-full h-full min-h-[60px] p-1.5 rounded-lg cursor-pointer transition-all duration-200 shadow-adaptive-sm hover:shadow-adaptive border-2 ${
         isSelected
           ? 'bg-purple-100 dark:bg-purple-950/20 border-purple-500 shadow-purple-200'
           : isToday

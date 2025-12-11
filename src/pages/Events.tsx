@@ -493,7 +493,7 @@ export const Events: React.FC = () => {
           return (
             <Card
               key={event.id}
-              className={`surface hover:shadow-lg transition-all duration-200 cursor-pointer`}
+              className={`surface hover:shadow-adaptive-lg transition-all duration-200 cursor-pointer`}
               onClick={() => handleViewEvent(event)}
             >
               <CardContent className="p-6">

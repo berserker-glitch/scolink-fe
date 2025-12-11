@@ -34,7 +34,7 @@ export const AppInput: React.FC<AppInputProps> = ({
       <div className="relative w-full">
         <input
           type={type}
-          className="peer relative z-10 border-2 border-border h-12 w-full rounded-lg bg-surface px-4 py-3 font-medium outline-none ring-0 focus:outline-none focus:ring-0 shadow-sm transition-all duration-200 ease-in-out focus:shadow-xl focus:shadow-interactive/30 placeholder:font-normal text-text-primary placeholder:text-text-muted hover:shadow-md hover:shadow-border/10"
+          className="peer relative z-10 border-2 border-border h-12 w-full rounded-lg bg-surface px-4 py-3 font-medium outline-none ring-0 focus:outline-none focus:ring-0 shadow-adaptive-sm transition-all duration-200 ease-in-out focus:shadow-adaptive-xl focus:shadow-interactive/30 placeholder:font-normal text-text-primary placeholder:text-text-muted hover:shadow-adaptive hover:shadow-border/10"
           placeholder={placeholder}
           value={value}
           onChange={onChange}

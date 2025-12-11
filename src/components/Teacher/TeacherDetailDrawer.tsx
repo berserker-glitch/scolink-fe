@@ -96,8 +96,8 @@ export const TeacherDetailDrawer: React.FC<TeacherDetailDrawerProps> = ({
   }
 
   return (
-    <div className="w-full bg-surface h-full overflow-hidden flex flex-col shadow-lg">
-      <div className="p-4 shrink-0 shadow-sm">
+    <div className="w-full bg-surface h-full overflow-hidden flex flex-col shadow-adaptive-lg">
+      <div className="p-4 shrink-0 shadow-adaptive-sm">
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-xl font-bold text-gray-900">
@@ -120,8 +120,8 @@ export const TeacherDetailDrawer: React.FC<TeacherDetailDrawerProps> = ({
 
       <div className="flex-1 overflow-hidden">
         <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'info' | 'groups')} className="h-full flex flex-col">
-          <div className="px-6 pt-4 shadow-sm">
-            <TabsList className="grid w-full grid-cols-2 bg-surface-secondary p-1 rounded-lg h-12 shadow-sm">
+          <div className="px-6 pt-4 shadow-adaptive-sm">
+            <TabsList className="grid w-full grid-cols-2 bg-surface-secondary p-1 rounded-lg h-12 shadow-adaptive-sm">
               <TabsTrigger 
                 value="info" 
                 className="flex items-center justify-center rounded-sm data-[state=active]:bg-interactive data-[state=active]:text-white data-[state=inactive]:text-text-muted hover:text-text-primary transition-all duration-200"
@@ -140,7 +140,7 @@ export const TeacherDetailDrawer: React.FC<TeacherDetailDrawerProps> = ({
           <div className="flex-1 overflow-y-auto p-6">
             <TabsContent value="info" className="space-y-4">
               {/* Profile Header - Minimal */}
-              <div className="text-center py-6 bg-surface rounded-lg shadow-sm">
+              <div className="text-center py-6 bg-surface rounded-lg shadow-adaptive-sm">
                 <div className="w-16 h-16 mx-auto mb-3 bg-interactive rounded-full flex items-center justify-center shadow-md">
                   <GraduationCap className="w-8 h-8 text-white" />
                 </div>
@@ -159,7 +159,7 @@ export const TeacherDetailDrawer: React.FC<TeacherDetailDrawerProps> = ({
 
                 {/* Information Grid - Minimal */}
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="p-4 bg-surface rounded-lg shadow-sm">
+                  <div className="p-4 bg-surface rounded-lg shadow-adaptive-sm">
                     <div className="flex items-center gap-2 mb-2">
                       <Mail className="w-4 h-4 text-interactive" />
                       <span className="text-sm font-medium text-text-secondary">Email</span>
@@ -167,7 +167,7 @@ export const TeacherDetailDrawer: React.FC<TeacherDetailDrawerProps> = ({
                     <p className="text-text-primary font-medium truncate">{teacher.email}</p>
                   </div>
 
-                  <div className="p-4 bg-surface rounded-lg shadow-sm">
+                  <div className="p-4 bg-surface rounded-lg shadow-adaptive-sm">
                     <div className="flex items-center gap-2 mb-2">
                       <Phone className="w-4 h-4 text-interactive" />
                       <span className="text-sm font-medium text-text-secondary">Phone</span>
@@ -175,7 +175,7 @@ export const TeacherDetailDrawer: React.FC<TeacherDetailDrawerProps> = ({
                     <p className="text-text-primary font-medium">{teacher.phone || 'Not provided'}</p>
                   </div>
 
-                  <div className="p-4 bg-surface rounded-lg shadow-sm">
+                  <div className="p-4 bg-surface rounded-lg shadow-adaptive-sm">
                     <div className="flex items-center gap-2 mb-2">
                       <BookOpen className="w-4 h-4 text-interactive" />
                       <span className="text-sm font-medium text-text-secondary">Subjects</span>
@@ -183,7 +183,7 @@ export const TeacherDetailDrawer: React.FC<TeacherDetailDrawerProps> = ({
                     <p className="text-text-primary font-medium">{teacher.subjects?.length || 0} subjects</p>
                   </div>
 
-                  <div className="p-4 bg-surface rounded-lg shadow-sm">
+                  <div className="p-4 bg-surface rounded-lg shadow-adaptive-sm">
                     <div className="flex items-center gap-2 mb-2">
                       <Users className="w-4 h-4 text-interactive" />
                       <span className="text-sm font-medium text-text-secondary">Groups</span>
@@ -194,7 +194,7 @@ export const TeacherDetailDrawer: React.FC<TeacherDetailDrawerProps> = ({
 
                 {/* Bio - Only if exists */}
                 {teacher.bio && (
-                  <div className="p-4 bg-surface rounded-lg shadow-sm">
+                  <div className="p-4 bg-surface rounded-lg shadow-adaptive-sm">
                     <div className="flex items-center gap-2 mb-2">
                       <User className="w-4 h-4 text-text-muted" />
                       <span className="text-sm font-medium text-text-secondary">Bio</span>
@@ -205,7 +205,7 @@ export const TeacherDetailDrawer: React.FC<TeacherDetailDrawerProps> = ({
 
                 {/* Account Activation - Only show if teacher doesn't have an account and plan allows it */}
                 {!teacherHasAccount && (planStatus?.plan === 'premium' || planStatus?.plan === 'lifetime') && (
-                  <div className="p-4 bg-surface rounded-lg shadow-sm border-2 border-dashed border-interactive/30">
+                  <div className="p-4 bg-surface rounded-lg shadow-adaptive-sm border-2 border-dashed border-interactive/30">
                     <div className="text-center">
                       <UserCheck className="w-8 h-8 mx-auto mb-3 text-interactive" />
                       <h3 className="text-lg font-semibold text-text-primary mb-2">
@@ -230,7 +230,7 @@ export const TeacherDetailDrawer: React.FC<TeacherDetailDrawerProps> = ({
 
                 {/* Account Status - Show if teacher has an account */}
                 {teacherHasAccount && (
-                  <div className="p-4 bg-green-50 border border-green-200 rounded-lg shadow-sm">
+                  <div className="p-4 bg-green-50 border border-green-200 rounded-lg shadow-adaptive-sm">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
                         <UserCheck className="w-4 h-4 text-green-600" />
@@ -258,19 +258,19 @@ export const TeacherDetailDrawer: React.FC<TeacherDetailDrawerProps> = ({
               </div>
 
               {groupsLoading ? (
-                <div className="bg-surface rounded-lg shadow-sm p-8 text-center">
+                <div className="bg-surface rounded-lg shadow-adaptive-sm p-8 text-center">
                   <Users className="w-12 h-12 mx-auto mb-3 opacity-50 text-text-muted" />
                   <p className="text-text-secondary">Loading groups...</p>
                 </div>
               ) : teacherGroups.length === 0 ? (
-                <div className="bg-surface rounded-lg shadow-sm p-8 text-center">
+                <div className="bg-surface rounded-lg shadow-adaptive-sm p-8 text-center">
                   <Users className="w-12 h-12 mx-auto mb-3 opacity-50 text-text-muted" />
                   <p className="text-text-secondary">This teacher is not assigned to any groups yet.</p>
                 </div>
               ) : (
                 <div className="space-y-3">
                   {teacherGroups.map((group) => (
-                    <div key={group.id} className="bg-surface rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow">
+                    <div key={group.id} className="bg-surface rounded-lg shadow-adaptive-sm p-4 hover:shadow-md transition-shadow">
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 bg-interactive/10 rounded-lg flex items-center justify-center">
