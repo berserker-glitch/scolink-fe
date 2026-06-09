@@ -51,9 +51,15 @@ interface Center {
   plan: 'basic' | 'pro' | 'premium' | 'lifetime';
   planExpiresAt?: string;
   planUpgradedAt?: string;
+  adminCount?: number;
+  createdBy?: string;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
+}
+
+interface CenterWithAdmins extends Center {
+  admins: User[];
 }
 
 interface CreateCenterRequest {
@@ -629,7 +635,7 @@ class ApiService {
   }
 
   // Center Plan Management
-  async updateCenterPlan(planId: string): Promise<Center> {
+  async updateCenterPlan(planId: 'basic'): Promise<Center> {
     const response = await this.request<Center>('/plans/plan', {
       method: 'PUT',
       body: JSON.stringify({ plan: planId }),
@@ -826,6 +832,11 @@ class ApiService {
 
   async getCenterById(id: string): Promise<Center> {
     const response = await this.request<Center>(`/centers/${id}`);
+    return response.data!;
+  }
+
+  async getCenterWithAdmins(id: string): Promise<CenterWithAdmins> {
+    const response = await this.request<CenterWithAdmins>(`/centers/${id}/details`);
     return response.data!;
   }
 
@@ -1684,6 +1695,7 @@ export default apiService;
 export type { 
   User, 
   Center, 
+  CenterWithAdmins,
   CreateCenterRequest, 
   CreateCenterAdminRequest, 
   SignupRequest,

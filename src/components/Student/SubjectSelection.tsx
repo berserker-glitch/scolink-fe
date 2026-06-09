@@ -5,6 +5,11 @@ import { Check } from 'lucide-react';
 interface SubjectSelectionProps {
   selectedSubjects: string[];
   onSubjectToggle: (subjectId: string) => void;
+  subjects?: Array<{
+    id: string;
+    name: string;
+    monthlyFee: number;
+  }>;
   error?: string;
   showTotalFee?: boolean;
 }
@@ -12,12 +17,13 @@ interface SubjectSelectionProps {
 export const SubjectSelection: React.FC<SubjectSelectionProps> = ({
   selectedSubjects,
   onSubjectToggle,
+  subjects = [],
   error,
   showTotalFee = false
 }) => {
   const getTotalFee = () => {
     return selectedSubjects.reduce((total, subjectId) => {
-      const subject = mockSubjects.find(s => s.id === subjectId);
+      const subject = subjects.find(s => s.id === subjectId);
       return total + (subject?.monthlyFee || 0);
     }, 0);
   };
@@ -31,7 +37,7 @@ export const SubjectSelection: React.FC<SubjectSelectionProps> = ({
       )}
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {mockSubjects.map(subject => (
+        {subjects.map(subject => (
           <Card 
             key={subject.id}
             className={`cursor-pointer transition-all ${
@@ -61,6 +67,14 @@ export const SubjectSelection: React.FC<SubjectSelectionProps> = ({
           </Card>
         ))}
       </div>
+
+      {subjects.length === 0 && (
+        <Card className="surface-secondary">
+          <CardContent className="p-4 text-center text-text-secondary">
+            No available subjects found.
+          </CardContent>
+        </Card>
+      )}
 
       {showTotalFee && selectedSubjects.length > 0 && (
         <Card className="surface-secondary">

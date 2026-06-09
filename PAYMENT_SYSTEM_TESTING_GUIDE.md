@@ -92,7 +92,7 @@ npm run dev
 # Test login
 curl -X POST http://localhost:3001/api/v1/auth/login \
   -H "Content-Type: application/json" \
-  -d '{"email":"admin@admin.com","password":"D8fd5D5694"}'
+  -d '{"email":"admin@admin.com","password":"<SUPER_ADMIN_PASSWORD>"}'
 ```
 **Expected Response:** JWT tokens
 
@@ -173,7 +173,7 @@ npm run dev
 ### 2. Login and Navigation
 1. **Login Test:**
    - Navigate to login page
-   - Enter credentials: `admin@admin.com` / `D8fd5D5694`
+   - Enter credentials: `admin@admin.com` / configured `SUPER_ADMIN_PASSWORD`
    - **Expected:** Successful login and redirect to dashboard
 
 2. **Navigation Test:**

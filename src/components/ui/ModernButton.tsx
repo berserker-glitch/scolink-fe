@@ -2,7 +2,7 @@ import React from 'react';
 import { LucideIcon } from 'lucide-react';
 
 export interface ModernButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'solid' | 'outline' | 'ghost';
+  variant?: 'solid' | 'outline' | 'ghost' | 'danger';
   size?: 'sm' | 'md' | 'lg';
   icon?: LucideIcon;
   iconPosition?: 'left' | 'right';
@@ -25,7 +25,8 @@ export const ModernButton: React.FC<ModernButtonProps> = ({
   const variantClasses = {
     solid: 'bg-purple-600 text-white hover:bg-purple-700 focus:ring-purple-500 shadow-sm',
     outline: 'border-2 border-purple-600 text-purple-600 bg-transparent hover:bg-purple-50 focus:ring-purple-500',
-    ghost: 'text-purple-600 bg-transparent hover:bg-purple-50 focus:ring-purple-500'
+    ghost: 'text-purple-600 bg-transparent hover:bg-purple-50 focus:ring-purple-500',
+    danger: 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500 shadow-sm'
   };
   
   const sizeClasses = {

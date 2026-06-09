@@ -89,7 +89,7 @@ const PlanSelection: React.FC = () => {
       ],
       buttonText: 'Start Professional Plan',
       popular: true,
-      planId: 'professional'
+      planId: 'pro'
     },
     {
       name: 'Premium',
