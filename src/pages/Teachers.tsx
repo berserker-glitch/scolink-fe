@@ -2,6 +2,16 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { ModernButton } from '@/components/ui';
 import { Modal } from '@/components/ui/Modal';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { FormField, Input, Textarea } from '@/components/ui/FormField';
 import { TeacherDetailDrawer } from '@/components/Teacher/TeacherDetailDrawer';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -72,6 +82,9 @@ export const Teachers: React.FC = () => {
   const [selectedTeacherId, setSelectedTeacherId] = useState<string | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [editingTeacher, setEditingTeacher] = useState<Teacher | null>(null);
+  const [deleteConfirm, setDeleteConfirm] = useState<{ isOpen: boolean; teacherId: string; teacherName: string }>({
+    isOpen: false, teacherId: '', teacherName: ''
+  });
   
   const [teacherForm, setTeacherForm] = useState({
     name: '',
@@ -199,7 +212,7 @@ export const Teachers: React.FC = () => {
       
     } catch (error) {
       console.error('Error generating schedule PDF:', error);
-      alert('Failed to generate schedule PDF. Please try again.');
+      toast({ title: 'Error', description: 'Failed to generate schedule PDF. Please try again.', variant: 'destructive' });
     }
   };
 
@@ -363,9 +376,7 @@ export const Teachers: React.FC = () => {
                     icon={Trash2}
                     onClick={(e) => {
                       e.stopPropagation();
-                      if (confirm('Are you sure you want to delete this teacher?')) {
-                        deleteTeacherMutation.mutate(teacher.id);
-                      }
+                      setDeleteConfirm({ isOpen: true, teacherId: teacher.id, teacherName: teacher.name });
                     }}
                   />
                 </div>
@@ -525,6 +536,30 @@ export const Teachers: React.FC = () => {
           </div>
         </div>
       </Modal>
+
+      {/* Delete Confirmation */}
+      <AlertDialog open={deleteConfirm.isOpen} onOpenChange={(open) => !open && setDeleteConfirm(d => ({ ...d, isOpen: false }))}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Teacher</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete <strong>{deleteConfirm.teacherName}</strong>? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-red-600 hover:bg-red-700 text-white"
+              onClick={() => {
+                deleteTeacherMutation.mutate(deleteConfirm.teacherId);
+                setDeleteConfirm(d => ({ ...d, isOpen: false }));
+              }}
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
     </div>
   );

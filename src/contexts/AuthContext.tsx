@@ -76,7 +76,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       return true; // Token is still valid
     }
 
-    console.log('Access token is near expiry, refreshing...');
     isRefreshingRef.current = true;
 
     try {
@@ -97,7 +96,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       if (data.success && data.data) {
         localStorage.setItem('access_token', data.data.accessToken);
         localStorage.setItem('refresh_token', data.data.refreshToken);
-        console.log('Token refreshed successfully');
         return true;
       }
 
@@ -121,7 +119,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     refreshTimerRef.current = setInterval(async () => {
       const success = await refreshTokenIfNeeded();
       if (!success) {
-        console.log('Token refresh failed, logging out user');
         await logout();
       }
     }, 2 * 60 * 1000); // Every 2 minutes
@@ -149,15 +146,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           const refreshSuccess = await refreshTokenIfNeeded();
           
           if (refreshSuccess) {
-            setUser(userData);
-            startRefreshTimer(); // Start the automatic refresh timer
-            
-            // Verify token is still valid by getting profile
+            // Always hydrate from server to avoid stale role/centerId
             try {
-              await apiService.getProfile();
-            } catch (error) {
-              console.error('Profile fetch failed after refresh:', error);
-              // If profile still fails, logout
+              const freshProfile = await apiService.getProfile();
+              setUser(freshProfile as User);
+              localStorage.setItem('scolink_user', JSON.stringify(freshProfile));
+              startRefreshTimer();
+            } catch {
               await logout();
             }
           } else {
@@ -194,7 +189,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         // User is back on the page, check if we need to refresh token
         const success = await refreshTokenIfNeeded();
         if (!success) {
-          console.log('Token refresh failed on visibility change, logging out');
           await logout();
         }
       }

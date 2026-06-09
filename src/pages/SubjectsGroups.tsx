@@ -3,6 +3,16 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { ModernButton } from '@/components/ui';
 import { Modal } from '@/components/ui/Modal';
 import { FormField, Input, Select } from '@/components/ui/FormField';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { SubjectDetailDrawer } from '@/components/Subject/SubjectDetailDrawer';
 import { GroupDetailDrawer } from '@/components/Subject/GroupDetailDrawer';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -51,6 +61,9 @@ export const SubjectsGroups: React.FC = () => {
   const [editingGroupId, setEditingGroupId] = useState<string | null>(null);
   const [isEditSubjectMode, setIsEditSubjectMode] = useState(false);
   const [editingSubjectId, setEditingSubjectId] = useState<string | null>(null);
+  const [deleteConfirm, setDeleteConfirm] = useState<{ isOpen: boolean; subjectId: string; subjectName: string }>({
+    isOpen: false, subjectId: '', subjectName: ''
+  });
   
   const [subjectForm, setSubjectForm] = useState({
     name: '',
@@ -571,9 +584,7 @@ export const SubjectsGroups: React.FC = () => {
                               icon={Trash2}
                               onClick={(e) => {
                                 e.stopPropagation();
-                                if (confirm('Are you sure you want to delete this subject? This will also delete all associated groups.')) {
-                                  deleteSubjectMutation.mutate({ id: subject.id, cascade: true });
-                                }
+                                setDeleteConfirm({ isOpen: true, subjectId: subject.id, subjectName: subject.name });
                               }}
                             />
                           </div>
@@ -1039,6 +1050,29 @@ export const SubjectsGroups: React.FC = () => {
           }}
         />
       )}
+      <AlertDialog open={deleteConfirm.isOpen} onOpenChange={(open) => setDeleteConfirm(d => ({ ...d, isOpen: open }))}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Subject</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete "{deleteConfirm.subjectName}"? This will also delete all associated groups and cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-red-600 hover:bg-red-700 text-white"
+              onClick={() => {
+                deleteSubjectMutation.mutate({ id: deleteConfirm.subjectId, cascade: true });
+                setDeleteConfirm(d => ({ ...d, isOpen: false }));
+              }}
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
     </div>
   );
 };

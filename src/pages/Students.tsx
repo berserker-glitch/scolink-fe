@@ -4,13 +4,23 @@ import { ModernButton } from '@/components/ui';
 import { AddStudentWizard } from '@/components/Student/AddStudentWizard';
 import { StudentDrawer } from '@/components/Student/StudentDrawer';
 import { PaymentModal } from '@/components/Student/PaymentModal';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiService, Student, Year, Field } from '@/services/api';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { 
-  Search, 
-  Plus, 
+import {
+  Search,
+  Plus,
   Phone
 } from 'lucide-react';
 
@@ -95,6 +105,9 @@ export const Students: React.FC = () => {
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
   const [selectedYear, setSelectedYear] = useState('');
   const [selectedField, setSelectedField] = useState('');
+  const [selectedSex, setSelectedSex] = useState('');
+  const [selectedTag, setSelectedTag] = useState('');
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
   // Debounce search query
@@ -110,13 +123,16 @@ export const Students: React.FC = () => {
   // Reset to page 1 when search or filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [debouncedSearchQuery, selectedYear, selectedField]);
+  }, [debouncedSearchQuery, selectedYear, selectedField, selectedSex, selectedTag]);
   const [isAddStudentOpen, setIsAddStudentOpen] = useState(false);
   const [selectedStudentId, setSelectedStudentId] = useState<string | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [editingStudent, setEditingStudent] = useState<Student | null>(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [deleteConfirm, setDeleteConfirm] = useState<{ isOpen: boolean; studentId: string; studentName: string }>({
+    isOpen: false, studentId: '', studentName: ''
+  });
   const studentsPerPage = 20;
 
   // Fetch students with pagination and filters
@@ -242,10 +258,12 @@ export const Students: React.FC = () => {
 
   const handleDeleteStudent = (studentId: string) => {
     const student = students.find(s => s.id === studentId);
-    if (student && confirm(`Are you sure you want to delete ${student.firstName} ${student.lastName}?`)) {
-      deleteStudentMutation.mutate(studentId);
+    if (student) {
+      setDeleteConfirm({ isOpen: true, studentId, studentName: `${student.firstName} ${student.lastName}` });
     }
   };
+
+  const activeFilterCount = [selectedYear, selectedField, selectedSex, selectedTag].filter(Boolean).length;
 
 
   return (
@@ -263,11 +281,15 @@ export const Students: React.FC = () => {
                   </p>
                 </div>
                 <div className="flex items-center space-x-4 mt-4 lg:mt-0">
-                  <ModernButton variant="outline" size="sm">
-                    Filter
+                  <ModernButton
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setIsFilterOpen(v => !v)}
+                  >
+                    Filter{activeFilterCount > 0 ? ` (${activeFilterCount})` : ''}
                   </ModernButton>
-                  <ModernButton 
-                    variant="solid" 
+                  <ModernButton
+                    variant="solid"
                     size="sm"
                     icon={Plus}
                     onClick={() => {
@@ -282,45 +304,89 @@ export const Students: React.FC = () => {
               </div>
 
               {/* Search and Filters */}
-              <div className="mb-6">
+              <div className="mb-6 space-y-3">
                 <div className="bg-surface rounded-lg border border-border p-4">
                   <div className="flex items-center space-x-4">
-                    {/* Search */}
                     <div className="flex-1 relative">
                       <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-text-muted" />
                       <input
                         type="text"
-                        placeholder="Search by name, phone, ID card, year, field..."
+                        placeholder="Search by name, phone, ID card..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         className="w-full pl-10 pr-4 py-2 bg-background text-text-primary border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
                       />
                     </div>
-
-                    {/* Filters */}
-                    <select
-                      value={selectedYear}
-                      onChange={(e) => setSelectedYear(e.target.value)}
-                      className="px-3 py-2 bg-background text-text-primary border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
-                    >
-                      <option value="">All Years</option>
-                      {years.map(year => (
-                        <option key={year.id} value={year.id}>{year.name}</option>
-                      ))}
-                    </select>
-
-                    <select
-                      value={selectedField}
-                      onChange={(e) => setSelectedField(e.target.value)}
-                      className="px-3 py-2 bg-background text-text-primary border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
-                    >
-                      <option value="">All Fields</option>
-                      {fields.map(field => (
-                        <option key={field.id} value={field.id}>{field.name}</option>
-                      ))}
-                    </select>
                   </div>
                 </div>
+
+                {/* Expandable Filter Panel */}
+                {isFilterOpen && (
+                  <div className="bg-surface rounded-lg border border-border p-4">
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                      <div>
+                        <label className="block text-xs font-medium text-text-secondary mb-1">Year</label>
+                        <select
+                          value={selectedYear}
+                          onChange={(e) => setSelectedYear(e.target.value)}
+                          className="w-full px-3 py-2 bg-background text-text-primary border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        >
+                          <option value="">All Years</option>
+                          {years.map(year => (
+                            <option key={year.id} value={year.id}>{year.name}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-xs font-medium text-text-secondary mb-1">Field</label>
+                        <select
+                          value={selectedField}
+                          onChange={(e) => setSelectedField(e.target.value)}
+                          className="w-full px-3 py-2 bg-background text-text-primary border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        >
+                          <option value="">All Fields</option>
+                          {fields.map(field => (
+                            <option key={field.id} value={field.id}>{field.name}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-xs font-medium text-text-secondary mb-1">Gender</label>
+                        <select
+                          value={selectedSex}
+                          onChange={(e) => setSelectedSex(e.target.value)}
+                          className="w-full px-3 py-2 bg-background text-text-primary border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        >
+                          <option value="">All</option>
+                          <option value="M">Male</option>
+                          <option value="F">Female</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-xs font-medium text-text-secondary mb-1">Tag</label>
+                        <select
+                          value={selectedTag}
+                          onChange={(e) => setSelectedTag(e.target.value)}
+                          className="w-full px-3 py-2 bg-background text-text-primary border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        >
+                          <option value="">All Tags</option>
+                          <option value="normal">Normal</option>
+                          <option value="ss">SS</option>
+                        </select>
+                      </div>
+                    </div>
+                    {activeFilterCount > 0 && (
+                      <div className="mt-3 flex justify-end">
+                        <button
+                          onClick={() => { setSelectedYear(''); setSelectedField(''); setSelectedSex(''); setSelectedTag(''); }}
+                          className="text-xs text-text-secondary hover:text-text-primary underline"
+                        >
+                          Clear filters
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
 
               {/* Students Table */}
@@ -497,6 +563,30 @@ export const Students: React.FC = () => {
           }}
         />
       )}
+
+      {/* Delete Confirmation */}
+      <AlertDialog open={deleteConfirm.isOpen} onOpenChange={(open) => !open && setDeleteConfirm(d => ({ ...d, isOpen: false }))}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Student</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete <strong>{deleteConfirm.studentName}</strong>? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-red-600 hover:bg-red-700 text-white"
+              onClick={() => {
+                deleteStudentMutation.mutate(deleteConfirm.studentId);
+                setDeleteConfirm(d => ({ ...d, isOpen: false }));
+              }}
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

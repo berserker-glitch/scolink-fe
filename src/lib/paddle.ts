@@ -94,9 +94,6 @@ let paddleInstance: Paddle | null = null;
 // Initialize Paddle using official method
 export const initializePaddle = async (): Promise<Paddle | null> => {
   try {
-    console.log('Initializing Paddle with official package...');
-    console.log('Token:', PADDLE_CONFIG.clientToken);
-    console.log('Environment:', PADDLE_CONFIG.environment);
     
     const paddle = await paddleInit({
       environment: PADDLE_CONFIG.environment,

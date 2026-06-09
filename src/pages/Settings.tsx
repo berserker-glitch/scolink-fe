@@ -5,6 +5,16 @@ import { ModernButton } from '@/components/ui';
 import { Modal } from '@/components/ui/Modal';
 import { FormField, Input, Select } from '@/components/ui/FormField';
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import {
   Settings as SettingsIcon,
   Shield,
   Download,
@@ -39,6 +49,14 @@ export const Settings: React.FC = () => {
   const [currentCode, setCurrentCode] = useState('');
   const [newCode, setNewCode] = useState('');
   const [confirmCode, setConfirmCode] = useState('');
+
+  // Confirmation dialog state (replaces all window.confirm calls)
+  const [confirmDialog, setConfirmDialog] = useState<{
+    isOpen: boolean;
+    title: string;
+    description: string;
+    onConfirm: () => void;
+  }>({ isOpen: false, title: '', description: '', onConfirm: () => {} });
   
   // Years and Fields Management
   const [isAddYearOpen, setIsAddYearOpen] = useState(false);
@@ -219,11 +237,25 @@ export const Settings: React.FC = () => {
 
 
   const handleChangeCode = () => {
-    if (newCode !== confirmCode) {
-      alert('New codes do not match');
+    if (!currentCode) {
+      toast({ title: 'Error', description: 'Please enter your current code', variant: 'destructive' });
       return;
     }
-    console.log('Changing employee code');
+    if (newCode.length < 4) {
+      toast({ title: 'Error', description: 'New code must be at least 4 characters', variant: 'destructive' });
+      return;
+    }
+    if (newCode !== confirmCode) {
+      toast({ title: 'Error', description: 'New codes do not match', variant: 'destructive' });
+      return;
+    }
+    const storedCode = localStorage.getItem('center_employee_code') || '';
+    if (storedCode && storedCode !== currentCode) {
+      toast({ title: 'Error', description: 'Current code is incorrect', variant: 'destructive' });
+      return;
+    }
+    localStorage.setItem('center_employee_code', newCode);
+    toast({ title: 'Success', description: 'Employee code changed successfully' });
     setIsChangeCodeOpen(false);
     setCurrentCode('');
     setNewCode('');
@@ -289,9 +321,12 @@ export const Settings: React.FC = () => {
   };
 
   const handleDeleteStaff = (staffId: string, staffName: string) => {
-    if (confirm(`Are you sure you want to delete ${staffName}? This action cannot be undone.`)) {
-      deleteStaffMutation.mutate(staffId);
-    }
+    setConfirmDialog({
+      isOpen: true,
+      title: 'Delete Staff Member',
+      description: `Are you sure you want to delete ${staffName}? This action cannot be undone.`,
+      onConfirm: () => deleteStaffMutation.mutate(staffId),
+    });
   };
 
 
@@ -336,13 +371,15 @@ export const Settings: React.FC = () => {
 
   const handleDeleteYear = (yearId: string) => {
     const yearFields = getFieldsByYear(yearId);
-    const message = yearFields.length > 0 
-      ? `Are you sure you want to delete this year? This will also delete ${yearFields.length} associated field(s).`
-      : 'Are you sure you want to delete this year?';
-      
-    if (confirm(message)) {
-      deleteYearMutation.mutate({ id: yearId, cascade: true });
-    }
+    const description = yearFields.length > 0
+      ? `This will also delete ${yearFields.length} associated field(s). This action cannot be undone.`
+      : 'This action cannot be undone.';
+    setConfirmDialog({
+      isOpen: true,
+      title: 'Delete Academic Year',
+      description,
+      onConfirm: () => deleteYearMutation.mutate({ id: yearId, cascade: true }),
+    });
   };
 
   // Fields Management Functions
@@ -371,9 +408,12 @@ export const Settings: React.FC = () => {
   };
 
   const handleDeleteField = (fieldId: string) => {
-    if (confirm('Are you sure you want to delete this field?')) {
-      deleteFieldMutation.mutate(fieldId);
-    }
+    setConfirmDialog({
+      isOpen: true,
+      title: 'Delete Field',
+      description: 'Are you sure you want to delete this field? This action cannot be undone.',
+      onConfirm: () => deleteFieldMutation.mutate(fieldId),
+    });
   };
 
   // Year expansion management
@@ -1045,6 +1085,25 @@ export const Settings: React.FC = () => {
           </div>
         </div>
       </Modal>
+
+      {/* Reusable Confirm Dialog */}
+      <AlertDialog open={confirmDialog.isOpen} onOpenChange={(open) => !open && setConfirmDialog(d => ({ ...d, isOpen: false }))}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{confirmDialog.title}</AlertDialogTitle>
+            <AlertDialogDescription>{confirmDialog.description}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-red-600 hover:bg-red-700 text-white"
+              onClick={() => { confirmDialog.onConfirm(); setConfirmDialog(d => ({ ...d, isOpen: false })); }}
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       {/* Change Password Modal */}
       <Modal

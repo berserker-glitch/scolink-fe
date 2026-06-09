@@ -25,12 +25,8 @@ export const SuperAdminOverview: React.FC = () => {
   const loadData = async () => {
     try {
       setLoading(true);
-      console.log('Loading overview data...');
-      
       // Check if user is authenticated
       const token = localStorage.getItem('access_token');
-      console.log('Auth token exists:', !!token);
-      console.log('Auth token value:', token);
       
       if (!token) {
         console.error('No authentication token found! User needs to login first.');
@@ -43,14 +39,8 @@ export const SuperAdminOverview: React.FC = () => {
         apiService.getUsers(1, 50)    // Get all users for stats
       ]);
       
-      console.log('Centers response:', centersResponse);
-      console.log('Users response:', usersResponse);
-      
       const centers = centersResponse?.centers || [];
       const users = usersResponse?.users || [];
-      
-      console.log('Parsed centers:', centers);
-      console.log('Parsed users:', users);
       
       // Get recent 5 centers for display
       setRecentCenters(centers.slice(0, 5));

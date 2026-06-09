@@ -3,6 +3,16 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { ModernButton } from '@/components/ui';
 import { Modal } from '@/components/ui/Modal';
 import { FormField, Input, Select, Textarea } from '@/components/ui/FormField';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { EventDetailDrawer } from '@/components/Event/EventDetailDrawer';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiService, Event, Group } from '@/services/api';
@@ -48,6 +58,9 @@ export const Events: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [isEditEventOpen, setIsEditEventOpen] = useState(false);
   const [editingEvent, setEditingEvent] = useState<Event | null>(null);
+  const [deleteConfirm, setDeleteConfirm] = useState<{ isOpen: boolean; eventId: string; eventName: string }>({
+    isOpen: false, eventId: '', eventName: ''
+  });
 
   // Fetch events from API
   const { data: eventsData, isLoading: eventsLoading } = useQuery({
@@ -579,9 +592,7 @@ export const Events: React.FC = () => {
                     icon={Trash2}
                     onClick={(e) => {
                       e.stopPropagation();
-                      if (confirm('Are you sure you want to delete this event? This action cannot be undone.')) {
-                        deleteEventMutation.mutate(event.id);
-                      }
+                      setDeleteConfirm({ isOpen: true, eventId: event.id, eventName: event.name });
                     }}
                   />
                 </div>
@@ -1223,6 +1234,29 @@ export const Events: React.FC = () => {
           </div>
         </div>
       </Modal>
+
+      <AlertDialog open={deleteConfirm.isOpen} onOpenChange={(open) => setDeleteConfirm(d => ({ ...d, isOpen: open }))}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Event</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete "{deleteConfirm.eventName}"? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-red-600 hover:bg-red-700 text-white"
+              onClick={() => {
+                deleteEventMutation.mutate(deleteConfirm.eventId);
+                setDeleteConfirm(d => ({ ...d, isOpen: false }));
+              }}
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
     </div>
   );

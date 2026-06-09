@@ -1,10 +1,4 @@
-//const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/api/v1';
-const API_BASE_URL ='https://api.scolink.ink/api/v1';
-//const API_BASE_URL = 'http://localhost:3001/api/v1';
-// Debug: Log the API base URL being used
-//console.log('🌐 Frontend is using API_BASE_URL:', API_BASE_URL);
-console.log('🌐 Environment mode:', import.meta.env.MODE);
-console.log('🌐 All env vars starting with VITE_:', Object.keys(import.meta.env).filter(k => k.startsWith('VITE_')));
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://api.scolink.ink/api/v1';
 
 interface ApiResponse<T = any> {
   success: boolean;
@@ -204,14 +198,6 @@ interface Group {
   }[];
 }
 
-
-interface UpdateSubjectRequest {
-  name?: string;
-  monthlyFee?: number;
-  yearId?: string;
-  fieldId?: string;
-  isActive?: boolean;
-}
 
 interface CreateTeacherRequest {
   name: string;
@@ -508,6 +494,9 @@ interface MonthlyPaymentStatus {
 }
 
 class ApiService {
+  // Single in-flight refresh promise — prevents 401 thundering herd
+  private refreshPromise: Promise<string | null> | null = null;
+
   getBaseUrl(): string {
     return API_BASE_URL;
   }
@@ -521,15 +510,22 @@ class ApiService {
   }
 
   private async refreshAccessToken(): Promise<string | null> {
+    if (this.refreshPromise) return this.refreshPromise;
+
+    this.refreshPromise = this._doRefresh().finally(() => {
+      this.refreshPromise = null;
+    });
+    return this.refreshPromise;
+  }
+
+  private async _doRefresh(): Promise<string | null> {
     try {
       const refreshToken = this.getRefreshToken();
-      console.log('Attempting to refresh with token:', refreshToken ? 'Present' : 'Missing');
-      
+
       if (!refreshToken) {
         throw new Error('No refresh token available');
       }
 
-      console.log('Making refresh request to:', `${API_BASE_URL}/auth/refresh`);
       const response = await fetch(`${API_BASE_URL}/auth/refresh`, {
         method: 'POST',
         headers: {
@@ -538,28 +534,21 @@ class ApiService {
         body: JSON.stringify({ refreshToken }),
       });
 
-      console.log('Refresh response status:', response.status);
-      
       if (!response.ok) {
         const errorData = await response.json();
-        console.error('Refresh failed with error:', errorData);
         throw new Error('Token refresh failed');
       }
 
       const data = await response.json();
-      console.log('Refresh response data:', data);
-      
+
       if (data.success && data.data) {
-        // Update stored tokens
         localStorage.setItem('access_token', data.data.accessToken);
         localStorage.setItem('refresh_token', data.data.refreshToken);
-        console.log('Tokens updated successfully, new access token:', data.data.accessToken.substring(0, 20) + '...');
         return data.data.accessToken;
       }
 
       throw new Error('Invalid refresh response');
     } catch (error) {
-      console.error('Token refresh failed:', error);
       // Clear tokens and redirect to login
       this.clearTokens();
       return null;
@@ -588,8 +577,7 @@ class ApiService {
   ): Promise<ApiResponse<T>> {
     // Always get a fresh token for each request attempt
     const token = this.getAuthToken();
-    console.log(`Using access token for ${endpoint}:`, token ? `${token.substring(0, 20)}...` : 'None');
-    
+
     // Create headers without Authorization first, then add it
     const baseHeaders = {
       'Content-Type': 'application/json',
@@ -610,33 +598,14 @@ class ApiService {
     };
 
     try {
-      console.log(`Making API request to: ${API_BASE_URL}${endpoint}`);
-      console.log('Request config:', config);
-      console.log('🔍 REQUEST METHOD:', config.method || 'GET (default)');
-      console.log('🔍 REQUEST BODY:', config.body || 'No body');
-      
       const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
-      
-      console.log('Response status:', response.status);
-      console.log('Response headers:', Object.fromEntries(response.headers.entries()));
-      
       const data = await response.json();
-      console.log('API response data:', data);
 
       if (!response.ok) {
-        console.error('API error response:', data);
-        
-        // If 401 error and we haven't retried yet, try to refresh token
         if (response.status === 401 && retryWithRefresh) {
-          console.log('Access token expired, attempting to refresh...');
           const newToken = await this.refreshAccessToken();
-          
           if (newToken) {
-            console.log('Token refresh successful, retrying original request with fresh token...');
-            // Retry the request - makeRequest will get the fresh token
-            return this.makeRequest(endpoint, options, false); // Don't retry again
-          } else {
-            console.log('Token refresh failed, cannot retry request');
+            return this.makeRequest(endpoint, options, false);
           }
         }
         
@@ -645,7 +614,6 @@ class ApiService {
 
       return data;
     } catch (error) {
-      console.error('API request failed:', error);
       throw error;
     }
   }
@@ -693,10 +661,7 @@ class ApiService {
     });
 
     const loginData = response.data!;
-    console.log('Login successful, storing tokens...');
-    console.log('Access Token:', loginData.accessToken ? `${loginData.accessToken.substring(0, 20)}...` : 'Missing');
-    console.log('Refresh Token:', loginData.refreshToken ? `${loginData.refreshToken.substring(0, 20)}...` : 'Missing');
-    
+
     // Store tokens and user data in localStorage
     localStorage.setItem('access_token', loginData.accessToken);
     localStorage.setItem('refresh_token', loginData.refreshToken);
@@ -763,8 +728,7 @@ class ApiService {
         method: 'POST',
         body: JSON.stringify({ refreshToken }),
       });
-    } catch (error) {
-      console.error('Logout API call failed:', error);
+    } catch {
       // Continue with local cleanup even if API call fails
     }
 
